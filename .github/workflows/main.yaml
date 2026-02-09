@@ -13,18 +13,35 @@ on:
       - main
 
 jobs:
+  setup:
+    name: Setup
+    runs-on: ubuntu-latest
+    outputs:
+      flutter_version: ${{ steps.read_fvm.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: read_fvm
+        name: Extract Version from .fvmrc
+        run: |
+          VERSION=$(jq -r .flutter .fvmrc)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
   semantic-pull-request:
+    name: Semantic Pull Request
     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/semantic_pull_request.yml@v1
 
-  build:
-    uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
-    with:
-      flutter_version: "3.38.x"
-      run_bloc_lint: true
-
   spell-check:
+    name: Spell Check
     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/spell_check.yml@v1
     with:
       includes: |
         **/*.md
       modified_files_only: false
+
+  verify_and_test:
+    name: Verify and Test
+    needs: setup
+    uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
+    with:
+      flutter_version: ${{ needs.setup.outputs.flutter_version }}
+      run_bloc_lint: true
