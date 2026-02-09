@@ -85,5 +85,4 @@ class DefaultFirebaseOptions {
     storageBucket: 'finance-app-4a537.firebasestorage.app',
     measurementId: 'G-ZXYW441S4L',
   );
-
 }
