@@ -1,4 +1,6 @@
+/// {@template currency_code}
 /// ISO 4217 currency codes.
+/// {@endtemplate}
 enum CurrencyCode {
   /// United States Dollar.
   usd,
@@ -10,9 +12,11 @@ enum CurrencyCode {
   gbp,
 }
 
+/// {@template balance}
 /// Represents the balance information for a financial account.
+/// {@endtemplate}
 class Balance {
-  /// Creates a [Balance] instance.
+  /// {@macro balance}
   const Balance({
     required this.current,
     required this.currencyCode,

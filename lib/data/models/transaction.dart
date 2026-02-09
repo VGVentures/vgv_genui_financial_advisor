@@ -1,4 +1,6 @@
+/// {@template transaction_category}
 /// Primary transaction category, based on Plaid's taxonomy.
+/// {@endtemplate}
 enum TransactionCategory {
   /// Restaurants, coffee shops, bars, food delivery.
   foodAndDrink,
@@ -46,7 +48,9 @@ enum TransactionCategory {
   governmentAndNonProfit,
 }
 
+/// {@template payment_channel}
 /// How the transaction was initiated.
+/// {@endtemplate}
 enum PaymentChannel {
   /// Online or app-based purchase.
   online,
@@ -58,9 +62,11 @@ enum PaymentChannel {
   other,
 }
 
+/// {@template transaction}
 /// Represents a single financial transaction.
+/// {@endtemplate}
 class Transaction {
-  /// Creates a [Transaction] instance.
+  /// {@macro transaction}
   const Transaction({
     required this.id,
     required this.accountId,

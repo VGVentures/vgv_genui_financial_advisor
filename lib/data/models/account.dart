@@ -1,6 +1,8 @@
 import 'package:finance_app/data/models/balance.dart';
 
+/// {@template account_type}
 /// Top-level account type classification, based on Plaid's taxonomy.
+/// {@endtemplate}
 enum AccountType {
   /// Checking and savings accounts.
   depository,
@@ -15,7 +17,9 @@ enum AccountType {
   investment,
 }
 
+/// {@template account_subtype}
 /// Detailed account subtype classification.
+/// {@endtemplate}
 enum AccountSubtype {
   /// Standard checking account.
   checking,
@@ -48,9 +52,11 @@ enum AccountSubtype {
   roth,
 }
 
+/// {@template account}
 /// Represents a financial account (bank, credit, loan, or investment).
+/// {@endtemplate}
 class Account {
-  /// Creates an [Account] instance.
+  /// {@macro account}
   const Account({
     required this.id,
     required this.name,
