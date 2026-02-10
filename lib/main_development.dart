@@ -5,10 +5,9 @@ import 'package:firebase_ai/firebase_ai.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
-
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  
+
   await bootstrap(() => const App());
 }
