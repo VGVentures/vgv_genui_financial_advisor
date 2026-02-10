@@ -2,13 +2,11 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
-import 'package:finance_app/core/crash/crash.dart';
+import 'package:finance_app/core/error_reporting_repository/error_reporting_repository.dart';
 import 'package:flutter/widgets.dart';
 
 class AppBlocObserver extends BlocObserver {
-  const AppBlocObserver({required this.crashManager});
-
-  final CrashManager crashManager;
+  const AppBlocObserver();
 
   @override
   void onChange(BlocBase<dynamic> bloc, Change<dynamic> change) {
@@ -17,26 +15,37 @@ class AppBlocObserver extends BlocObserver {
   }
 
   @override
-  Future<void> onError(
+  void onError(
     BlocBase<dynamic> bloc,
     Object error,
     StackTrace stackTrace,
-  ) async {
+  ) {
     log('onError(${bloc.runtimeType}, $error, $stackTrace)');
-    await crashManager.recordError(error, stackTrace: stackTrace);
     super.onError(bloc, error, stackTrace);
   }
 }
 
 Future<void> bootstrap({
   required FutureOr<Widget> Function() builder,
-  required CrashManager crashManager,
+  required ErrorReportingRepository errorReportingRepository,
 }) async {
-  await crashManager.init();
+  await runZonedGuarded(
+    () async {
+      WidgetsFlutterBinding.ensureInitialized();
+      await errorReportingRepository.init();
 
-  FlutterError.onError = crashManager.handleFlutterError;
+      FlutterError.onError = errorReportingRepository.handleFlutterError;
 
-  Bloc.observer = AppBlocObserver(crashManager: crashManager);
+      Bloc.observer = const AppBlocObserver();
 
-  runApp(await builder());
+      runApp(await builder());
+    },
+    (error, stackTrace) async {
+      await errorReportingRepository.recordError(
+        error,
+        fatal: true,
+        stackTrace: stackTrace,
+      );
+    },
+  );
 }

@@ -1,9 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 
 /// {@template CrashManager}
 /// Abstract class defining the contract for crash reporting managers.
 /// {@endtemplate}
-abstract class CrashManager {
+abstract class ErrorReportingRepository {
   /// Initializes the crash manager
   Future<void> init();
 
