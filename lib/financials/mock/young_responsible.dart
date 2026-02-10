@@ -1,5 +1,5 @@
-import 'package:finance_app/data/mock/mock_scenario.dart';
-import 'package:finance_app/data/models/models.dart';
+import 'package:finance_app/financials/mock/mock_scenario.dart';
+import 'package:finance_app/financials/models/models.dart';
 
 // ---------------------------------------------------------------------------
 // Young & Responsible — Alex, 23, junior software developer

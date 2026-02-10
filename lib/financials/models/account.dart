@@ -1,4 +1,4 @@
-import 'package:finance_app/data/models/balance.dart';
+import 'package:finance_app/financials/models/balance.dart';
 
 /// {@template account_type}
 /// Top-level account type classification, based on Plaid's taxonomy.

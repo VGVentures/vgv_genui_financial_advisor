@@ -1,4 +1,4 @@
-import 'package:finance_app/data/models/models.dart';
+import 'package:finance_app/financials/models/models.dart';
 
 /// {@template mock_scenario}
 /// Bundles accounts and transactions for a single mock persona.
