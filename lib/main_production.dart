@@ -5,6 +5,6 @@ import 'package:finance_app/core/error_reporting_repository/error_reporting_repo
 Future<void> main() async {
   await bootstrap(
     builder: () => const App(),
-    errorReportingRepository: ProdErrorReportingRepositoryImpl(),
+    errorReportingRepository: ProdErrorReportingRepository(),
   );
 }

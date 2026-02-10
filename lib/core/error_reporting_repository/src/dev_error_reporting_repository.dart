@@ -1,10 +1,10 @@
 import 'package:finance_app/core/error_reporting_repository/src/error_reporting_repository.dart';
 import 'package:flutter/foundation.dart';
 
-/// {@template DevCrashManager}
+/// {@template DevErrorReportingRepository}
 /// Development implementation of [ErrorReportingRepository].
 /// {@endtemplate}
-class DevErrorReportingRepositoryImpl extends ErrorReportingRepository {
+class DevErrorReportingRepository extends ErrorReportingRepository {
   String? _userIdentifier;
 
   @override
@@ -13,11 +13,11 @@ class DevErrorReportingRepositoryImpl extends ErrorReportingRepository {
   }
 
   @override
-  Future<void> recordError(
+  void recordError(
     Object error, {
     StackTrace? stackTrace,
     bool fatal = false,
-  }) async {
+  }) {
     final severity = fatal ? 'FATAL' : 'ERROR';
     debugPrint('[$severity] $error');
     if (stackTrace != null) {

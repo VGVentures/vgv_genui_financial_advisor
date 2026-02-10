@@ -6,7 +6,9 @@ import 'package:finance_app/core/error_reporting_repository/error_reporting_repo
 import 'package:flutter/widgets.dart';
 
 class AppBlocObserver extends BlocObserver {
-  const AppBlocObserver();
+  const AppBlocObserver({required this.errorReportingRepository});
+
+  final ErrorReportingRepository errorReportingRepository;
 
   @override
   void onChange(BlocBase<dynamic> bloc, Change<dynamic> change) {
@@ -21,6 +23,7 @@ class AppBlocObserver extends BlocObserver {
     StackTrace stackTrace,
   ) {
     log('onError(${bloc.runtimeType}, $error, $stackTrace)');
+    errorReportingRepository.recordError(error, stackTrace: stackTrace);
     super.onError(bloc, error, stackTrace);
   }
 }
@@ -29,23 +32,15 @@ Future<void> bootstrap({
   required FutureOr<Widget> Function() builder,
   required ErrorReportingRepository errorReportingRepository,
 }) async {
-  await runZonedGuarded(
-    () async {
-      WidgetsFlutterBinding.ensureInitialized();
-      await errorReportingRepository.init();
+  final binding = WidgetsFlutterBinding.ensureInitialized();
+  await errorReportingRepository.init();
 
-      FlutterError.onError = errorReportingRepository.handleFlutterError;
-
-      Bloc.observer = const AppBlocObserver();
-
-      runApp(await builder());
-    },
-    (error, stackTrace) async {
-      await errorReportingRepository.recordError(
-        error,
-        fatal: true,
-        stackTrace: stackTrace,
-      );
-    },
+  FlutterError.onError = errorReportingRepository.handleFlutterError;
+  binding.platformDispatcher.onError =
+      errorReportingRepository.handlePlatformError;
+  Bloc.observer = AppBlocObserver(
+    errorReportingRepository: errorReportingRepository,
   );
+
+  runApp(await builder());
 }

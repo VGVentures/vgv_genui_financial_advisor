@@ -1,21 +1,21 @@
 import 'package:finance_app/core/error_reporting_repository/src/error_reporting_repository.dart';
 
-/// {@template ProdCrashManager}
+/// {@template ProdErrorReportingRepository}
 /// Production environment implementation of [ErrorReportingRepository].
 /// {@endtemplate}
-class ProdErrorReportingRepositoryImpl extends ErrorReportingRepository {
+class ProdErrorReportingRepository extends ErrorReportingRepository {
   /// Initialize crash reporting service
   @override
   Future<void> init() async {}
 
   /// Report error to crash service
   @override
-  Future<void> recordError(
+  void recordError(
     Object error, {
     StackTrace? stackTrace,
     bool fatal = false,
-  }) async {
-    // For example: await FirebaseCrashlytics.instance.recordError(
+  }) {
+    // For example: FirebaseCrashlytics.instance.recordError(
     //   error,
     //   stackTrace,
     //   fatal: fatal,
