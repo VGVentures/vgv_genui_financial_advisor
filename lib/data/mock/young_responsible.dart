@@ -12,7 +12,8 @@ const _credit = 'acc_yr_credit';
 
 final youngResponsibleScenario = MockScenario(
   name: 'Young & Responsible',
-  description: 'Alex, 23 — junior software developer. Disciplined saver who '
+  description:
+      'Alex, 23 — junior software developer. Disciplined saver who '
       'pays credit card in full monthly, cooks at home mostly, and lives a '
       'modest lifestyle. Biweekly paycheck with automatic savings transfers.',
   accounts: _accounts,

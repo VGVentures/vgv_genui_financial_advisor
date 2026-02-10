@@ -636,7 +636,7 @@ final _transactions = <Transaction>[
     category: TransactionCategory.entertainment,
     paymentChannel: PaymentChannel.online,
   ),
-  
+
   Transaction(
     id: 'txn_yk_052',
     accountId: _credit,

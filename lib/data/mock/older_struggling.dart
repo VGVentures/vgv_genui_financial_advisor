@@ -14,7 +14,8 @@ const _student = 'acc_og_student';
 
 final olderStrugglingScenario = MockScenario(
   name: 'Older & Struggling',
-  description: 'Dennis, 56 – distribution center supervisor, divorced. '
+  description:
+      'Dennis, 56 – distribution center supervisor, divorced. '
       '94.7% credit utilisation, paying only minimums, medical debt on a '
       'payment plan, co-signed student loan, savings being drained to cover '
       'shortfalls, and bank fees piling up. Every dollar is accounted for '
