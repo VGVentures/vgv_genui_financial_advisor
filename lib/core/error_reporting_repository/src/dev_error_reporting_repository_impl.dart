@@ -1,15 +1,15 @@
-import 'package:finance_app/core/crash/src/crash_manager.dart';
+import 'package:finance_app/core/error_reporting_repository/src/error_reporting_repository.dart';
 import 'package:flutter/foundation.dart';
 
 /// {@template DevCrashManager}
-/// Development implementation of [CrashManager].
+/// Development implementation of [ErrorReportingRepository].
 /// {@endtemplate}
-class DevCrashManager extends CrashManager {
+class DevErrorReportingRepositoryImpl extends ErrorReportingRepository {
   String? _userIdentifier;
 
   @override
   Future<void> init() async {
-    debugPrint('CrashManager Initialized in development mode');
+    debugPrint('ErrorReportingRepository Initialized in development mode');
   }
 
   @override

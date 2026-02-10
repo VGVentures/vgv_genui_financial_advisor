@@ -1,9 +1,9 @@
-import 'package:finance_app/core/crash/src/crash_manager.dart';
+import 'package:finance_app/core/error_reporting_repository/src/error_reporting_repository.dart';
 
 /// {@template ProdCrashManager}
-/// Production environment implementation of [CrashManager].
+/// Production environment implementation of [ErrorReportingRepository].
 /// {@endtemplate}
-class ProdCrashManager extends CrashManager {
+class ProdErrorReportingRepositoryImpl extends ErrorReportingRepository {
   /// Initialize crash reporting service
   @override
   Future<void> init() async {}
