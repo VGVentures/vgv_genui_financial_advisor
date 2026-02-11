@@ -78,7 +78,7 @@ jobs:
         with:
           flutter-version: ${{ needs.setup.outputs.flutter_version }}
       - run: flutter pub get
-      - run: flutter build web
+      - run: flutter build web --target lib/main_production.dart
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
@@ -97,7 +97,7 @@ jobs:
         with:
           flutter-version: ${{ needs.setup.outputs.flutter_version }}
       - run: flutter pub get
-      - run: flutter build web
+      - run: flutter build web --target lib/main_production.dart
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
