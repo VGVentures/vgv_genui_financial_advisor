@@ -24,8 +24,9 @@ void main() {
     });
 
     test('returns correct data for youngResponsible', () {
-      final result =
-          repository.getFinancialData(PersonaTypeEnum.youngResponsible);
+      final result = repository.getFinancialData(
+        PersonaTypeEnum.youngResponsible,
+      );
 
       expect(result.personaType, PersonaTypeEnum.youngResponsible);
       expect(result.description, youngResponsibleScenario.description);
@@ -43,8 +44,9 @@ void main() {
     });
 
     test('returns correct data for olderStruggling', () {
-      final result =
-          repository.getFinancialData(PersonaTypeEnum.olderStruggling);
+      final result = repository.getFinancialData(
+        PersonaTypeEnum.olderStruggling,
+      );
 
       expect(result.personaType, PersonaTypeEnum.olderStruggling);
       expect(result.description, olderStrugglingScenario.description);
@@ -53,8 +55,9 @@ void main() {
     });
 
     test('all persona types return unique data when calling the method', () {
-      final results =
-          PersonaTypeEnum.values.map(repository.getFinancialData).toList();
+      final results = PersonaTypeEnum.values
+          .map(repository.getFinancialData)
+          .toList();
 
       final descriptions = results.map((r) => r.description).toSet();
       expect(descriptions.length, PersonaTypeEnum.values.length);
