@@ -67,10 +67,10 @@ jobs:
       - run: flutter pub get
       - run: dart run very_good_cli:very_good packages check licenses --allowed "MIT,BSD-3-Clause,BSD-2-Clause,Apache-2.0"
 
-  deploy_development:
-    name: Deploy to Development
+  deploy_production:
+    name: Deploy to Production
     needs: [setup, verify_and_test]
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -78,7 +78,7 @@ jobs:
         with:
           flutter-version: ${{ needs.setup.outputs.flutter_version }}
       - run: flutter pub get
-      - run: flutter build web --target lib/main_development.dart
+      - run: flutter build web --wasm --target lib/main_production.dart
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
@@ -97,7 +97,7 @@ jobs:
         with:
           flutter-version: ${{ needs.setup.outputs.flutter_version }}
       - run: flutter pub get
-      - run: flutter build web --target lib/main_development.dart
+      - run: flutter build web --wasm --target lib/main_development.dart
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
