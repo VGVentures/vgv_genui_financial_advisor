@@ -1,7 +1,7 @@
 import 'package:finance_app/core/analytics_repository/analytics_repository.dart';
 import 'package:finance_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:wiredash/wiredash.dart';
 
 class App extends StatelessWidget {
   const App({
@@ -13,8 +13,9 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider.value(
-      value: analyticsRepository,
+    return Wiredash(
+      projectId: 'gcn26-finance-app-j9k7f4b',
+      secret: 'p_iCQvLnrp18LEacxg6JYRtV5g-FbvfA',
       child: MaterialApp(
         theme: ThemeData(
           appBarTheme: AppBarTheme(

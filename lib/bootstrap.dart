@@ -4,6 +4,8 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:finance_app/core/analytics_repository/analytics_repository.dart';
 import 'package:finance_app/core/error_reporting_repository/error_reporting_repository.dart';
+import 'package:finance_app/firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/widgets.dart';
 
 class AppBlocObserver extends BlocObserver {
@@ -38,6 +40,10 @@ Future<void> bootstrap({
   final binding = WidgetsFlutterBinding.ensureInitialized();
   await errorReportingRepository.init();
   await analyticsRepository.init();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   FlutterError.onError = errorReportingRepository.handleFlutterError;
   binding.platformDispatcher.onError =
