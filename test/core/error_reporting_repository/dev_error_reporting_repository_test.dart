@@ -1,5 +1,5 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:finance_app/core/error_reporting_repository/src/dev_error_reporting_repository.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   late DevErrorReportingRepository repository;

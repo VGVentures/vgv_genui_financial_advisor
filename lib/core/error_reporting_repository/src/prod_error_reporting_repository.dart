@@ -6,9 +6,9 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 /// Production environment implementation of [ErrorReportingRepository].
 /// {@endtemplate}
 class ProdErrorReportingRepository extends ErrorReportingRepository {
-  final Hub _sentryHub;
-
   ProdErrorReportingRepository(this._sentryHub);
+
+  final Hub _sentryHub;
 
   @override
   Future<void> init() async {
@@ -40,10 +40,10 @@ class ProdErrorReportingRepository extends ErrorReportingRepository {
         stackTrace: stackTrace,
         hint: Hint.withMap({
           if (reason != null) 'reason': reason,
-          if (extra != null) ...extra,
+          ...?extra,
         }),
       );
-    } catch (e) {
+    } on Exception catch (e) {
       // Don't let error reporting crash the app
       debugPrint('Failed to report error to Sentry: $e');
     }
@@ -55,7 +55,7 @@ class ProdErrorReportingRepository extends ErrorReportingRepository {
       // Clear user context
       try {
         _sentryHub.configureScope((scope) => scope.setUser(null));
-      } catch (e) {
+      } on Exception catch (e) {
         debugPrint('Failed to clear user in Sentry: $e');
       }
       return;
@@ -69,7 +69,7 @@ class ProdErrorReportingRepository extends ErrorReportingRepository {
       if (kDebugMode) {
         debugPrint('👤 User identifier set: $identifier');
       }
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Failed to set user identifier in Sentry: $e');
     }
   }

@@ -20,13 +20,13 @@ class AppBlocObserver extends BlocObserver {
   }
 
   @override
-  void onError(
+  Future<void> onError(
     BlocBase<dynamic> bloc,
     Object error,
     StackTrace stackTrace,
-  ) {
+  ) async {
     log('onError(${bloc.runtimeType}, $error, $stackTrace)');
-    errorReportingRepository.recordError(error, stackTrace);
+    await errorReportingRepository.recordError(error, stackTrace);
     super.onError(bloc, error, stackTrace);
   }
 }
@@ -44,8 +44,8 @@ Future<void> bootstrap({
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  FlutterError.onError = (details) {
-    errorReportingRepository.recordError(
+  FlutterError.onError = (details) async {
+    await errorReportingRepository.recordError(
       details.exception,
       details.stack,
       reason: 'Flutter framework error',
@@ -57,10 +57,12 @@ Future<void> bootstrap({
   };
 
   binding.platformDispatcher.onError = (error, stackTrace) {
-    errorReportingRepository.recordError(
-      error,
-      stackTrace,
-      reason: 'Unhandled platform error',
+    unawaited(
+      errorReportingRepository.recordError(
+        error,
+        stackTrace,
+        reason: 'Unhandled platform error',
+      ),
     );
     return true;
   };

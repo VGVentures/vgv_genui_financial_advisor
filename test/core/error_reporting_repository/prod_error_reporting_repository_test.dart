@@ -1,10 +1,10 @@
 // test/core/error_reporting_repository/prod_error_reporting_repository_test.dart
 
+import 'package:finance_app/core/error_reporting_repository/src/prod_error_reporting_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
-import 'package:finance_app/core/error_reporting_repository/src/prod_error_reporting_repository.dart';
 
 import 'prod_error_reporting_repository_test.mocks.dart';
 
