@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:finance_app/core/error_reporting_repository/src/error_reporting_repository.dart';
 import 'package:flutter/foundation.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -39,6 +41,7 @@ class ProdErrorReportingRepository extends ErrorReportingRepository {
         error,
         stackTrace: stackTrace,
         hint: Hint.withMap({
+          // ignore: use_null_aware_elements, null-aware syntax not applicable for conditional map entries
           if (reason != null) 'reason': reason,
           ...?extra,
         }),
@@ -63,7 +66,7 @@ class ProdErrorReportingRepository extends ErrorReportingRepository {
 
     try {
       _sentryHub.configureScope((scope) {
-        scope.setUser(SentryUser(id: identifier));
+        unawaited(scope.setUser(SentryUser(id: identifier)));
       });
 
       if (kDebugMode) {
