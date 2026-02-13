@@ -1,14 +1,16 @@
-// Ignore for testing purposes
-// ignore_for_file: prefer_const_constructors
-
 import 'package:finance_app/app/app.dart';
+import 'package:finance_app/core/analytics_repository/analytics_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('App', () {
     testWidgets('renders Scaffold', (tester) async {
-      await tester.pumpWidget(App());
+      final analyticsRepository = DevAnalyticsRepository();
+      await analyticsRepository.init();
+      await tester.pumpWidget(
+        App(analyticsRepository: analyticsRepository),
+      );
       expect(find.byType(Scaffold), findsOneWidget);
     });
   });

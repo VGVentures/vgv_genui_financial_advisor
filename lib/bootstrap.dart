@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
+import 'package:finance_app/core/analytics_repository/analytics_repository.dart';
 import 'package:finance_app/core/error_reporting_repository/error_reporting_repository.dart';
 import 'package:flutter/widgets.dart';
 
@@ -29,11 +30,14 @@ class AppBlocObserver extends BlocObserver {
 }
 
 Future<void> bootstrap({
-  required FutureOr<Widget> Function() builder,
+  required FutureOr<Widget> Function(AnalyticsRepository analyticsRepository)
+      builder,
   required ErrorReportingRepository errorReportingRepository,
+  required AnalyticsRepository analyticsRepository,
 }) async {
   final binding = WidgetsFlutterBinding.ensureInitialized();
   await errorReportingRepository.init();
+  await analyticsRepository.init();
 
   FlutterError.onError = errorReportingRepository.handleFlutterError;
   binding.platformDispatcher.onError =
@@ -42,5 +46,5 @@ Future<void> bootstrap({
     errorReportingRepository: errorReportingRepository,
   );
 
-  runApp(await builder());
+  runApp(await builder(analyticsRepository));
 }
