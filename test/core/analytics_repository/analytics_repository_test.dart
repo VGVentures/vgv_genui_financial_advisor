@@ -81,6 +81,30 @@ void main() {
     late MockFirebaseAnalytics mockFirebaseAnalytics;
     late MockWiredashAnalytics mockWiredashAnalytics;
 
+    void stubFirebaseLogEvent() {
+      when(
+        () => mockFirebaseAnalytics.logEvent(
+          name: any(named: 'name'),
+          parameters: any(named: 'parameters'),
+        ),
+      ).thenAnswer((_) async {});
+    }
+
+    void stubWiredashTrackEvent() {
+      when(
+        () => mockWiredashAnalytics.trackEvent(
+          any(),
+          data: any(named: 'data'),
+        ),
+      ).thenAnswer((_) async {});
+    }
+
+    void stubFirebaseSetUserId() {
+      when(
+        () => mockFirebaseAnalytics.setUserId(id: any(named: 'id')),
+      ).thenAnswer((_) async {});
+    }
+
     setUp(() {
       mockFirebaseAnalytics = MockFirebaseAnalytics();
       mockWiredashAnalytics = MockWiredashAnalytics();
@@ -99,19 +123,8 @@ void main() {
 
     group('trackEvent', () {
       setUp(() {
-        when(
-          () => mockFirebaseAnalytics.logEvent(
-            name: any(named: 'name'),
-            parameters: any(named: 'parameters'),
-          ),
-        ).thenAnswer((_) async {});
-
-        when(
-          () => mockWiredashAnalytics.trackEvent(
-            any(),
-            data: any(named: 'data'),
-          ),
-        ).thenAnswer((_) async {});
+        stubFirebaseLogEvent();
+        stubWiredashTrackEvent();
       });
 
       test('delegates to FirebaseAnalytics and WiredashAnalytics', () async {
@@ -146,11 +159,7 @@ void main() {
     });
 
     group('setUserId', () {
-      setUp(() {
-        when(
-          () => mockFirebaseAnalytics.setUserId(id: any(named: 'id')),
-        ).thenAnswer((_) async {});
-      });
+      setUp(stubFirebaseSetUserId);
 
       test('delegates to FirebaseAnalytics', () async {
         await repository.setUserId('user123');
