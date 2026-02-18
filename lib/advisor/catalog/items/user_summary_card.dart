@@ -57,7 +57,7 @@ final userSummaryCardItem = CatalogItem(
     final json = ctx.data as Map<String, Object?>;
     final context = ctx.buildContext;
 
-    final name = json['name'] as String;
+    final name = json['name']! as String;
     final healthScore = json['financialHealthScore']! as String;
     final totalAssets = (json['totalAssets']! as num).toDouble();
     final totalDebt = (json['totalDebt']! as num).toDouble();
@@ -67,12 +67,13 @@ final userSummaryCardItem = CatalogItem(
     final recommendation = json['recommendation']! as String;
 
     final theme = Theme.of(context);
-    // TODO(juanRodriguez17): Color shown must match theme colors. This is just a placeholder mapping.
+    // TODO(juanRodriguez17): Color shown must match theme colors. This is
+    //just a placeholder mapping.
     final healthColor = _healthColor(healthScore);
     final netWorthColor = netWorth >= 0 ? Colors.green : Colors.red;
 
     return Card(
-      // TODO (juanRodriguez17): Use `Spacing` class when gets merged
+      // TODO(juanRodriguez17): Use `Spacing` class when gets merged
       elevation: 4,
       child: Padding(
         padding: const EdgeInsets.all(16),
