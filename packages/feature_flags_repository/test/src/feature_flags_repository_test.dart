@@ -204,6 +204,14 @@ void main() {
           ),
         ).thenAnswer((_) => fakePreference);
 
+        when(
+          () => mockPreferences.setBool('feature_flag_test_flag', any()),
+        ).thenAnswer((invocation) async {
+          final value = invocation.positionalArguments[1] as bool;
+          await fakePreference.setValue(value);
+          return true;
+        });
+
         final repository = FeatureFlagsRepository(
           streamingSharedPreferences: mockPreferences,
           featureFlags: [testFlag],
@@ -211,10 +219,10 @@ void main() {
 
         final future = expectLater(
           repository.watchFeatureFlag('test_flag'),
-          emits(_isFlag(id: 'test_flag', value: false)),
+          emits(_isFlag(id: 'test_flag', value: true)),
         );
 
-        controller.add(false);
+        await repository.toggleFeatureFlag('test_flag');
 
         await future;
       });
@@ -237,6 +245,14 @@ void main() {
           ),
         ).thenAnswer((_) => fakePreference);
 
+        when(
+          () => mockPreferences.setBool('feature_flag_test_flag', any()),
+        ).thenAnswer((invocation) async {
+          final value = invocation.positionalArguments[1] as bool;
+          await fakePreference.setValue(value);
+          return true;
+        });
+
         final repository = FeatureFlagsRepository(
           streamingSharedPreferences: mockPreferences,
           featureFlags: [testFlag],
@@ -245,14 +261,13 @@ void main() {
         final future = expectLater(
           repository.watchFeatureFlag('test_flag'),
           emitsInOrder([
-            _isFlag(id: 'test_flag', value: false),
             _isFlag(id: 'test_flag', value: true),
+            _isFlag(id: 'test_flag', value: false),
           ]),
         );
 
-        controller
-          ..add(false)
-          ..add(true);
+        await repository.toggleFeatureFlag('test_flag');
+        await repository.toggleFeatureFlag('test_flag');
 
         await future;
       });
@@ -275,6 +290,14 @@ void main() {
           ),
         ).thenAnswer((_) => fakePreference);
 
+        when(
+          () => mockPreferences.setBool('feature_flag_test_flag', any()),
+        ).thenAnswer((invocation) async {
+          final value = invocation.positionalArguments[1] as bool;
+          await fakePreference.setValue(value);
+          return true;
+        });
+
         final repository = FeatureFlagsRepository(
           streamingSharedPreferences: mockPreferences,
           featureFlags: [testFlag],
@@ -290,7 +313,7 @@ void main() {
           ),
         );
 
-        controller.add(true);
+        await repository.toggleFeatureFlag('test_flag');
 
         await future;
       });
