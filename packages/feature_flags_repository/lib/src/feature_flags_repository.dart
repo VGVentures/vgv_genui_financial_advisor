@@ -11,8 +11,8 @@ class FeatureFlagsRepository {
   const FeatureFlagsRepository({
     required StreamingSharedPreferences streamingSharedPreferences,
     required List<FeatureFlag> featureFlags,
-  })  : _preferences = streamingSharedPreferences,
-        _featureFlags = featureFlags;
+  }) : _preferences = streamingSharedPreferences,
+       _featureFlags = featureFlags;
 
   /// The [StreamingSharedPreferences] instance used to persist feature flag
   /// states.

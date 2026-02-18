@@ -18,7 +18,7 @@ class FeatureFlagsException implements Exception {
 class FeatureFlagNotFoundException extends FeatureFlagsException {
   /// {@macro feature_flag_not_found_exception}
   const FeatureFlagNotFoundException(this.id)
-      : super('No feature flag found with id "$id".');
+    : super('No feature flag found with id "$id".');
 
   /// The feature flag ID that was not found.
   final String id;

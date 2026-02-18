@@ -16,9 +16,9 @@ class FakePreference extends StreamView<bool> implements Preference<bool> {
     required this.defaultValue,
     required bool initialValue,
     required StreamController<bool> controller,
-  })  : _value = initialValue,
-        _controller = controller,
-        super(controller.stream);
+  }) : _value = initialValue,
+       _controller = controller,
+       super(controller.stream);
 
   final StreamController<bool> _controller;
   bool _value;
