@@ -19,7 +19,6 @@ void main() {
     testWidgets('renders $AppBar with title and all $PersonaCard items', (
       tester,
     ) async {
-      final l10n = AppLocalizationsEn();
       await tester.pumpWidget(
         const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
