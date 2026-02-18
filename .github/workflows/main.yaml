@@ -109,7 +109,8 @@ jobs:
   distribute_android:
     name: Distribute Android APK
     needs: [setup, verify_and_test]
-    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
+    # TODO: restore condition before merging
+    # if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
