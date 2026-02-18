@@ -6,6 +6,7 @@ import 'package:finance_app/core/error_reporting_repository/error_reporting_repo
 import 'package:finance_app/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 
 class AppBlocObserver extends BlocObserver {
   const AppBlocObserver({required this.errorReportingRepository});
@@ -48,5 +49,14 @@ Future<void> bootstrap({
     errorReportingRepository: errorReportingRepository,
   );
 
-  runApp(await builder());
+  runApp(
+    MultiProvider(
+      providers: [
+        Provider<ErrorReportingRepository>.value(
+          value: errorReportingRepository,
+        ),
+      ],
+      child: await builder(),
+    ),
+  );
 }
