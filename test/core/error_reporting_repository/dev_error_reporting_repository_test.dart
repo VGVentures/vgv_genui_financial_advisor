@@ -9,10 +9,6 @@ void main() {
   });
 
   group('DevErrorReportingRepository', () {
-    test('init completes successfully', () async {
-      await expectLater(repository.init(), completes);
-    });
-
     test('recordError logs error without throwing', () async {
       final error = Exception('Test error');
       final stackTrace = StackTrace.current;
@@ -24,20 +20,6 @@ void main() {
           reason: 'Test reason',
           extra: {'key': 'value'},
         ),
-        completes,
-      );
-    });
-
-    test('setUserIdentifier stores identifier', () async {
-      await expectLater(
-        repository.setUserIdentifier('user123'),
-        completes,
-      );
-    });
-
-    test('setUserIdentifier with null', () async {
-      await expectLater(
-        repository.setUserIdentifier(null),
         completes,
       );
     });

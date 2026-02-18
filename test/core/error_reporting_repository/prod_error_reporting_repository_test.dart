@@ -1,14 +1,11 @@
-// test/core/error_reporting_repository/prod_error_reporting_repository_test.dart
-
 import 'package:finance_app/core/error_reporting_repository/src/prod_error_reporting_repository.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
-import 'prod_error_reporting_repository_test.mocks.dart';
+class MockHub extends Mock implements Hub {}
 
-@GenerateMocks([Hub])
 void main() {
   late MockHub mockHub;
   late ProdErrorReportingRepository repository;
@@ -19,43 +16,84 @@ void main() {
   });
 
   group('ProdErrorReportingRepository', () {
-    test('init completes successfully', () async {
-      await expectLater(repository.init(), completes);
-    });
-
     test('recordError calls Sentry captureException', () async {
       final error = Exception('Test error');
       final stackTrace = StackTrace.current;
 
       when(
-        mockHub.captureException(
-          any,
-          stackTrace: anyNamed('stackTrace'),
-          hint: anyNamed('hint'),
+        () => mockHub.captureException(
+          any<dynamic>(),
+          stackTrace: any<StackTrace?>(named: 'stackTrace'),
+          hint: any<Hint?>(named: 'hint'),
         ),
       ).thenAnswer((_) async => SentryId.newId());
 
       await repository.recordError(error, stackTrace);
 
       verify(
-        mockHub.captureException(
+        () => mockHub.captureException(
           error,
           stackTrace: stackTrace,
-          hint: anyNamed('hint'),
+          hint: any<Hint?>(named: 'hint'),
         ),
       ).called(1);
     });
+  });
 
-    test('setUserIdentifier sets user in Sentry', () async {
-      when(mockHub.configureScope(any)).thenAnswer((invocation) {
-        final callback =
-            invocation.positionalArguments[0] as void Function(Scope);
-        callback(Scope(SentryOptions()));
-      });
+  group('handleFlutterError', () {
+    test('captures Flutter error with context', () {
+      final exception = Exception('Widget error');
+      final stack = StackTrace.current;
+      final details = FlutterErrorDetails(
+        exception: exception,
+        stack: stack,
+        library: 'flutter',
+        context: ErrorDescription('building widget'),
+      );
 
-      await repository.setUserIdentifier('test_user_123');
+      when(
+        () => mockHub.captureException(
+          any<dynamic>(),
+          stackTrace: any<StackTrace?>(named: 'stackTrace'),
+          hint: any<Hint?>(named: 'hint'),
+        ),
+      ).thenAnswer((_) async => SentryId.newId());
 
-      verify(mockHub.configureScope(any)).called(1);
+      repository.handleFlutterError(details);
+
+      verify(
+        () => mockHub.captureException(
+          exception,
+          stackTrace: stack,
+          hint: any<Hint?>(named: 'hint'),
+        ),
+      ).called(1);
+    });
+  });
+
+  group('handlePlatformError', () {
+    test('captures platform error and returns true', () {
+      final error = Exception('Platform error');
+      final stackTrace = StackTrace.current;
+
+      when(
+        () => mockHub.captureException(
+          any<dynamic>(),
+          stackTrace: any<StackTrace?>(named: 'stackTrace'),
+          hint: any<Hint?>(named: 'hint'),
+        ),
+      ).thenAnswer((_) async => SentryId.newId());
+
+      final result = repository.handlePlatformError(error, stackTrace);
+
+      expect(result, true);
+      verify(
+        () => mockHub.captureException(
+          error,
+          stackTrace: stackTrace,
+          hint: any<Hint?>(named: 'hint'),
+        ),
+      ).called(1);
     });
   });
 }

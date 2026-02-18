@@ -12,12 +12,7 @@ class ProdErrorReportingRepository extends ErrorReportingRepository {
 
   final Hub _sentryHub;
 
-  @override
-  Future<void> init() async {
-    debugPrint('Sentry error reporting initialized');
-  }
-
-  /// Report error to crash service
+  // Report error to crash service
   @override
   Future<void> recordError(
     dynamic error,
@@ -25,55 +20,41 @@ class ProdErrorReportingRepository extends ErrorReportingRepository {
     String? reason,
     Map<String, dynamic>? extra,
   }) async {
-    if (kDebugMode) {
-      debugPrint('🔴 Error: $error');
-      if (stackTrace != null) {
-        debugPrint('Stack trace: $stackTrace');
-      }
-      if (reason != null) {
-        debugPrint('Reason: $reason');
-      }
-    }
-
-    try {
-      // Capture exception in Sentry
-      await _sentryHub.captureException(
-        error,
-        stackTrace: stackTrace,
-        hint: Hint.withMap({
-          // ignore: use_null_aware_elements, null-aware syntax not applicable for conditional map entries
-          if (reason != null) 'reason': reason,
-          ...?extra,
-        }),
-      );
-    } on Exception catch (e) {
-      // Don't let error reporting crash the app
-      debugPrint('Failed to report error to Sentry: $e');
-    }
+    await _sentryHub.captureException(
+      error,
+      stackTrace: stackTrace,
+      hint: Hint.withMap({
+        if (reason != null) 'reason': reason,
+        ...?extra,
+      }),
+    );
   }
 
   @override
-  Future<void> setUserIdentifier(String? identifier) async {
-    if (identifier == null || identifier.isEmpty) {
-      // Clear user context
-      try {
-        _sentryHub.configureScope((scope) => scope.setUser(null));
-      } on Exception catch (e) {
-        debugPrint('Failed to clear user in Sentry: $e');
-      }
-      return;
-    }
+  void handleFlutterError(FlutterErrorDetails details) {
+    unawaited(
+      recordError(
+        details.exception,
+        details.stack,
+        reason: 'Flutter framework error',
+        extra: {
+          'library': details.library,
+          'context': details.context?.toString(),
+        },
+      ),
+    );
+  }
 
-    try {
-      _sentryHub.configureScope((scope) {
-        unawaited(scope.setUser(SentryUser(id: identifier)));
-      });
+  @override
+  bool handlePlatformError(Object error, StackTrace stackTrace) {
+    unawaited(
+      recordError(
+        error,
+        stackTrace,
+        reason: 'Unhandled platform error',
+      ),
+    );
 
-      if (kDebugMode) {
-        debugPrint('👤 User identifier set: $identifier');
-      }
-    } on Exception catch (e) {
-      debugPrint('Failed to set user identifier in Sentry: $e');
-    }
+    return true; // Indicates the error was handled
   }
 }
