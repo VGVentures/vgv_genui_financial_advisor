@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
-import 'package:finance_app/app/view/app.dart';
 import 'package:finance_app/core/analytics_repository/analytics_repository.dart';
 import 'package:finance_app/core/error_reporting_repository/error_reporting_repository.dart';
 import 'package:finance_app/firebase_options.dart';
+import 'package:finance_app/simple_chat/app.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/widgets.dart';
 
@@ -50,5 +50,5 @@ Future<void> bootstrap({
     errorReportingRepository: errorReportingRepository,
   );
 
-  runApp(App(navigatorObservers: [analyticsRepository.navigatorObserver]));
+  runApp(const SimpleChatApp());
 }

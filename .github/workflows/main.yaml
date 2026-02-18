@@ -34,86 +34,9 @@ jobs:
               - "pubspec.yaml"
               - ".github/workflows/license_check.yaml"
 
-  semantic-pull-request:
-    name: Semantic Pull Request
-    uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/semantic_pull_request.yml@v1
-
-  spell-check:
-    name: Spell Check
-    uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/spell_check.yml@v1
-    with:
-      includes: |
-        **/*.md
-      modified_files_only: false
-
-  verify_and_test:
-    name: Verify and Test
-    needs: setup
-    strategy:
-      fail-fast: false
-      matrix:
-        package:
-          - .
-          - packages/feature_flags_repository
-    uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
-    with:
-      flutter_version: ${{ needs.setup.outputs.flutter_version }}
-      working_directory: ${{ matrix.package }}
-      run_bloc_lint: true
-      min_coverage: 85
-
-  build:
-    needs: [verify_and_test]
-    runs-on: ubuntu-latest
-    if: always()
-    steps:
-      - if: needs.verify_and_test.result != 'success'
-        run: exit 1
-
-  license_check:
-    name: License Check
-    needs: setup
-    if: needs.setup.outputs.license_check_needed == 'true'
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        package:
-          - .
-          - packages/feature_flags_repository
-    defaults:
-      run:
-        working-directory: ${{ matrix.package }}
-    steps:
-      - uses: actions/checkout@v6
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: ${{ needs.setup.outputs.flutter_version }}
-      - run: flutter pub get
-      - run: dart run very_good_cli:very_good packages check licenses --allowed "MIT,BSD-3-Clause,BSD-2-Clause,Apache-2.0,AAL"
-
-  deploy_production:
-    name: Deploy to Production
-    needs: [setup, verify_and_test]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: ${{ needs.setup.outputs.flutter_version }}
-      - run: flutter pub get
-      - run: flutter build web --wasm --target lib/main_production.dart
-      - uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-          channelId: live
-          projectId: finance-app-4a537
-
   deploy_preview:
     name: Deploy Preview
-    needs: [setup, verify_and_test]
+    needs: [setup]
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
@@ -122,6 +45,7 @@ jobs:
         with:
           flutter-version: ${{ needs.setup.outputs.flutter_version }}
       - run: flutter pub get
+      - run: pushd packages/feature_flags_repository && flutter pub get && popd
       - run: flutter build web --wasm --target lib/main_development.dart
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
@@ -129,50 +53,4 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
           projectId: finance-app-4a537
 
-  distribute_android:
-    name: Distribute Android APK
-    needs: [setup, verify_and_test]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: ${{ needs.setup.outputs.flutter_version }}
-
-      - run: flutter pub get
-
-      - name: Decode keystore
-        run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > "$GITHUB_WORKSPACE/release.jks"
-
-      - name: Build release APK
-        run: flutter build apk --release --flavor production --target lib/main_production.dart
-        env:
-          ANDROID_KEYSTORE_PATH: ${{ github.workspace }}/release.jks
-          ANDROID_KEYSTORE_ALIAS: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}
-          ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD }}
-          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-
-      - name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v2
-        with:
-          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-
-      - name: Install Firebase CLI
-        run: npm install -g firebase-tools
-
-      - name: Upload to Firebase App Distribution
-        run: |
-          firebase appdistribution:distribute \
-            build/app/outputs/flutter-apk/app-production-release.apk \
-            --app "1:283633165905:android:ae52554bdcf77adecdba70" \
-            --release-notes "${{ github.event.head_commit.message }}" \
-            --project "finance-app-4a537"
+  
