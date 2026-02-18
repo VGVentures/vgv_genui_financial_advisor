@@ -1,3 +1,4 @@
+import 'package:finance_app/app/presentation.dart';
 import 'package:finance_app/financials/mock/mock_scenario.dart';
 import 'package:flutter/material.dart';
 
@@ -13,9 +14,13 @@ class PersonaCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorExtension = Theme.of(context).extension<AppColors>();
+
     return Card(
-      //TODO(juanRodriguez17): Uses styles app when gets merged
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: const EdgeInsets.symmetric(
+        horizontal: Spacing.md,
+        vertical: Spacing.xs,
+      ),
       child: ListTile(
         leading: CircleAvatar(
           child: Text(
@@ -23,11 +28,19 @@ class PersonaCard extends StatelessWidget {
             style: Theme.of(context).textTheme.bodyLarge,
           ),
         ),
-        title: Text(scenario.name),
+        title: Text(
+          scenario.name,
+          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+            color: colorExtension?.primary.shade900,
+          ),
+        ),
         subtitle: Text(
           scenario.description,
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            color: colorExtension?.secondary.shade500,
+          ),
         ),
         trailing: const Icon(Icons.chevron_right),
         onTap: onTap,

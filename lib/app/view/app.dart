@@ -30,12 +30,17 @@ class App extends StatelessWidget {
           builder: (context) {
             return Scaffold(
               appBar: AppBar(
-                title: Text(context.l10n.appName),
+                title: Text(context.l10n.homeAppBarTitle),
               ),
               body: const PersonaSelectorPage(),
               floatingActionButton: FloatingActionButton(
                 onPressed: () => unawaited(Wiredash.of(context).show()),
-                child: const Icon(Icons.camera),
+                child: Icon(
+                  Icons.camera,
+                  color: Theme.of(
+                    context,
+                  ).extension<AppColors>()?.neutral.shade500,
+                ),
               ),
             );
           },

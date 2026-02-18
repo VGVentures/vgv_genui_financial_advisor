@@ -1,3 +1,4 @@
+import 'package:finance_app/app/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:genui/genui.dart';
 import 'package:intl/intl.dart';
@@ -67,37 +68,42 @@ final userSummaryCardItem = CatalogItem(
     final recommendation = json['recommendation']! as String;
 
     final theme = Theme.of(context);
-    // TODO(juanRodriguez17): Color shown must match theme colors. This is
-    //just a placeholder mapping.
+    final colorExtension = theme.extension<AppColors>();
     final healthColor = _healthColor(healthScore);
-    final netWorthColor = netWorth >= 0 ? Colors.green : Colors.red;
+    final netWorthColor = netWorth >= 0
+        ? colorExtension?.neutral.shade50
+        : colorExtension?.error.shade500;
 
     return Card(
-      // TODO(juanRodriguez17): Use `Spacing` class when gets merged
-      elevation: 4,
+      elevation: Spacing.xxs,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(Spacing.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
-          spacing: 12,
+          spacing: Spacing.sm,
           children: [
             // Header
             Row(
               children: [
                 Icon(Icons.person, color: theme.colorScheme.primary),
-                const SizedBox(width: 8),
+                const SizedBox(width: Spacing.xs),
                 Expanded(
-                  child: Text(name, style: theme.textTheme.titleMedium),
+                  child: Text(
+                    name,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      color: colorExtension?.primary.shade900,
+                    ),
+                  ),
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 4,
+                    horizontal: Spacing.sm,
+                    vertical: Spacing.xxs,
                   ),
                   decoration: BoxDecoration(
                     color: healthColor.withAlpha(30),
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(Spacing.md),
                     border: Border.all(color: healthColor),
                   ),
                   child: Text(
@@ -110,9 +116,17 @@ final userSummaryCardItem = CatalogItem(
                 ),
               ],
             ),
-            const Divider(height: 2),
+            Divider(
+              height: 2,
+              color: colorExtension?.primary.shade900,
+            ),
             // Net Worth
-            Text('Net Worth', style: theme.textTheme.labelSmall),
+            Text(
+              'Net Worth',
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: colorExtension?.primary.shade900,
+              ),
+            ),
             Text(
               _currencyFormat.format(netWorth),
               style: theme.textTheme.titleLarge?.copyWith(
@@ -123,40 +137,57 @@ final userSummaryCardItem = CatalogItem(
               children: [
                 Text(
                   'Assets: ${_currencyFormat.format(totalAssets)}',
-                  style: theme.textTheme.bodySmall,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: colorExtension?.primary.shade900,
+                  ),
                 ),
-                const SizedBox(width: 16),
+                const SizedBox(width: Spacing.md),
                 Text(
                   'Debt: ${_currencyFormat.format(totalDebt)}',
-                  style: theme.textTheme.bodySmall,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: colorExtension?.primary.shade900,
+                  ),
                 ),
               ],
             ),
-            const Divider(height: 2),
+            Divider(
+              height: 2,
+              color: colorExtension?.primary.shade900,
+            ),
             // Monthly Cash Flow
             Text(
               'Monthly Cash Flow (Jan 2026)',
-              style: theme.textTheme.labelSmall,
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: colorExtension?.primary.shade900,
+              ),
             ),
             Row(
               children: [
                 Expanded(
                   child: Text(
                     'Income: ${_currencyFormat.format(monthlyIncome)}',
-                    style: theme.textTheme.bodySmall,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: colorExtension?.primary.shade900,
+                    ),
                   ),
                 ),
                 Text(
                   'Expenses: ${_currencyFormat.format(monthlyExpenses)}',
-                  style: theme.textTheme.bodySmall,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: colorExtension?.primary.shade900,
+                  ),
                 ),
               ],
             ),
-            const Divider(height: 2),
+            Divider(
+              height: 2,
+              color: colorExtension?.primary.shade900,
+            ),
             // Recommendation
             Text(
               recommendation,
               style: theme.textTheme.bodyMedium?.copyWith(
+                color: colorExtension?.primary.shade900,
                 fontStyle: FontStyle.italic,
               ),
             ),

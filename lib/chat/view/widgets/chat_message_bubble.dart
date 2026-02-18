@@ -1,3 +1,4 @@
+import 'package:finance_app/app/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:genui/genui.dart';
 
@@ -34,23 +35,30 @@ class _UserBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorExtension = theme.extension<AppColors>();
+
     return Align(
       alignment: Alignment.centerRight,
       child: Container(
-        // TODO(juanRodriguez17): Use spacing class when gets merged
-        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+        margin: const EdgeInsets.symmetric(
+          vertical: Spacing.xs,
+          horizontal: Spacing.xs,
+        ),
+        padding: const EdgeInsets.symmetric(
+          vertical: Spacing.sm,
+          horizontal: Spacing.sm,
+        ),
         constraints: BoxConstraints(
           maxWidth: MediaQuery.sizeOf(context).width * 0.75,
         ),
         decoration: BoxDecoration(
           color: theme.colorScheme.primary,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(Spacing.md),
         ),
         child: Text(
           text,
           style: theme.textTheme.bodyMedium?.copyWith(
-            color: theme.colorScheme.onPrimary,
+            color: colorExtension?.secondary.shade50,
           ),
         ),
       ),
@@ -66,18 +74,25 @@ class _AssistantTextBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorExtension = theme.extension<AppColors>();
+
     return Align(
       alignment: Alignment.centerLeft,
       child: Container(
-        // TODO(juanRodriguez17): Use spacing class when gets merged
-        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+        margin: const EdgeInsets.symmetric(
+          vertical: Spacing.xs,
+          horizontal: Spacing.xs,
+        ),
+        padding: const EdgeInsets.symmetric(
+          vertical: Spacing.sm,
+          horizontal: Spacing.sm,
+        ),
         constraints: BoxConstraints(
           maxWidth: MediaQuery.sizeOf(context).width * 0.75,
         ),
         decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceContainer,
-          borderRadius: BorderRadius.circular(16),
+          color: colorExtension?.secondary.shade500,
+          borderRadius: BorderRadius.circular(Spacing.md),
         ),
         child: Text(text, style: theme.textTheme.bodyMedium),
       ),

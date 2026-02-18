@@ -1,3 +1,4 @@
+import 'package:finance_app/app/presentation/spacing.dart';
 import 'package:finance_app/chat/bloc/bloc.dart';
 import 'package:finance_app/chat/chat.dart';
 import 'package:finance_app/l10n/l10n.dart';
@@ -28,8 +29,7 @@ class ChatView extends StatelessWidget {
                 }
                 return ListView.builder(
                   reverse: true,
-                  // TODO(juanRodriguez17): Uses spacing class when gets merged
-                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  padding: const EdgeInsets.symmetric(vertical: Spacing.xs),
                   itemCount: state.messages.length,
                   itemBuilder: (context, index) {
                     final message =
@@ -50,8 +50,10 @@ class ChatView extends StatelessWidget {
             builder: (context, state) {
               if (state.isLoading) {
                 return const Padding(
-                  // TODO(juanRodriguez17): Uses spacing class when gets merged
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: Spacing.md,
+                    vertical: Spacing.md,
+                  ),
                   child: CircularProgressIndicator(),
                 );
               }

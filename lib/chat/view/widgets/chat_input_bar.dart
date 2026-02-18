@@ -1,3 +1,4 @@
+import 'package:finance_app/app/presentation.dart';
 import 'package:finance_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 
@@ -34,11 +35,11 @@ class _ChatInputBarState extends State<ChatInputBar> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final colorExtension = Theme.of(context).extension<AppColors>();
 
     return SafeArea(
       child: Padding(
-        // TODO(juanRodriguez17): Use spacing class when gets merged
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(Spacing.xs),
         child: Row(
           children: [
             Expanded(
@@ -48,21 +49,33 @@ class _ChatInputBarState extends State<ChatInputBar> {
                 textInputAction: TextInputAction.send,
                 onSubmitted: (_) => _submit(),
                 decoration: InputDecoration(
-                  hintText: l10n.chatInputBarHint,
                   border: const OutlineInputBorder(),
-                  // TODO(juanRodriguez17): Use spacing class when gets merged
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 8,
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: colorExtension?.secondary.shade500 ?? Colors.grey,
+                    ),
                   ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: Spacing.sm,
+                    vertical: Spacing.xs,
+                  ),
+                  hintText: l10n.chatInputBarHint,
+                  hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: colorExtension?.secondary.shade500,
+                  ),
+                ),
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: colorExtension?.primary.shade900,
                 ),
               ),
             ),
-            // TODO(juanRodriguez17): Use spacing class when gets merged
-            const SizedBox(width: 8),
+            const SizedBox(width: Spacing.xs),
             IconButton.filled(
               onPressed: widget.enabled ? _submit : null,
-              icon: const Icon(Icons.send),
+              icon: Icon(
+                Icons.send,
+                color: colorExtension?.neutral.shade500,
+              ),
             ),
           ],
         ),
