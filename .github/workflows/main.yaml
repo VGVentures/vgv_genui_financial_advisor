@@ -49,9 +49,16 @@ jobs:
   verify_and_test:
     name: Verify and Test
     needs: setup
+    strategy:
+      fail-fast: false
+      matrix:
+        package:
+          - .
+          - packages/feature_flags_repository
     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
     with:
       flutter_version: ${{ needs.setup.outputs.flutter_version }}
+      working_directory: ${{ matrix.package }}
       run_bloc_lint: true
 
   license_check:
