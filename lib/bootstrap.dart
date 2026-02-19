@@ -22,13 +22,13 @@ class AppBlocObserver extends BlocObserver {
   }
 
   @override
-  void onError(
+  Future<void> onError(
     BlocBase<dynamic> bloc,
     Object error,
     StackTrace stackTrace,
-  ) {
+  ) async {
     log('onError(${bloc.runtimeType}, $error, $stackTrace)');
-    errorReportingRepository.recordError(error, stackTrace: stackTrace);
+    await errorReportingRepository.recordError(error, stackTrace);
     super.onError(bloc, error, stackTrace);
   }
 }
@@ -38,7 +38,6 @@ Future<void> bootstrap({
   required AnalyticsRepository analyticsRepository,
 }) async {
   final binding = WidgetsFlutterBinding.ensureInitialized();
-  await errorReportingRepository.init();
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -47,6 +46,7 @@ Future<void> bootstrap({
   FlutterError.onError = errorReportingRepository.handleFlutterError;
   binding.platformDispatcher.onError =
       errorReportingRepository.handlePlatformError;
+
   Bloc.observer = AppBlocObserver(
     errorReportingRepository: errorReportingRepository,
   );
