@@ -70,7 +70,7 @@ jobs:
       - if: needs.verify_and_test.result != 'success'
         run: exit 1
 
-  license_check:
+  license_check_jobs:
     name: License Check
     needs: setup
     if: needs.setup.outputs.license_check_needed == 'true'
@@ -91,6 +91,14 @@ jobs:
           flutter-version: ${{ needs.setup.outputs.flutter_version }}
       - run: flutter pub get
       - run: dart run very_good_cli:very_good packages check licenses --allowed "MIT,BSD-3-Clause,BSD-2-Clause,Apache-2.0,AAL"
+
+  license_check:
+    needs: [license_check_jobs]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - if: needs.license_check_jobs.result != 'success' && needs.license_check_jobs.result != 'skipped'
+        run: exit 1
 
   deploy_production:
     name: Deploy to Production
