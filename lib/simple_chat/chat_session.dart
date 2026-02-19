@@ -12,6 +12,7 @@ import 'ai_client.dart';
 import 'catalog/bar_chart.dart';
 import 'catalog/compact_hero.dart';
 import 'catalog/compact_info_card.dart';
+import 'catalog/dashboard.dart';
 import 'catalog/stat_column.dart';
 import 'catalog/stat_row.dart';
 import 'catalog/wide_hero.dart';
@@ -44,15 +45,18 @@ class ChatSession extends ChangeNotifier {
   bool get isProcessing => _isProcessing;
 
   void _init() {
-    final Catalog catalog = BasicCatalogItems.asCatalog().copyWith([
-      barChart,
-      compactHero,
-      compactInfoCard,
-      statColumn,
-      statRow,
-      wideHero,
-      wideInfoPanel,
-    ]);
+    final Catalog catalog = BasicCatalogItems.asCatalog()
+        .copyWithout([BasicCatalogItems.textField])
+        .copyWith([
+          barChart,
+          compactHero,
+          compactInfoCard,
+          dashboard,
+          statColumn,
+          statRow,
+          wideHero,
+          wideInfoPanel,
+        ]);
 
     // Initialize Message Processor
     _surfaceController = SurfaceController(catalogs: [catalog]);
@@ -97,6 +101,18 @@ Device type: $deviceType.
 
 Adapt your widget choices based on the device type. Each component's schema
 description specifies which device types it is designed for.
+
+## Interactivity
+Prefer interactive widgets when appropriate. Use Slider for numeric ranges,
+ChoicePicker for selecting from options, CheckBox for toggles, and Button
+for actions. These let the user engage with the content directly rather
+than just reading it.
+
+## Dashboard
+When presenting data alongside controls, use the Dashboard component.
+It combines a visualization (like a BarChart) with interactive controls
+(like Sliders or ChoicePickers) in a responsive layout that adapts to
+the device type automatically.
 ''',
     );
 

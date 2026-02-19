@@ -6,13 +6,10 @@ class SimpleChatApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = ColorScheme.fromSeed(seedColor: Colors.blue);
     return MaterialApp(
       title: 'Simple Chat Controller',
-      theme: ThemeData(colorScheme: colorScheme),
-      darkTheme: ThemeData(
-        colorScheme: colorScheme.copyWith(brightness: Brightness.dark),
-      ),
+      theme: ThemeData(),
+      darkTheme: ThemeData.dark(),
       home: const ChatScreen(),
     );
   }
