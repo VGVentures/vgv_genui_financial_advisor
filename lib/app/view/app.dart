@@ -15,17 +15,17 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Wiredash(
-      projectId: 'gcn26-finance-app-j9k7f4b',
-      secret: 'p_iCQvLnrp18LEacxg6JYRtV5g-FbvfA',
-      child: MaterialApp(
-        theme: AppThemes.light.themeData.themeData,
-        darkTheme: AppThemes.dark.themeData.themeData,
-        themeMode: ThemeMode.light,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        navigatorObservers: navigatorObservers,
-        home: Builder(
+    return MaterialApp(
+      theme: AppThemes.light.themeData.themeData,
+      darkTheme: AppThemes.dark.themeData.themeData,
+      themeMode: ThemeMode.light,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      navigatorObservers: navigatorObservers,
+      home: Wiredash(
+        projectId: 'gcn26-finance-app-j9k7f4b',
+        secret: 'p_iCQvLnrp18LEacxg6JYRtV5g-FbvfA',
+        child: Builder(
           builder: (context) {
             return Scaffold(
               appBar: AppBar(
