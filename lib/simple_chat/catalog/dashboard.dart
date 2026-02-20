@@ -63,8 +63,8 @@ final dashboard = CatalogItem(
           "title": "Spending",
           "orientation": "vertical",
           "bars": [
-            { "label": "Housing", "value": 40 },
-            { "label": "Food", "value": 25 }
+            { "label": "Housing", "value": { "path": "/housing" } },
+            { "label": "Food", "value": { "path": "/food" } }
           ]
         },
         {

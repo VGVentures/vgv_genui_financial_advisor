@@ -7,7 +7,8 @@ final _schema = S.object(
   description:
       'A bar chart for comparing values. Set orientation to "vertical" '
       '(bars bottom-to-top) on mobile or "horizontal" (bars left-to-right) '
-      'on desktop.',
+      'on desktop. Bar values can be literal numbers or data binding paths '
+      '(e.g. {"path": "/myValue"}) so the chart updates reactively.',
   properties: {
     'component': S.string(enumValues: ['BarChart']),
     'title': A2uiSchemas.stringReference(
@@ -26,8 +27,11 @@ final _schema = S.object(
           'label': A2uiSchemas.stringReference(
             description: 'The label for this bar.',
           ),
-          'value': S.number(
-            description: 'The numeric value for this bar.',
+          'value': A2uiSchemas.numberReference(
+            description:
+                'The numeric value for this bar. Can be a literal number '
+                'or a data binding path (e.g. {"path": "/myValue"}) so the '
+                'chart updates when the bound value changes.',
           ),
         },
         required: ['label', 'value'],
@@ -46,7 +50,7 @@ extension type _ChartData.fromMap(Map<String, Object?> _json) {
 
 extension type _BarEntry.fromMap(Map<String, Object?> _json) {
   Object get label => _json['label'] as Object;
-  double get value => (_json['value'] as num).toDouble();
+  Object get value => _json['value'] as Object;
 }
 
 final barChart = CatalogItem(
@@ -75,17 +79,33 @@ final barChart = CatalogItem(
       context.data as Map<String, Object?>,
     );
 
-    final ValueNotifier<String?> titleNotifier =
-        context.dataContext.subscribeToString(data.title);
+    final titleNotifier = context.dataContext.subscribeToString(data.title);
 
-    final List<_BarEntry> entries = data.bars
+    final entries = data.bars
         .whereType<Map<String, Object?>>()
         .map(_BarEntry.fromMap)
         .toList();
 
+    // Create a ValueNotifier<num?> for each bar value, supporting both
+    // literal numbers and data binding paths (e.g. {"path": "/myValue"}).
+    final valueNotifiers = <ValueNotifier<num?>>[];
+    for (final entry in entries) {
+      final valueRef = entry.value;
+      if (valueRef is Map && valueRef.containsKey('path')) {
+        valueNotifiers.add(
+          context.dataContext.subscribe<num>(valueRef['path'] as String),
+        );
+      } else if (valueRef is num) {
+        valueNotifiers.add(ValueNotifier(valueRef.toDouble()));
+      } else {
+        valueNotifiers.add(ValueNotifier(0));
+      }
+    }
+
     return _BarChartWidget(
       titleNotifier: titleNotifier,
       entries: entries,
+      valueNotifiers: valueNotifiers,
       dataContext: context.dataContext,
       isHorizontal: data.orientation == 'horizontal',
     );
@@ -96,22 +116,20 @@ class _BarChartWidget extends StatelessWidget {
   const _BarChartWidget({
     required this.titleNotifier,
     required this.entries,
+    required this.valueNotifiers,
     required this.dataContext,
     required this.isHorizontal,
   });
 
   final ValueNotifier<String?> titleNotifier;
   final List<_BarEntry> entries;
+  final List<ValueNotifier<num?>> valueNotifiers;
   final DataContext dataContext;
   final bool isHorizontal;
 
   @override
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
-    final double maxValue = entries.fold<double>(
-      0,
-      (max, e) => e.value > max ? e.value : max,
-    );
 
     final labelAxis = fl.AxisTitles(
       sideTitles: fl.SideTitles(
@@ -163,52 +181,75 @@ class _BarChartWidget extends StatelessWidget {
                 );
               },
             ),
-            SizedBox(
-              height: isHorizontal
-                  ? entries.length * 48.0 + 24
-                  : 200,
-              child: fl.BarChart(
-                fl.BarChartData(
-                  alignment: fl.BarChartAlignment.spaceAround,
-                  maxY: maxValue * 1.2,
-                  barTouchData: const fl.BarTouchData(
-                    enabled: false,
-                  ),
-                  rotationQuarterTurns: isHorizontal ? 1 : 0,
-                  titlesData: fl.FlTitlesData(
-                    topTitles: hiddenAxis,
-                    rightTitles: hiddenAxis,
-                    bottomTitles: labelAxis,
-                    leftTitles:
-                        isHorizontal ? hiddenAxis : valueAxis,
-                  ),
-                  borderData: fl.FlBorderData(show: false),
-                  gridData: fl.FlGridData(
-                    drawVerticalLine: isHorizontal,
-                    drawHorizontalLine: !isHorizontal,
-                  ),
-                  barGroups: [
-                    for (int i = 0; i < entries.length; i++)
-                      fl.BarChartGroupData(
-                        x: i,
-                        barRods: [
-                          fl.BarChartRodData(
-                            toY: entries[i].value,
-                            color: colorScheme.primary,
-                            width: isHorizontal ? 24 : 20,
-                            borderRadius: isHorizontal
-                                ? const BorderRadius.horizontal(
-                                    right: Radius.circular(4),
-                                  )
-                                : const BorderRadius.vertical(
-                                    top: Radius.circular(4),
-                                  ),
-                          ),
-                        ],
+            ListenableBuilder(
+              listenable: Listenable.merge(valueNotifiers),
+              builder: (context, _) {
+                final values = [
+                  for (final n in valueNotifiers)
+                    (n.value ?? 0).toDouble(),
+                ];
+                final maxValue = values.fold<double>(
+                  0,
+                  (max, v) => v > max ? v : max,
+                );
+
+                return SizedBox(
+                  height: isHorizontal
+                      ? entries.length * 48.0 + 24
+                      : 200,
+                  child: fl.BarChart(
+                    fl.BarChartData(
+                      alignment: fl.BarChartAlignment.spaceAround,
+                      maxY: maxValue * 1.2,
+                      barTouchData: fl.BarTouchData(
+                        touchTooltipData: fl.BarTouchTooltipData(
+                          getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                            return fl.BarTooltipItem(
+                              rod.toY.toStringAsFixed(0),
+                              TextStyle(
+                                color: colorScheme.onInverseSurface,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            );
+                          },
+                        ),
                       ),
-                  ],
-                ),
-              ),
+                      rotationQuarterTurns: isHorizontal ? 1 : 0,
+                      titlesData: fl.FlTitlesData(
+                        topTitles: hiddenAxis,
+                        rightTitles: hiddenAxis,
+                        bottomTitles: labelAxis,
+                        leftTitles: valueAxis,
+                      ),
+                      borderData: fl.FlBorderData(show: false),
+                      gridData: fl.FlGridData(
+                        drawVerticalLine: isHorizontal,
+                        drawHorizontalLine: !isHorizontal,
+                      ),
+                      barGroups: [
+                        for (int i = 0; i < entries.length; i++)
+                          fl.BarChartGroupData(
+                            x: i,
+                            barRods: [
+                              fl.BarChartRodData(
+                                toY: values[i],
+                                color: colorScheme.primary,
+                                width: isHorizontal ? 24 : 20,
+                                borderRadius: isHorizontal
+                                    ? const BorderRadius.horizontal(
+                                        right: Radius.circular(4),
+                                      )
+                                    : const BorderRadius.vertical(
+                                        top: Radius.circular(4),
+                                      ),
+                              ),
+                            ],
+                          ),
+                      ],
+                    ),
+                  ),
+                );
+              },
             ),
           ],
         ),
@@ -228,8 +269,7 @@ class _BarLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ValueNotifier<String?> notifier =
-        dataContext.subscribeToString(entry.label);
+    final notifier = dataContext.subscribeToString(entry.label);
 
     return ValueListenableBuilder<String?>(
       valueListenable: notifier,
