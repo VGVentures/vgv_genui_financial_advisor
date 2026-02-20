@@ -1,56 +1,31 @@
 part of 'feature_flags_cubit.dart';
 
-class FeatureFlagsState {
-  FeatureFlagsState({
-    required this.featureFlags,
-    required this.isLoading,
-    this.error,
-  });
-
-  factory FeatureFlagsState.initial() {
-    return FeatureFlagsState(
-      featureFlags: [],
-      isLoading: false,
-    );
-  }
-
-  final List<FeatureFlagState> featureFlags;
-  bool isLoading;
-  String? error;
-
-  FeatureFlagsState copyWith({
-    String? featureFlagId,
-    List<FeatureFlagState>? featureFlags,
-    bool? isLoading,
-    String? error,
-  }) {
-    if (featureFlagId != null) {
-      final index = this.featureFlags.indexWhere(
-        (element) => element.featureFlag.id == featureFlagId,
-      );
-
-      if (index >= 0) {
-        this.featureFlags[index] = FeatureFlagState(
-          featureFlag: this.featureFlags[index].featureFlag,
-          isEnabled: !this.featureFlags[index].isEnabled,
-        );
-      }
-    }
-
-    return FeatureFlagsState(
-      featureFlags: featureFlags ?? this.featureFlags,
-      isLoading: isLoading ?? this.isLoading,
-      error: error ?? this.error,
-    );
-  }
+sealed class FeatureFlagsState {
+  const FeatureFlagsState();
 }
 
-class FeatureFlagState {
-  FeatureFlagState({
-    required this.featureFlag,
-    this.isEnabled = false,
-  });
+class FeatureFlagsInitial extends FeatureFlagsState {
+  const FeatureFlagsInitial();
+}
 
-  final FeatureFlag featureFlag;
-  final bool isEnabled;
+class FeatureFlagsInProgress extends FeatureFlagsState {
+  const FeatureFlagsInProgress();
+}
+
+class FeatureFlagsSuccess extends Equatable implements FeatureFlagsState {
+  const FeatureFlagsSuccess({required this.featureFlags});
+
+  final List<FeatureFlag> featureFlags;
+
+  @override
+  List<Object?> get props => [featureFlags];
+}
+
+class FeatureFlagsFailure extends Equatable implements FeatureFlagsState {
+  const FeatureFlagsFailure({required this.error});
+
+  final Object error;
+
+  @override
+  List<Object?> get props => [error];
 }
