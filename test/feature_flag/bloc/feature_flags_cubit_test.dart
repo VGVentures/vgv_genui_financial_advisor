@@ -77,7 +77,7 @@ void main() {
         when(() => repository.getFeatureFlagIds()).thenReturn([flag.id]);
         when(
           () => repository.watchFeatureFlag(flag.id),
-        ).thenAnswer((_) => Stream.error(Exception('stream error')));
+        ).thenAnswer((_) => Stream.error('ERROR'));
       },
       build: () => FeatureFlagsCubit(featureFlagsRepository: repository),
       act: (cubit) => cubit.init(),
