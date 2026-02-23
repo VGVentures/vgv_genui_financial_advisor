@@ -32,12 +32,13 @@ body:
   - type: textarea
     id: goals
     attributes:
-      label: Goals
+      label: Goals & Scope
       description: What customer or business outcomes should this work achieve?
       placeholder: |
         - Improve...
         - Reduce...
         - Increase...
+        - Scope: ...
     validations:
       required: true
 
