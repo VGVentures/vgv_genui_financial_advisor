@@ -33,7 +33,7 @@ body:
     id: goals
     attributes:
       label: Goals & Scope
-      description: What customer or business outcomes should this work achieve?
+      description: What outcomes should this work achieve?
       placeholder: |
         - Improve...
         - Reduce...
@@ -84,7 +84,6 @@ body:
       label: Notes
       description: Optional extra context (scope, dependencies, risks, open questions).
       placeholder: |
-        Scope:
         Dependencies:
         Risks:
         Open questions:
