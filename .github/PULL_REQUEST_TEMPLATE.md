@@ -12,6 +12,10 @@
 
 Resolves #
 
+## Preview
+
+<!--- Add screenshots or videos of your change -->
+
 ## Type of Change
 
 <!--- Put an `x` in all the boxes that apply: -->
