@@ -43,7 +43,7 @@ Future<void> bootstrap({
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // Ensure the analytics repository is initialized after Firebase is 
+  // Ensure the analytics repository is initialized after Firebase is
   // initialized, since it relies on Firebase Analytics.
   final analyticsRepository = analyticsRepositoryFactory();
 
