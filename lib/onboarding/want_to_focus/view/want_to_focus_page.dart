@@ -12,25 +12,28 @@ class WantToFocusPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorExtensions = Theme.of(context).extension<AppColors>();
+    final isMobile = Breakpoints.isMobile(MediaQuery.of(context).size.width);
 
     return BlocProvider(
       create: (_) => WantToFocusCubit(),
       child: Scaffold(
         backgroundColor: colorExtensions?.secondary.shade200,
-        body: const SingleChildScrollView(
+        body: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: _Dimensions.horizontalPadding,
-              vertical: _Dimensions.verticalPadding,
+              horizontal: isMobile
+                  ? Spacing.xxl
+                  : _Dimensions.horizontalPadding,
+              vertical: isMobile ? Spacing.md : _Dimensions.verticalPadding,
             ),
-            child: WantToFocusView(),
+            child: const WantToFocusView(),
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: Builder(
           builder: (context) => SizedBox(
-            width: _Dimensions.fabSize,
-            height: _Dimensions.fabSize,
+            width: isMobile ? _Dimensions.mobileFabSize : _Dimensions.fabSize,
+            height: isMobile ? _Dimensions.mobileFabSize : _Dimensions.fabSize,
             child: FloatingActionButton(
               onPressed: () {
                 // TODO(juanRodriguez17): Add navigation to the next screen
@@ -54,8 +57,12 @@ class WantToFocusPage extends StatelessWidget {
               ),
               child: Assets.images.onboarding.rightArrow.image(
                 color: colorExtensions?.secondary.shade700,
-                width: _Dimensions.fabIconSize,
-                height: _Dimensions.fabIconSize,
+                width: isMobile
+                    ? _Dimensions.mobileFabIconSize
+                    : _Dimensions.fabIconSize,
+                height: isMobile
+                    ? _Dimensions.mobileFabIconSize
+                    : _Dimensions.fabIconSize,
               ),
             ),
           ),
@@ -69,5 +76,7 @@ abstract final class _Dimensions {
   static const double horizontalPadding = 200;
   static const double verticalPadding = 120;
   static const double fabSize = 140;
-  static const double fabIconSize = 28;
+  static const double fabIconSize = 22;
+  static const double mobileFabSize = 80;
+  static const double mobileFabIconSize = 13;
 }

@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 class WriteYourOwnOptionCard extends StatefulWidget {
   const WriteYourOwnOptionCard({
     required this.label,
+    this.isMobile = false,
     this.onChanged,
     super.key,
   });
 
   final String label;
+  final bool isMobile;
   final ValueChanged<String>? onChanged;
 
   @override
@@ -72,9 +74,13 @@ class _WriteYourOwnOptionCardState extends State<WriteYourOwnOptionCard> {
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: _Dimensions.verticalPadding,
-            horizontal: _Dimensions.horizontalPadding,
+          padding: EdgeInsets.symmetric(
+            vertical: widget.isMobile
+                ? Spacing.md
+                : _Dimensions.verticalPadding,
+            horizontal: widget.isMobile
+                ? Spacing.xs
+                : _Dimensions.horizontalPadding,
           ),
           child: isEditing
               ? TextField(
@@ -83,14 +89,18 @@ class _WriteYourOwnOptionCardState extends State<WriteYourOwnOptionCard> {
                   autofocus: true,
                   textAlign: TextAlign.center,
                   style: textTheme.bodyLarge?.copyWith(
-                    fontSize: Spacing.xxxl,
+                    fontSize: widget.isMobile
+                        ? _Dimensions.mobileTextSize
+                        : Spacing.xxxl,
                     fontWeight: FontWeight.w600,
                     color: colorScheme.primary,
                   ),
                   decoration: InputDecoration.collapsed(
                     hintText: widget.label,
                     hintStyle: textTheme.bodyLarge?.copyWith(
-                      fontSize: Spacing.xxxl,
+                      fontSize: widget.isMobile
+                          ? _Dimensions.mobileTextSize
+                          : Spacing.xxxl,
                       fontWeight: FontWeight.w400,
                       color: colorExtension?.secondary.shade600,
                     ),
@@ -100,7 +110,6 @@ class _WriteYourOwnOptionCardState extends State<WriteYourOwnOptionCard> {
                     widget.onChanged?.call(value);
                   },
                   onChanged: (value) {
-                    // setState(() {});
                     widget.onChanged?.call(value);
                   },
                 )
@@ -111,7 +120,9 @@ class _WriteYourOwnOptionCardState extends State<WriteYourOwnOptionCard> {
                       child: Text(
                         _hasText ? _controller.text : widget.label,
                         style: textTheme.bodyLarge?.copyWith(
-                          fontSize: Spacing.xxxl,
+                          fontSize: widget.isMobile
+                              ? _Dimensions.mobileTextSize
+                              : Spacing.xxxl,
                           fontWeight: _hasText
                               ? FontWeight.w600
                               : FontWeight.w400,
@@ -124,8 +135,12 @@ class _WriteYourOwnOptionCardState extends State<WriteYourOwnOptionCard> {
                     if (!_hasText) ...[
                       const SizedBox(width: Spacing.xs),
                       Assets.images.onboarding.editPencil.image(
-                        width: _Dimensions.iconSize,
-                        height: _Dimensions.iconSize,
+                        width: widget.isMobile
+                            ? Spacing.sm
+                            : _Dimensions.iconSize,
+                        height: widget.isMobile
+                            ? Spacing.sm
+                            : _Dimensions.iconSize,
                       ),
                     ],
                   ],
@@ -141,4 +156,5 @@ abstract final class _Dimensions {
   static const double borderWidth = 2;
   static const double horizontalPadding = 20;
   static const double verticalPadding = 44;
+  static const double mobileTextSize = 18;
 }

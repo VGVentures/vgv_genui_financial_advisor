@@ -7,12 +7,14 @@ class SelectableOptionCard extends StatelessWidget {
     required this.label,
     required this.isSelected,
     required this.onTap,
+    this.isMobile = false,
     super.key,
   });
 
   final String label;
   final bool isSelected;
   final VoidCallback onTap;
+  final bool isMobile;
 
   @override
   Widget build(BuildContext context) {
@@ -39,17 +41,19 @@ class SelectableOptionCard extends StatelessWidget {
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: _Dimensions.verticalPadding,
-            horizontal: _Dimensions.horizontalPadding,
+          padding: EdgeInsets.symmetric(
+            vertical: isMobile
+                ? _Dimensions.mobileVerticalPadding
+                : _Dimensions.verticalPadding,
+            horizontal: isMobile ? Spacing.xs : _Dimensions.horizontalPadding,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (isSelected) ...[
                 Assets.images.onboarding.checkedOption.image(
-                  width: _Dimensions.iconSize,
-                  height: _Dimensions.iconSize,
+                  width: isMobile ? Spacing.lg : _Dimensions.iconSize,
+                  height: isMobile ? Spacing.lg : _Dimensions.iconSize,
                 ),
                 const SizedBox(width: Spacing.md),
               ],
@@ -57,7 +61,9 @@ class SelectableOptionCard extends StatelessWidget {
                 child: Text(
                   label,
                   style: textTheme.bodyLarge?.copyWith(
-                    fontSize: Spacing.xxxl,
+                    fontSize: isMobile
+                        ? _Dimensions.mobileTextSize
+                        : Spacing.xxxl,
                     fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
                     color: colorScheme.primary,
                   ),
@@ -78,4 +84,6 @@ abstract final class _Dimensions {
   static const double borderWidth = 2;
   static const double horizontalPadding = 40;
   static const double verticalPadding = 44;
+  static const double mobileVerticalPadding = 17;
+  static const double mobileTextSize = 18;
 }
