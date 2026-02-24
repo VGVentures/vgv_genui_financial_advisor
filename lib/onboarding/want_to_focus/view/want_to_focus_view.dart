@@ -15,6 +15,7 @@ class WantToFocusView extends StatelessWidget {
     final themeOf = Theme.of(context);
     final textTheme = themeOf.textTheme;
     final colorScheme = themeOf.colorScheme;
+    final isDesktop = Breakpoints.isDesktop(MediaQuery.of(context).size.width);
 
     return Center(
       child: Column(
@@ -22,11 +23,11 @@ class WantToFocusView extends StatelessWidget {
         spacing: Spacing.xxxl,
         children: [
           Text(
-            l10n.whatDoYouWantToFocusLabel,
+            isDesktop
+                ? l10n.whatDoYouWantToFocusLabel
+                : l10n.whatWouldYouLikeToFocusLabel,
             style: textTheme.displayLarge?.copyWith(
-              fontSize: Breakpoints.isDesktop(MediaQuery.of(context).size.width)
-                  ? _Dimensions.titleSize
-                  : Spacing.xxl,
+              fontSize: isDesktop ? _Dimensions.titleSize : Spacing.xxl,
               color: colorScheme.primary,
             ),
             textAlign: TextAlign.center,

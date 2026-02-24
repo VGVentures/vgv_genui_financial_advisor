@@ -24,6 +24,10 @@
     "@whatDoYouWantToFocusLabel": {
         "description": "Label for the dropdown to select the focus of the financial advice"
     },
+    "whatWouldYouLikeToFocusLabel": "What would you like to \nfocus on?",
+    "@whatWouldYouLikeToFocusLabel": {
+        "description": "Label for the dropdown to select the focus of the financial advice"
+    },
     "genUILabel": "Gen UI",
     "@genUILabel": {
         "description": "Label for the Gen UI text"

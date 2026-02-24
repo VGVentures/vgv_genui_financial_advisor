@@ -24,6 +24,10 @@
     "@whatDoYouWantToFocusLabel": {
         "description": "Etiqueta para el menú desplegable para seleccionar el enfoque del asesoramiento financiero"
     },
+    "whatWouldYouLikeToFocusLabel": "En que te gustaría \nenfocarte?",
+    "@whatWouldYouLikeToFocusLabel": {
+        "description": "Etiqueta para el menú desplegable para seleccionar el enfoque del asesoramiento financiero"
+    },
     "genUILabel": "Gen UI",
     "@genUILabel": {
         "description": "Etiqueta para el texto Gen UI"
