@@ -53,8 +53,6 @@ flutter_gen:
 flutter:
   generate: true
   uses-material-design: true
-<<<<<<< HEAD
-=======
   assets:
     - assets/images/
     - assets/images/onboarding/
@@ -71,4 +69,3 @@ flutter:
           weight: 600
         - asset: assets/fonts/Poppins-Bold.ttf
           weight: 700
->>>>>>> 2aec254 (feat: add screen and state management)
