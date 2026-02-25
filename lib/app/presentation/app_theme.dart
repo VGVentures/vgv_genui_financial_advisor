@@ -1,5 +1,6 @@
 import 'package:finance_app/app/presentation.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 abstract class AppThemeMode {
   AppThemeMode({required this.themeData}) {
@@ -35,16 +36,18 @@ class AppTheme {
       ThemeData.from(
         colorScheme: colorScheme,
         useMaterial3: true,
-        textTheme: TextTheme(
-          displayLarge: AppTextStyles.titleLarge,
-          displayMedium: AppTextStyles.titleMedium,
-          displaySmall: AppTextStyles.titleSmall,
-          bodyLarge: AppTextStyles.bodyLarge,
-          bodyMedium: AppTextStyles.bodyMedium,
-          bodySmall: AppTextStyles.bodySmall,
-          labelLarge: AppTextStyles.titleLarge,
-          labelMedium: AppTextStyles.titleMedium,
-          labelSmall: AppTextStyles.titleSmall,
+        textTheme: GoogleFonts.poppinsTextTheme(
+          TextTheme(
+            displayLarge: AppTextStyles.titleLarge,
+            displayMedium: AppTextStyles.titleMedium,
+            displaySmall: AppTextStyles.titleSmall,
+            bodyLarge: AppTextStyles.bodyLarge,
+            bodyMedium: AppTextStyles.bodyMedium,
+            bodySmall: AppTextStyles.bodySmall,
+            labelLarge: AppTextStyles.titleLarge,
+            labelMedium: AppTextStyles.titleMedium,
+            labelSmall: AppTextStyles.titleSmall,
+          ),
         ),
       ).copyWith(
         extensions: [colors],

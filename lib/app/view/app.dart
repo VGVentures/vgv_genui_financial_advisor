@@ -1,6 +1,6 @@
 import 'package:finance_app/app/presentation.dart';
 import 'package:finance_app/l10n/l10n.dart';
-import 'package:finance_app/persona/persona.dart';
+import 'package:finance_app/onboarding/onboarding.dart';
 import 'package:flutter/material.dart';
 
 class App extends StatelessWidget {
@@ -20,16 +20,7 @@ class App extends StatelessWidget {
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       navigatorObservers: navigatorObservers,
-      home: Builder(
-        builder: (context) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(context.l10n.homeAppBarTitle),
-            ),
-            body: const PersonaSelectorPage(),
-          );
-        },
-      ),
+      home: const KickOffPage(),
     );
   }
 }

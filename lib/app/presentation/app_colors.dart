@@ -54,6 +54,11 @@ abstract class AppColors extends ThemeExtension<AppColors> {
   /// 400: outline
   /// 200: outlineVariant
   MaterialColor get neutralVariant;
+
+  Color get accentBlue;
+  Color get badgeDarkBlue;
+  Color get badgeWhite;
+  Color get badgeTextBlueColor;
 }
 
 class LightThemeColors extends AppColors {
@@ -155,6 +160,18 @@ class LightThemeColors extends AppColors {
     800: Color(0xFF49454F),
     900: Color(0xFF000000),
   });
+
+  @override
+  Color get accentBlue => const Color(0xFF6D92F5);
+
+  @override
+  Color get badgeDarkBlue => const Color(0xFF2C64F0);
+
+  @override
+  Color get badgeWhite => const Color(0xFFF0F0F0);
+
+  @override
+  Color get badgeTextBlueColor => const Color(0xFF183889);
 }
 
 class DarkThemeColors extends AppColors {
@@ -256,4 +273,16 @@ class DarkThemeColors extends AppColors {
     800: Color(0xFF1D1A22),
     900: Color(0xFF000000),
   });
+
+  @override
+  Color get badgeDarkBlue => const Color(0xFF2C64F0);
+
+  @override
+  Color get badgeWhite => const Color(0xFFF0F0F0);
+
+  @override
+  Color get accentBlue => const Color(0xFF6D92F5);
+
+  @override
+  Color get badgeTextBlueColor => const Color(0xFF183889);
 }
