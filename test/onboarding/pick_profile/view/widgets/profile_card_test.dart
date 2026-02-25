@@ -1,5 +1,4 @@
 import 'package:finance_app/onboarding/pick_profile/pick_profile.dart';
-import 'package:finance_app/onboarding/pick_profile/view/widgets/profile_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -7,9 +6,7 @@ import '../../../../helpers/helpers.dart';
 
 void main() {
   group(ProfileCard, () {
-    setUp(() {
-      TestWidgetsFlutterBinding.ensureInitialized();
-    });
+    setUp(TestWidgetsFlutterBinding.ensureInitialized);
 
     testWidgets('renders beginner profile correctly', (tester) async {
       // Use mobile size to avoid overflow
