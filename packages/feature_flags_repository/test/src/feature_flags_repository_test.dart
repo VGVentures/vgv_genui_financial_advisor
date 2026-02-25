@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:feature_flags_repository/feature_flags_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 
 class MockStreamingSharedPreferences extends Mock
     implements StreamingSharedPreferences {}

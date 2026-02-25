@@ -5,11 +5,13 @@ import 'package:feature_flags_repository/feature_flags_repository.dart';
 import 'package:finance_app/app/view/app.dart';
 import 'package:finance_app/core/analytics_repository/analytics_repository.dart';
 import 'package:finance_app/core/error_reporting_repository/error_reporting_repository.dart';
+import 'package:finance_app/feature_flag/active_feature_flags.dart';
 import 'package:finance_app/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
+import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 
 class AppBlocObserver extends BlocObserver {
   const AppBlocObserver({required this.errorReportingRepository});
@@ -50,22 +52,7 @@ Future<void> bootstrap({
   final streamingPrefs = await StreamingSharedPreferences.instance;
   final featureFlagsRepository = FeatureFlagsRepository(
     streamingSharedPreferences: streamingPrefs,
-    featureFlags: const [
-      FeatureFlag(
-        id: 'dark_mode',
-        name: 'Dark Mode',
-        description: 'Enable dark mode theme across the app.',
-        value: false,
-        defaultValue: false,
-      ),
-      FeatureFlag(
-        id: 'ai_insights',
-        name: 'AI Insights',
-        description: 'Show AI-powered financial insights on the dashboard.',
-        value: false,
-        defaultValue: false,
-      ),
-    ],
+    featureFlags: activeFeatureFlags,
   );
 
   FlutterError.onError = errorReportingRepository.handleFlutterError;
