@@ -28,7 +28,7 @@ class PickProfilePage extends StatelessWidget {
     return BlocProvider(
       create: (_) => PickProfileCubit(),
       child: Scaffold(
-        backgroundColor: colorExtensions?.secondary.shade200,
+        backgroundColor: colorExtensions?.secondary.shade200 ?? Colors.grey.shade200,
         body: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.symmetric(
