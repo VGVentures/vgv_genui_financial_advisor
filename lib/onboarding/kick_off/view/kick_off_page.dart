@@ -1,7 +1,6 @@
 import 'package:finance_app/app/presentation.dart';
 import 'package:finance_app/l10n/l10n.dart';
 import 'package:finance_app/onboarding/kick_off/view/widgets/trust_badge.dart';
-import 'package:finance_app/persona/persona.dart';
 import 'package:flutter/material.dart';
 
 class KickOffPage extends StatelessWidget {

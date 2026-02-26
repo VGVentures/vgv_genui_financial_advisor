@@ -76,7 +76,6 @@ void main() {
       final button = find.byType(OutlinedButton);
       expect(button, findsOneWidget);
 
-      // Should not throw when tapped
       await tester.tap(button);
       await tester.pump();
     });

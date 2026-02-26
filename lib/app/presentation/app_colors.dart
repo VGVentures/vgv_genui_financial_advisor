@@ -165,7 +165,7 @@ class LightThemeColors extends AppColors {
   Color get accentBlue => const Color(0xFF6D92F5);
 
   @override
-  Color get badgeDarkBlue => const Color(0xFF2C64F0);
+  Color get badgeDarkBlue => const Color(0xFF2C64F1);
 
   @override
   Color get badgeWhite => const Color(0xFFF0F0F0);
@@ -275,7 +275,7 @@ class DarkThemeColors extends AppColors {
   });
 
   @override
-  Color get badgeDarkBlue => const Color(0xFF2C64F0);
+  Color get badgeDarkBlue => const Color(0xFF2C64F1);
 
   @override
   Color get badgeWhite => const Color(0xFFF0F0F0);
