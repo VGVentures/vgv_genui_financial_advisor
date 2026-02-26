@@ -1,13 +1,13 @@
 import 'package:finance_app/app/app.dart';
 import 'package:finance_app/core/analytics_repository/analytics_repository.dart';
 import 'package:finance_app/core/error_reporting_repository/error_reporting_repository.dart';
-import 'package:finance_app/persona/persona.dart';
+import 'package:finance_app/onboarding/onboarding.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 
 void main() {
   group(App, () {
-    testWidgets('renders $PersonaSelectorPage', (tester) async {
+    testWidgets('renders $KickOffPage', (tester) async {
       final analyticsRepository = DevAnalyticsRepository();
       await tester.pumpWidget(
         MultiProvider(
@@ -24,7 +24,7 @@ void main() {
           ),
         ),
       );
-      expect(find.byType(PersonaSelectorPage), findsOneWidget);
+      expect(find.byType(KickOffPage), findsOneWidget);
     });
   });
 }

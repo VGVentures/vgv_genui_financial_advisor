@@ -74,9 +74,11 @@ class KickOffPage extends StatelessWidget {
               height: 20,
             ),
             Text(
-              "For this demo, we're using VGV Finances as our hypothetical app. "
-              "We've set up two user profiles — choose one, set your preferences, and watch "
-              "Gen UI build the experience around you in real time.",
+              "For this demo, we're using VGV Finances as our "
+              'hypothetical app. '
+              "We've set up two user profiles — choose one, "
+              'set your preferences, and watch '
+              'Gen UI build the experience around you in real time.',
               style: GoogleFonts.poppins(
                 fontWeight: FontWeight.w400,
                 fontSize: 20,
@@ -91,24 +93,34 @@ class KickOffPage extends StatelessWidget {
       ),
     );
 
-    final button = Padding(
-      padding: const EdgeInsets.only(bottom: 30, right: 20),
-      child: OutlinedButton(
-        onPressed: _onNextPressed,
-        style: OutlinedButton.styleFrom(
-          shape: const CircleBorder(),
-          side: const BorderSide(color: Colors.white, width: 1.1),
-          padding: const EdgeInsets.all(40),
-        ),
-        child: const Icon(
-          Icons.arrow_forward,
-          color: Colors.white,
-        ),
+    // Base button without padding
+    final baseButton = OutlinedButton(
+      onPressed: _onNextPressed,
+      style: OutlinedButton.styleFrom(
+        shape: const CircleBorder(),
+        side: const BorderSide(color: Colors.white, width: 1.1),
+        padding: const EdgeInsets.all(40),
+      ),
+      child: const Icon(
+        Icons.arrow_forward,
+        color: Colors.white,
       ),
     );
 
+    // Desktop button with more padding
+    final desktopButton = Padding(
+      padding: const EdgeInsets.only(bottom: 30, right: 20),
+      child: baseButton,
+    );
+
+    // Mobile button closer to the corner
+    final mobileButton = Padding(
+      padding: const EdgeInsets.only(bottom: 10, right: 10),
+      child: baseButton,
+    );
+
     // Top right decoration with stars and activity zone
-    const topRightDecoration = Positioned(
+    const topRightDesktopDecoration = Positioned(
       top: 60,
       right: 40,
       child: SizedBox(
@@ -168,7 +180,7 @@ class KickOffPage extends StatelessWidget {
     );
 
     // Bottom left decoration with stars and flare
-    const bottomLeftDecoration = Positioned(
+    const bottomLeftDesktopDecoration = Positioned(
       bottom: 80,
       left: 40,
       child: SizedBox(
@@ -230,24 +242,151 @@ class KickOffPage extends StatelessWidget {
       ),
     );
 
-    final decoratedBody = Stack(
+    // Mobile top right decoration
+    const mobileTopRightDecoration = Positioned(
+      top: 80,
+      right: 20,
+      child: SizedBox(
+        width: 120,
+        height: 130,
+        child: Stack(
+          children: [
+            // Ellipse top
+            Positioned(
+              top: 0,
+              left: 20,
+              child: Image(
+                image: AssetImage('assets/icons_kick_off/Ellipse 139.png'),
+                width: 8,
+                height: 8,
+              ),
+            ),
+            // Activity zone (cube)
+            Positioned(
+              top: 15,
+              right: 0,
+              child: Opacity(
+                opacity: 0.7,
+                child: Image(
+                  image: AssetImage('assets/icons_kick_off/activity_zone.png'),
+                  width: 32,
+                  height: 32,
+                ),
+              ),
+            ),
+            // Star 5
+            Positioned(
+              top: 65,
+              left: 10,
+              child: Image(
+                image: AssetImage('assets/icons_kick_off/Star 5.png'),
+                width: 14,
+                height: 14,
+              ),
+            ),
+            // Ellipse bottom right
+            Positioned(
+              bottom: 0,
+              right: 15,
+              child: Image(
+                image: AssetImage('assets/icons_kick_off/Ellipse 139.png'),
+                width: 8,
+                height: 8,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    // Mobile bottom left decoration
+    const mobileBottomLeftDecoration = Positioned(
+      bottom: 60,
+      left: 20,
+      child: SizedBox(
+        width: 120,
+        height: 120,
+        child: Stack(
+          children: [
+            // Ellipse top left
+            Positioned(
+              top: 0,
+              left: 0,
+              child: Image(
+                image: AssetImage('assets/icons_kick_off/Ellipse 139.png'),
+                width: 8,
+                height: 8,
+              ),
+            ),
+            // Flare
+            Positioned(
+              top: 15,
+              left: 50,
+              child: Opacity(
+                opacity: 0.5,
+                child: Image(
+                  image: AssetImage('assets/icons_kick_off/flare.png'),
+                  width: 24,
+                  height: 24,
+                ),
+              ),
+            ),
+            // Soft star bottom left
+            Positioned(
+              bottom: 0,
+              left: 20,
+              child: Opacity(
+                opacity: 0.5,
+                child: Image(
+                  image: AssetImage('assets/icons_kick_off/Soft Star.png'),
+                  width: 18,
+                  height: 18,
+                ),
+              ),
+            ),
+            // Ellipse bottom right
+            Positioned(
+              bottom: 25,
+              right: 20,
+              child: Image(
+                image: AssetImage('assets/icons_kick_off/Ellipse 139.png'),
+                width: 8,
+                height: 8,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    // Desktop decorated body
+    final desktopDecoratedBody = Stack(
       children: [
         body,
-        topRightDecoration,
-        bottomLeftDecoration,
+        topRightDesktopDecoration,
+        bottomLeftDesktopDecoration,
+      ],
+    );
+
+    // Mobile decorated body
+    final mobileDecoratedBody = Stack(
+      children: [
+        body,
+        mobileTopRightDecoration,
+        mobileBottomLeftDecoration,
       ],
     );
 
     return ResponsiveScaffold(
       mobile: Scaffold(
         backgroundColor: bgColor,
-        body: decoratedBody,
-        floatingActionButton: button,
+        body: mobileDecoratedBody,
+        floatingActionButton: mobileButton,
       ),
       desktop: Scaffold(
         backgroundColor: bgColor,
-        body: decoratedBody,
-        floatingActionButton: button,
+        body: desktopDecoratedBody,
+        floatingActionButton: desktopButton,
       ),
     );
   }

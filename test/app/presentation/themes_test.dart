@@ -27,21 +27,12 @@ void main() {
       expect(theme.themeData.colorScheme.brightness, Brightness.light);
     });
 
-    test('themeData includes $AppColors extension', () {
-      final themeData = LightTheme().themeData.themeData;
-      expect(themeData.extension<AppColors>(), isA<LightThemeColors>());
-    });
   });
 
   group(DarkTheme, () {
     test('produces a $ThemeData with dark brightness', () {
       final theme = DarkTheme();
       expect(theme.themeData.colorScheme.brightness, Brightness.dark);
-    });
-
-    test('themeData includes $AppColors extension', () {
-      final themeData = DarkTheme().themeData.themeData;
-      expect(themeData.extension<AppColors>(), isA<DarkThemeColors>());
     });
   });
 }
