@@ -46,15 +46,11 @@ dev_dependencies:
   mocktail: ^1.0.4
   very_good_analysis: ^10.2.0
   very_good_cli: ^1.0.0
-<<<<<<< HEAD
-  
-=======
 
 flutter_gen:
   output: lib/gen/
   line_length: 80
 
->>>>>>> main
 flutter:
   generate: true
   uses-material-design: true
