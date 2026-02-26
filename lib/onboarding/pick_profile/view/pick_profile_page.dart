@@ -46,8 +46,7 @@ class PickProfilePage extends StatelessWidget {
             height: fabSize,
             child: FloatingActionButton(
               onPressed: () {
-                // TODO(juanRodriguez17): Add navigation to the next screen
-                // when gets merged
+                // TODO
               },
               backgroundColor: Colors.transparent,
               hoverColor: colorExtensions?.secondary.shade200,

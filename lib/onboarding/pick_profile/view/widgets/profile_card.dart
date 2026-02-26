@@ -17,9 +17,12 @@ class ProfileCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorExtensions = Theme.of(context).extension<AppColors>();
+    final beginnerColor =
+        colorExtensions?.secondary.shade600 ?? const Color(0xFF6D92F5);
     final l10n = context.l10n;
     final isOptimizer = profileType == ProfileType.optimizer;
-    final titleColor = isOptimizer ? _kOptimizerColor : _kBeginnerColor;
+    final titleColor = isOptimizer ? _kOptimizerColor : beginnerColor;
 
     final title = isOptimizer
         ? l10n.profileOptimizerTitle
@@ -44,7 +47,7 @@ class ProfileCard extends StatelessWidget {
             color: Colors.white,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: isSelected ? _kBeginnerColor : Colors.transparent,
+              color: isSelected ? beginnerColor : Colors.transparent,
               width: 2,
             ),
             boxShadow: [
@@ -114,7 +117,6 @@ extension on ProfileType {
   };
 }
 
-const _kBeginnerColor = Color(0xFF6D92F5);
 const _kOptimizerColor = Color(0xFFFFB1EE);
 const _kTextColor = Color(0xFF1A1A2E);
 
