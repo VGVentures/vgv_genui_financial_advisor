@@ -26,7 +26,6 @@ void main() {
       final theme = LightTheme();
       expect(theme.themeData.colorScheme.brightness, Brightness.light);
     });
-
   });
 
   group(DarkTheme, () {
