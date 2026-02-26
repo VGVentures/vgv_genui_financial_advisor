@@ -38,16 +38,15 @@ class AppBlocObserver extends BlocObserver {
 
 Future<void> bootstrap({
   required ErrorReportingRepository errorReportingRepository,
-  required AnalyticsRepository analyticsRepository,
+  required AnalyticsRepository Function() analyticsRepositoryFactory,
 }) async {
   final binding = WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  final analyticsRepository = analyticsRepositoryFactory();
 
   final streamingPrefs = await StreamingSharedPreferences.instance;
   final featureFlagsRepository = FeatureFlagsRepository(

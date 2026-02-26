@@ -26,10 +26,13 @@ dependencies:
   json_schema_builder: ^0.1.3
   provider: ^6.1.2
   rxdart: ^0.28.0
-  sentry_flutter: ^8.0.0
+  sentry_flutter: ^9.14.0
   shared_preferences: ^2.2.0
   streaming_shared_preferences: ^2.0.0
-  wiredash: ^2.6.0
+  wiredash:
+    git:
+      url: https://github.com/brianegan/wiredash-sdk.git
+      ref: dc5595a500b7e8419b2efe4889b5fc745582b493
 
 
 dev_dependencies:
@@ -39,8 +42,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   mocktail: ^1.0.4
-  very_good_analysis: ^10.1.0
-  very_good_cli: ^0.28.0
+  very_good_analysis: ^10.2.0
+  very_good_cli: ^1.0.0
   
 flutter:
   generate: true
