@@ -1,7 +1,7 @@
 import 'package:finance_app/app/presentation.dart';
+import 'package:finance_app/l10n/l10n.dart';
 import 'package:finance_app/onboarding/view/widgets/trust_badge.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class KickOffPage extends StatelessWidget {
   const KickOffPage({super.key});
@@ -12,6 +12,7 @@ class KickOffPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final appColors = Theme.of(context).extension<AppColors>()!;
     final bgColor = appColors.accentBlue;
 
@@ -31,7 +32,7 @@ class KickOffPage extends StatelessWidget {
                     child: Transform.rotate(
                       angle: -0.03,
                       child: TrustBadge(
-                        text: 'Nothing is hardcoded!',
+                        text: l10n.notHardcodedBadgeText,
                         backgroundColor: appColors.badgeDarkBlue,
                         textColor: Colors.white,
                       ),
@@ -42,7 +43,7 @@ class KickOffPage extends StatelessWidget {
                     child: Transform.rotate(
                       angle: 0.03,
                       child: TrustBadge(
-                        text: 'You can trust us',
+                        text: l10n.trustBadgeText,
                         backgroundColor: appColors.badgeWhite,
                         textColor: appColors.badgeTextBlueColor,
                         icon: Image.asset(
@@ -60,13 +61,14 @@ class KickOffPage extends StatelessWidget {
               height: 40,
             ),
             Text(
-              "Let's kick things off!",
-              style: GoogleFonts.poppins(
+              l10n.kickOffTitle,
+              style: const TextStyle(
+                fontFamily: 'Poppins',
                 fontWeight: FontWeight.w700,
                 fontSize: 48,
                 height: 80 / 64,
                 letterSpacing: -1,
-                color: const Color(0xFFF9FAFB),
+                color: Color(0xFFF9FAFB),
               ),
               textAlign: TextAlign.center,
             ),
@@ -74,17 +76,14 @@ class KickOffPage extends StatelessWidget {
               height: 20,
             ),
             Text(
-              "For this demo, we're using VGV Finances as our "
-              'hypothetical app. '
-              "We've set up two user profiles — choose one, "
-              'set your preferences, and watch '
-              'Gen UI build the experience around you in real time.',
-              style: GoogleFonts.poppins(
+              l10n.kickOffDescription,
+              style: const TextStyle(
+                fontFamily: 'Poppins',
                 fontWeight: FontWeight.w400,
                 fontSize: 20,
                 height: 1.5,
                 letterSpacing: 0,
-                color: const Color(0xFFF9FAFB),
+                color: Color(0xFFF9FAFB),
               ),
               textAlign: TextAlign.center,
             ),

@@ -1,4 +1,5 @@
 import 'package:finance_app/app/presentation.dart';
+import 'package:finance_app/l10n/l10n.dart';
 import 'package:finance_app/onboarding/onboarding.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -7,6 +8,8 @@ void main() {
   Widget buildTestableWidget({required Widget child}) {
     return MaterialApp(
       theme: AppThemes.light.themeData.themeData,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       home: child,
     );
   }
@@ -24,31 +27,40 @@ void main() {
       expect(find.byType(TrustBadge), findsNWidgets(2));
     });
 
-    testWidgets('renders "You can trust us" badge text', (tester) async {
+    testWidgets('renders trust badge text', (tester) async {
       await tester.pumpWidget(buildTestableWidget(child: const KickOffPage()));
 
-      expect(find.text('You can trust us'), findsOneWidget);
+      final context = tester.element(find.byType(KickOffPage));
+      final l10n = AppLocalizations.of(context);
+
+      expect(find.text(l10n.trustBadgeText), findsOneWidget);
     });
 
-    testWidgets('renders "Nothing is hardcoded!" badge text', (tester) async {
+    testWidgets('renders not hardcoded badge text', (tester) async {
       await tester.pumpWidget(buildTestableWidget(child: const KickOffPage()));
 
-      expect(find.text('Nothing is hardcoded!'), findsOneWidget);
+      final context = tester.element(find.byType(KickOffPage));
+      final l10n = AppLocalizations.of(context);
+
+      expect(find.text(l10n.notHardcodedBadgeText), findsOneWidget);
     });
 
     testWidgets('renders title text', (tester) async {
       await tester.pumpWidget(buildTestableWidget(child: const KickOffPage()));
 
-      expect(find.text("Let's kick things off!"), findsOneWidget);
+      final context = tester.element(find.byType(KickOffPage));
+      final l10n = AppLocalizations.of(context);
+
+      expect(find.text(l10n.kickOffTitle), findsOneWidget);
     });
 
     testWidgets('renders description text', (tester) async {
       await tester.pumpWidget(buildTestableWidget(child: const KickOffPage()));
 
-      expect(
-        find.textContaining('For this demo'),
-        findsOneWidget,
-      );
+      final context = tester.element(find.byType(KickOffPage));
+      final l10n = AppLocalizations.of(context);
+
+      expect(find.text(l10n.kickOffDescription), findsOneWidget);
     });
 
     testWidgets('renders next button with arrow icon', (tester) async {
