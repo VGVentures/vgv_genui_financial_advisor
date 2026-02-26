@@ -70,7 +70,7 @@ class IntroBadge extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           SvgPicture.asset(
-            'assets/intro/softstargradient.svg',
+            'assets/images/intro/softstargradient.svg',
             width: 22,
             height: 22,
           ),

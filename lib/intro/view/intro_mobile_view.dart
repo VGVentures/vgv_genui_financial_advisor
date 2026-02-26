@@ -38,7 +38,7 @@ class IntroMobileView extends StatelessWidget {
             left: 0,
             right: 0,
             child: SvgPicture.asset(
-              'assets/intro/waveline3.svg',
+              'assets/images/intro/waveline3.svg',
               fit: BoxFit.fitWidth,
             ),
           ),
@@ -47,7 +47,7 @@ class IntroMobileView extends StatelessWidget {
             left: 18,
             top: 90,
             child: SvgPicture.asset(
-              'assets/intro/star8.svg',
+              'assets/images/intro/star8.svg',
               width: 18,
               height: 18,
             ),
@@ -56,7 +56,7 @@ class IntroMobileView extends StatelessWidget {
             left: 30,
             top: 200,
             child: SvgPicture.asset(
-              'assets/intro/star8.svg',
+              'assets/images/intro/star8.svg',
               width: 14,
               height: 14,
             ),
@@ -66,7 +66,7 @@ class IntroMobileView extends StatelessWidget {
             left: 175,
             top: 55,
             child: SvgPicture.asset(
-              'assets/intro/circles.svg',
+              'assets/images/intro/circles.svg',
               width: 8,
               height: 8,
             ),
@@ -75,7 +75,7 @@ class IntroMobileView extends StatelessWidget {
             left: 185,
             top: 130,
             child: SvgPicture.asset(
-              'assets/intro/star7.svg',
+              'assets/images/intro/star7.svg',
               width: 16,
               height: 16,
             ),
@@ -84,7 +84,7 @@ class IntroMobileView extends StatelessWidget {
             left: 165,
             top: 210,
             child: SvgPicture.asset(
-              'assets/intro/circles.svg',
+              'assets/images/intro/circles.svg',
               width: 8,
               height: 8,
             ),
@@ -93,7 +93,7 @@ class IntroMobileView extends StatelessWidget {
             right: 30,
             top: 350,
             child: SvgPicture.asset(
-              'assets/intro/softstar.svg',
+              'assets/images/intro/softstar.svg',
               width: 25,
               height: 25,
             ),
@@ -102,7 +102,7 @@ class IntroMobileView extends StatelessWidget {
             right: 40,
             top: 220,
             child: SvgPicture.asset(
-              'assets/intro/circles.svg',
+              'assets/images/intro/circles.svg',
               width: 10,
               height: 10,
             ),
@@ -111,7 +111,7 @@ class IntroMobileView extends StatelessWidget {
             right: 120,
             top: 350,
             child: SvgPicture.asset(
-              'assets/intro/star7.svg',
+              'assets/images/intro/star7.svg',
               width: 12,
               height: 12,
             ),

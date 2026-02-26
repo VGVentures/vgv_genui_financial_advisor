@@ -40,7 +40,7 @@ class IntroDesktopView extends StatelessWidget {
             top: 0,
             bottom: 0,
             child: SvgPicture.asset(
-              'assets/intro/wavelines1.svg',
+              'assets/images/intro/wavelines1.svg',
               fit: BoxFit.fitHeight,
             ),
           ),
@@ -49,7 +49,7 @@ class IntroDesktopView extends StatelessWidget {
             top: 0,
             bottom: 0,
             child: SvgPicture.asset(
-              'assets/intro/wavelines2.svg',
+              'assets/images/intro/wavelines2.svg',
               fit: BoxFit.fitHeight,
             ),
           ),
@@ -57,7 +57,7 @@ class IntroDesktopView extends StatelessWidget {
             left: 80,
             top: 200,
             child: SvgPicture.asset(
-              'assets/intro/circles.svg',
+              'assets/images/intro/circles.svg',
               width: 10,
               height: 10,
             ),
@@ -66,7 +66,7 @@ class IntroDesktopView extends StatelessWidget {
             left: 180,
             top: 220,
             child: SvgPicture.asset(
-              'assets/intro/star8.svg',
+              'assets/images/intro/star8.svg',
               width: 24,
               height: 25,
             ),
@@ -75,7 +75,7 @@ class IntroDesktopView extends StatelessWidget {
             left: 180,
             top: 320,
             child: SvgPicture.asset(
-              'assets/intro/circles.svg',
+              'assets/images/intro/circles.svg',
               width: 10,
               height: 10,
             ),
@@ -84,7 +84,7 @@ class IntroDesktopView extends StatelessWidget {
             left: 170,
             top: 590,
             child: SvgPicture.asset(
-              'assets/intro/star6.svg',
+              'assets/images/intro/star6.svg',
               width: 23,
               height: 23,
             ),
@@ -93,7 +93,7 @@ class IntroDesktopView extends StatelessWidget {
             left: 90,
             top: 830,
             child: SvgPicture.asset(
-              'assets/intro/circles.svg',
+              'assets/images/intro/circles.svg',
               width: 10,
               height: 10,
             ),
@@ -102,7 +102,7 @@ class IntroDesktopView extends StatelessWidget {
             left: 400,
             top: 830,
             child: SvgPicture.asset(
-              'assets/intro/circles.svg',
+              'assets/images/intro/circles.svg',
               width: 10,
               height: 10,
             ),
@@ -111,7 +111,7 @@ class IntroDesktopView extends StatelessWidget {
             left: 820,
             top: 900,
             child: SvgPicture.asset(
-              'assets/intro/circles.svg',
+              'assets/images/intro/circles.svg',
               width: 10,
               height: 10,
             ),
@@ -120,7 +120,7 @@ class IntroDesktopView extends StatelessWidget {
             left: 1100,
             top: 820,
             child: SvgPicture.asset(
-              'assets/intro/circles.svg',
+              'assets/images/intro/circles.svg',
               width: 10,
               height: 10,
             ),
@@ -129,7 +129,7 @@ class IntroDesktopView extends StatelessWidget {
             left: 1300,
             top: 850,
             child: SvgPicture.asset(
-              'assets/intro/circles.svg',
+              'assets/images/intro/circles.svg',
               width: 10,
               height: 10,
             ),
@@ -138,7 +138,7 @@ class IntroDesktopView extends StatelessWidget {
             right: 790,
             top: 80,
             child: SvgPicture.asset(
-              'assets/intro/circles.svg',
+              'assets/images/intro/circles.svg',
               width: 10,
               height: 10,
             ),
@@ -147,7 +147,7 @@ class IntroDesktopView extends StatelessWidget {
             right: 580,
             top: 140,
             child: SvgPicture.asset(
-              'assets/intro/circles.svg',
+              'assets/images/intro/circles.svg',
               width: 10,
               height: 10,
             ),
@@ -156,7 +156,7 @@ class IntroDesktopView extends StatelessWidget {
             right: 250,
             top: 140,
             child: SvgPicture.asset(
-              'assets/intro/star7.svg',
+              'assets/images/intro/star7.svg',
               width: 24,
               height: 24,
             ),
@@ -165,7 +165,7 @@ class IntroDesktopView extends StatelessWidget {
             right: 290,
             top: 500,
             child: SvgPicture.asset(
-              'assets/intro/softstar.svg',
+              'assets/images/intro/softstar.svg',
               width: 24,
               height: 24,
             ),
@@ -174,7 +174,7 @@ class IntroDesktopView extends StatelessWidget {
             right: 150,
             top: 700,
             child: SvgPicture.asset(
-              'assets/intro/star9.svg',
+              'assets/images/intro/star9.svg',
               width: 15,
               height: 15,
             ),
@@ -183,7 +183,7 @@ class IntroDesktopView extends StatelessWidget {
             right: 80,
             top: 50,
             child: SvgPicture.asset(
-              'assets/intro/circles.svg',
+              'assets/images/intro/circles.svg',
               width: 10,
               height: 10,
             ),
@@ -192,7 +192,7 @@ class IntroDesktopView extends StatelessWidget {
             right: 230,
             top: 320,
             child: SvgPicture.asset(
-              'assets/intro/circles.svg',
+              'assets/images/intro/circles.svg',
               width: 10,
               height: 10,
             ),
@@ -201,7 +201,7 @@ class IntroDesktopView extends StatelessWidget {
             right: 120,
             top: 500,
             child: SvgPicture.asset(
-              'assets/intro/circles.svg',
+              'assets/images/intro/circles.svg',
               width: 10,
               height: 10,
             ),
@@ -210,7 +210,7 @@ class IntroDesktopView extends StatelessWidget {
             right: 100,
             top: 900,
             child: SvgPicture.asset(
-              'assets/intro/circles.svg',
+              'assets/images/intro/circles.svg',
               width: 10,
               height: 10,
             ),
