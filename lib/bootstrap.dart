@@ -9,7 +9,6 @@ import 'package:finance_app/core/error_reporting_repository/error_reporting_repo
 import 'package:finance_app/feature_flag/active_feature_flags.dart';
 import 'package:finance_app/firebase_options.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
-import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
