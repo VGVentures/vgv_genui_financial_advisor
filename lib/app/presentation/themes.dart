@@ -21,6 +21,7 @@ class LightTheme extends AppThemeMode {
 }
 
 class DarkTheme extends AppThemeMode {
+  // TODO(dev): Replace LightThemeColors with DarkThemeColors when available.
   DarkTheme()
     : super(
         themeData: AppTheme(LightThemeColors()),
