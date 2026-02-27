@@ -1,15 +1,16 @@
 import 'dart:math' show pi;
 
+import 'package:finance_app/gen/assets.gen.dart';
 import 'package:finance_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-/// {@template intro_badge}
+/// {@template intro_badges}
 /// The "2026 ✦ Gen UI" overlapping badges shown on the intro screen.
 /// {@endtemplate}
-class IntroBadge extends StatelessWidget {
-  /// {@macro intro_badge}
-  const IntroBadge({super.key});
+class IntroBadges extends StatelessWidget {
+  /// {@macro intro_badges}
+  const IntroBadges({super.key});
 
   static const double _yearAngle = -15 * pi / 180;
   static const double _genUiAngle = 12.91 * pi / 180;
@@ -71,7 +72,7 @@ class IntroBadge extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           SvgPicture.asset(
-            'assets/images/intro/softstargradient.svg',
+            Assets.images.intro.softstargradient,
             width: 22,
             height: 22,
           ),

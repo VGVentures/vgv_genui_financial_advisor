@@ -1,3 +1,4 @@
+import 'package:finance_app/gen/assets.gen.dart';
 import 'package:finance_app/intro/view/widgets/widgets.dart';
 import 'package:finance_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +43,7 @@ class IntroDesktopView extends StatelessWidget {
             top: 0,
             bottom: 0,
             child: SvgPicture.asset(
-              'assets/images/intro/waveline1.svg',
+              Assets.images.intro.waveline1,
               fit: BoxFit.fitHeight,
               alignment: Alignment.centerLeft,
             ),
@@ -52,7 +53,7 @@ class IntroDesktopView extends StatelessWidget {
             top: 0,
             bottom: 0,
             child: SvgPicture.asset(
-              'assets/images/intro/waveline2.svg',
+              Assets.images.intro.waveline2,
               fit: BoxFit.fitHeight,
               alignment: Alignment.centerRight,
             ),
@@ -61,7 +62,7 @@ class IntroDesktopView extends StatelessWidget {
             left: 80,
             top: 200,
             child: SvgPicture.asset(
-              'assets/images/intro/circles.svg',
+              Assets.images.intro.circles,
               width: 10,
               height: 10,
             ),
@@ -70,7 +71,7 @@ class IntroDesktopView extends StatelessWidget {
             left: 180,
             top: 220,
             child: SvgPicture.asset(
-              'assets/images/intro/star8.svg',
+              Assets.images.intro.star8,
               width: 24,
               height: 25,
             ),
@@ -79,7 +80,7 @@ class IntroDesktopView extends StatelessWidget {
             left: 180,
             top: 320,
             child: SvgPicture.asset(
-              'assets/images/intro/circles.svg',
+              Assets.images.intro.circles,
               width: 10,
               height: 10,
             ),
@@ -88,7 +89,7 @@ class IntroDesktopView extends StatelessWidget {
             left: 170,
             top: 590,
             child: SvgPicture.asset(
-              'assets/images/intro/star6.svg',
+              Assets.images.intro.star6,
               width: 23,
               height: 23,
             ),
@@ -97,7 +98,7 @@ class IntroDesktopView extends StatelessWidget {
             left: 90,
             top: 830,
             child: SvgPicture.asset(
-              'assets/images/intro/circles.svg',
+              Assets.images.intro.circles,
               width: 10,
               height: 10,
             ),
@@ -106,7 +107,7 @@ class IntroDesktopView extends StatelessWidget {
             left: 400,
             top: 830,
             child: SvgPicture.asset(
-              'assets/images/intro/circles.svg',
+              Assets.images.intro.circles,
               width: 10,
               height: 10,
             ),
@@ -115,7 +116,7 @@ class IntroDesktopView extends StatelessWidget {
             left: 820,
             top: 900,
             child: SvgPicture.asset(
-              'assets/images/intro/circles.svg',
+              Assets.images.intro.circles,
               width: 10,
               height: 10,
             ),
@@ -124,7 +125,7 @@ class IntroDesktopView extends StatelessWidget {
             left: 1100,
             top: 820,
             child: SvgPicture.asset(
-              'assets/images/intro/circles.svg',
+              Assets.images.intro.circles,
               width: 10,
               height: 10,
             ),
@@ -133,7 +134,7 @@ class IntroDesktopView extends StatelessWidget {
             left: 1300,
             top: 850,
             child: SvgPicture.asset(
-              'assets/images/intro/circles.svg',
+              Assets.images.intro.circles,
               width: 10,
               height: 10,
             ),
@@ -142,7 +143,7 @@ class IntroDesktopView extends StatelessWidget {
             right: 790,
             top: 80,
             child: SvgPicture.asset(
-              'assets/images/intro/circles.svg',
+              Assets.images.intro.circles,
               width: 10,
               height: 10,
             ),
@@ -151,7 +152,7 @@ class IntroDesktopView extends StatelessWidget {
             right: 580,
             top: 140,
             child: SvgPicture.asset(
-              'assets/images/intro/circles.svg',
+              Assets.images.intro.circles,
               width: 10,
               height: 10,
             ),
@@ -160,7 +161,7 @@ class IntroDesktopView extends StatelessWidget {
             right: 250,
             top: 140,
             child: SvgPicture.asset(
-              'assets/images/intro/star7.svg',
+              Assets.images.intro.star7,
               width: 24,
               height: 24,
             ),
@@ -169,7 +170,7 @@ class IntroDesktopView extends StatelessWidget {
             right: 290,
             top: 500,
             child: SvgPicture.asset(
-              'assets/images/intro/softstar.svg',
+              Assets.images.intro.softstar,
               width: 24,
               height: 24,
             ),
@@ -178,7 +179,7 @@ class IntroDesktopView extends StatelessWidget {
             right: 150,
             top: 700,
             child: SvgPicture.asset(
-              'assets/images/intro/star9.svg',
+              Assets.images.intro.star9,
               width: 15,
               height: 15,
             ),
@@ -187,7 +188,7 @@ class IntroDesktopView extends StatelessWidget {
             right: 80,
             top: 50,
             child: SvgPicture.asset(
-              'assets/images/intro/circles.svg',
+              Assets.images.intro.circles,
               width: 10,
               height: 10,
             ),
@@ -196,7 +197,7 @@ class IntroDesktopView extends StatelessWidget {
             right: 230,
             top: 320,
             child: SvgPicture.asset(
-              'assets/images/intro/circles.svg',
+              Assets.images.intro.circles,
               width: 10,
               height: 10,
             ),
@@ -205,7 +206,7 @@ class IntroDesktopView extends StatelessWidget {
             right: 120,
             top: 500,
             child: SvgPicture.asset(
-              'assets/images/intro/circles.svg',
+              Assets.images.intro.circles,
               width: 10,
               height: 10,
             ),
@@ -214,7 +215,7 @@ class IntroDesktopView extends StatelessWidget {
             right: 100,
             top: 900,
             child: SvgPicture.asset(
-              'assets/images/intro/circles.svg',
+              Assets.images.intro.circles,
               width: 10,
               height: 10,
             ),
@@ -223,7 +224,7 @@ class IntroDesktopView extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const IntroBadge(),
+                const IntroBadges(),
                 const SizedBox(height: 40),
                 Row(
                   mainAxisSize: MainAxisSize.min,
