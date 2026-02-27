@@ -5,6 +5,8 @@
 import 'dart:async';
 
 import 'package:dartantic_ai/dartantic_ai.dart' as dartantic;
+import 'package:dartantic_firebase_ai/dartantic_firebase_ai.dart'
+    as dartantic_firebase_ai;
 
 /// An abstract interface for AI clients.
 abstract interface class AiClient {
@@ -24,15 +26,16 @@ abstract interface class AiClient {
 /// An implementation of [AiClient] using `package:dartantic_ai`.
 class DartanticAiClient implements AiClient {
   DartanticAiClient({String? modelName}) {
-    const apiKey = 'AIzaSyBwvpz17nHOHuGJfGFUIeXixeUdF0wl_zM';
-    _provider = dartantic.GoogleProvider(apiKey: apiKey);
+    _provider = dartantic_firebase_ai.FirebaseAIProvider(
+      backend: dartantic_firebase_ai.FirebaseAIBackend.googleAI,
+    );
     _agent = dartantic.Agent.forProvider(
       _provider,
       chatModelName: modelName ?? 'gemini-3-flash-preview',
     );
   }
 
-  late final dartantic.GoogleProvider _provider;
+  late final dartantic_firebase_ai.FirebaseAIProvider _provider;
   late final dartantic.Agent _agent;
 
   @override

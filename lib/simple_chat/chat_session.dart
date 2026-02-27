@@ -5,20 +5,19 @@
 import 'dart:async';
 
 import 'package:dartantic_ai/dartantic_ai.dart' as dartantic;
+import 'package:finance_app/simple_chat/ai_client.dart';
+import 'package:finance_app/simple_chat/catalog/bar_chart.dart';
+import 'package:finance_app/simple_chat/catalog/compact_hero.dart';
+import 'package:finance_app/simple_chat/catalog/compact_info_card.dart';
+import 'package:finance_app/simple_chat/catalog/container_item.dart';
+import 'package:finance_app/simple_chat/catalog/dashboard.dart';
+import 'package:finance_app/simple_chat/catalog/stat_column.dart';
+import 'package:finance_app/simple_chat/catalog/stat_row.dart';
+import 'package:finance_app/simple_chat/catalog/wide_hero.dart';
+import 'package:finance_app/simple_chat/catalog/wide_info_panel.dart';
+import 'package:finance_app/simple_chat/message.dart';
 import 'package:flutter/foundation.dart';
 import 'package:genui/genui.dart';
-
-import 'ai_client.dart';
-import 'catalog/bar_chart.dart';
-import 'catalog/compact_hero.dart';
-import 'catalog/compact_info_card.dart';
-import 'catalog/container_item.dart';
-import 'catalog/dashboard.dart';
-import 'catalog/stat_column.dart';
-import 'catalog/stat_row.dart';
-import 'catalog/wide_hero.dart';
-import 'catalog/wide_info_panel.dart';
-import 'message.dart';
 
 /// A class that manages the chat session state and logic.
 class ChatSession extends ChangeNotifier {
@@ -46,19 +45,21 @@ class ChatSession extends ChangeNotifier {
   bool get isProcessing => _isProcessing;
 
   void _init() {
-    final Catalog catalog = BasicCatalogItems.asCatalog()
-        .copyWithout([BasicCatalogItems.textField])
-        .copyWith([
-          barChart,
-          compactHero,
-          compactInfoCard,
-          containerItem,
-          dashboard,
-          statColumn,
-          statRow,
-          wideHero,
-          wideInfoPanel,
-        ]);
+    final catalog = BasicCatalogItems.asCatalog()
+        .copyWithout(itemsToRemove: [BasicCatalogItems.textField])
+        .copyWith(
+          newItems: [
+            barChart,
+            compactHero,
+            compactInfoCard,
+            containerItem,
+            dashboard,
+            statColumn,
+            statRow,
+            wideHero,
+            wideInfoPanel,
+          ],
+        );
 
     // Initialize Message Processor
     _surfaceController = SurfaceController(catalogs: [catalog]);

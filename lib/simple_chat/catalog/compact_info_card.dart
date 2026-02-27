@@ -58,29 +58,27 @@ final compactInfoCard = CatalogItem(
         ? context.buildChild(cardData.imageChildId!)
         : null;
 
-    final ValueNotifier<String?> titleNotifier = context.dataContext
-        .subscribeToString(cardData.title);
-    final ValueNotifier<String?> bodyNotifier = context.dataContext
-        .subscribeToString(cardData.body);
-
     return _CompactInfoCard(
       imageChild: imageChild,
-      titleNotifier: titleNotifier,
-      bodyNotifier: bodyNotifier,
+      dataContext: context.dataContext,
+      title: cardData.title,
+      body: cardData.body,
     );
   },
 );
 
 class _CompactInfoCard extends StatelessWidget {
   const _CompactInfoCard({
+    required this.dataContext,
+    required this.title,
+    required this.body,
     this.imageChild,
-    required this.titleNotifier,
-    required this.bodyNotifier,
   });
 
+  final DataContext dataContext;
+  final Object title;
+  final Object body;
   final Widget? imageChild;
-  final ValueNotifier<String?> titleNotifier;
-  final ValueNotifier<String?> bodyNotifier;
 
   @override
   Widget build(BuildContext context) {
@@ -96,17 +94,19 @@ class _CompactInfoCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ValueListenableBuilder<String?>(
-                  valueListenable: titleNotifier,
-                  builder: (context, title, _) => Text(
+                BoundString(
+                  dataContext: dataContext,
+                  value: title,
+                  builder: (context, title) => Text(
                     '${title ?? ''} - Compact',
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ),
                 const SizedBox(height: 8.0),
-                ValueListenableBuilder<String?>(
-                  valueListenable: bodyNotifier,
-                  builder: (context, body, _) => Text(body ?? ''),
+                BoundString(
+                  dataContext: dataContext,
+                  value: body,
+                  builder: (context, body) => Text(body ?? ''),
                 ),
               ],
             ),

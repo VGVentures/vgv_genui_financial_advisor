@@ -65,34 +65,30 @@ final wideHero = CatalogItem(
         ? context.buildChild(data.imageChildId!)
         : null;
 
-    final ValueNotifier<String?> titleNotifier =
-        context.dataContext.subscribeToString(data.title);
-    final ValueNotifier<String?> subtitleNotifier =
-        context.dataContext.subscribeToString(data.subtitle);
-    final ValueNotifier<String?> bodyNotifier =
-        context.dataContext.subscribeToString(data.body);
-
     return _WideHero(
       imageChild: imageChild,
-      titleNotifier: titleNotifier,
-      subtitleNotifier: subtitleNotifier,
-      bodyNotifier: bodyNotifier,
+      dataContext: context.dataContext,
+      title: data.title,
+      subtitle: data.subtitle,
+      body: data.body,
     );
   },
 );
 
 class _WideHero extends StatelessWidget {
   const _WideHero({
+    required this.dataContext,
+    required this.title,
     this.imageChild,
-    required this.titleNotifier,
-    required this.subtitleNotifier,
-    required this.bodyNotifier,
+    this.subtitle,
+    this.body,
   });
 
+  final DataContext dataContext;
+  final Object title;
   final Widget? imageChild;
-  final ValueNotifier<String?> titleNotifier;
-  final ValueNotifier<String?> subtitleNotifier;
-  final ValueNotifier<String?> bodyNotifier;
+  final Object? subtitle;
+  final Object? body;
 
   @override
   Widget build(BuildContext context) {
@@ -116,18 +112,20 @@ class _WideHero extends StatelessWidget {
                   mainAxisAlignment:
                       MainAxisAlignment.center,
                   children: [
-                    ValueListenableBuilder<String?>(
-                      valueListenable: titleNotifier,
-                      builder: (context, title, _) => Text(
+                    BoundString(
+                      dataContext: dataContext,
+                      value: title,
+                      builder: (context, title) => Text(
                         title ?? '',
                         style: Theme.of(context)
                             .textTheme
                             .headlineMedium,
                       ),
                     ),
-                    ValueListenableBuilder<String?>(
-                      valueListenable: subtitleNotifier,
-                      builder: (context, subtitle, _) {
+                    BoundString(
+                      dataContext: dataContext,
+                      value: subtitle,
+                      builder: (context, subtitle) {
                         if (subtitle == null) {
                           return const SizedBox.shrink();
                         }
@@ -143,9 +141,10 @@ class _WideHero extends StatelessWidget {
                         );
                       },
                     ),
-                    ValueListenableBuilder<String?>(
-                      valueListenable: bodyNotifier,
-                      builder: (context, body, _) {
+                    BoundString(
+                      dataContext: dataContext,
+                      value: body,
+                      builder: (context, body) {
                         if (body == null) {
                           return const SizedBox.shrink();
                         }

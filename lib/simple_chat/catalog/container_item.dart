@@ -88,14 +88,13 @@ final containerItem = CatalogItem(
       context.data as Map<String, Object?>,
     );
 
-    final titleNotifier = context.dataContext.subscribeToString(data.title);
-
     final children = [
       for (final id in data.childIds) context.buildChild(id),
     ];
 
     return _ContainerWidget(
-      titleNotifier: titleNotifier,
+      dataContext: context.dataContext,
+      title: data.title,
       backgroundColor: _parseColor(data.backgroundColor),
       borderColor: _parseColor(data.borderColor),
       borderWidth: data.borderWidth.toDouble(),
@@ -115,7 +114,8 @@ Color? _parseColor(String? hex) {
 
 class _ContainerWidget extends StatelessWidget {
   const _ContainerWidget({
-    required this.titleNotifier,
+    required this.dataContext,
+    required this.title,
     required this.backgroundColor,
     required this.borderColor,
     required this.borderWidth,
@@ -124,7 +124,8 @@ class _ContainerWidget extends StatelessWidget {
     required this.children,
   });
 
-  final ValueNotifier<String?> titleNotifier;
+  final DataContext dataContext;
+  final Object? title;
   final Color? backgroundColor;
   final Color? borderColor;
   final double borderWidth;
@@ -147,9 +148,10 @@ class _ContainerWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: [
-          ValueListenableBuilder<String?>(
-            valueListenable: titleNotifier,
-            builder: (context, title, _) {
+          BoundString(
+            dataContext: dataContext,
+            value: title,
+            builder: (context, title) {
               if (title == null || title.isEmpty) {
                 return const SizedBox.shrink();
               }

@@ -60,29 +60,27 @@ final compactHero = CatalogItem(
         ? context.buildChild(data.imageChildId!)
         : null;
 
-    final ValueNotifier<String?> titleNotifier =
-        context.dataContext.subscribeToString(data.title);
-    final ValueNotifier<String?> subtitleNotifier =
-        context.dataContext.subscribeToString(data.subtitle);
-
     return _CompactHero(
       imageChild: imageChild,
-      titleNotifier: titleNotifier,
-      subtitleNotifier: subtitleNotifier,
+      dataContext: context.dataContext,
+      title: data.title,
+      subtitle: data.subtitle,
     );
   },
 );
 
 class _CompactHero extends StatelessWidget {
   const _CompactHero({
+    required this.dataContext,
+    required this.title,
     this.imageChild,
-    required this.titleNotifier,
-    required this.subtitleNotifier,
+    this.subtitle,
   });
 
+  final DataContext dataContext;
+  final Object title;
   final Widget? imageChild;
-  final ValueNotifier<String?> titleNotifier;
-  final ValueNotifier<String?> subtitleNotifier;
+  final Object? subtitle;
 
   @override
   Widget build(BuildContext context) {
@@ -112,9 +110,10 @@ class _CompactHero extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  ValueListenableBuilder<String?>(
-                    valueListenable: titleNotifier,
-                    builder: (context, title, _) => Text(
+                  BoundString(
+                    dataContext: dataContext,
+                    value: title,
+                    builder: (context, title) => Text(
                       title ?? '',
                       style: Theme.of(context)
                           .textTheme
@@ -125,9 +124,10 @@ class _CompactHero extends StatelessWidget {
                           ),
                     ),
                   ),
-                  ValueListenableBuilder<String?>(
-                    valueListenable: subtitleNotifier,
-                    builder: (context, subtitle, _) {
+                  BoundString(
+                    dataContext: dataContext,
+                    value: subtitle,
+                    builder: (context, subtitle) {
                       if (subtitle == null) return const SizedBox.shrink();
                       return Padding(
                         padding: const EdgeInsets.only(top: 4),

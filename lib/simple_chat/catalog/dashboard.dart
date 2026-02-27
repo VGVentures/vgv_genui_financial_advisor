@@ -91,11 +91,6 @@ final dashboard = CatalogItem(
       context.data as Map<String, Object?>,
     );
 
-    final titleNotifier =
-        context.dataContext.subscribeToString(data.title);
-    final descriptionNotifier =
-        context.dataContext.subscribeToString(data.description);
-
     final visualization = context.buildChild(
       data.visualizationChildId,
     );
@@ -104,8 +99,9 @@ final dashboard = CatalogItem(
     ];
 
     return _DashboardWidget(
-      titleNotifier: titleNotifier,
-      descriptionNotifier: descriptionNotifier,
+      dataContext: context.dataContext,
+      title: data.title,
+      description: data.description,
       visualization: visualization,
       controls: controls,
     );
@@ -114,14 +110,16 @@ final dashboard = CatalogItem(
 
 class _DashboardWidget extends StatelessWidget {
   const _DashboardWidget({
-    required this.titleNotifier,
-    required this.descriptionNotifier,
+    required this.dataContext,
+    required this.title,
     required this.visualization,
     required this.controls,
+    this.description,
   });
 
-  final ValueNotifier<String?> titleNotifier;
-  final ValueNotifier<String?> descriptionNotifier;
+  final DataContext dataContext;
+  final Object title;
+  final Object? description;
   final Widget visualization;
   final List<Widget> controls;
 
@@ -156,16 +154,18 @@ class _DashboardWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        ValueListenableBuilder<String?>(
-          valueListenable: titleNotifier,
-          builder: (context, title, _) => Text(
+        BoundString(
+          dataContext: dataContext,
+          value: title,
+          builder: (context, title) => Text(
             title ?? '',
             style: Theme.of(context).textTheme.titleLarge,
           ),
         ),
-        ValueListenableBuilder<String?>(
-          valueListenable: descriptionNotifier,
-          builder: (context, description, _) {
+        BoundString(
+          dataContext: dataContext,
+          value: description,
+          builder: (context, description) {
             if (description == null || description.isEmpty) {
               return const SizedBox.shrink();
             }

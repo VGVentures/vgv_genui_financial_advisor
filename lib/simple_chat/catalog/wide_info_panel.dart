@@ -65,34 +65,30 @@ final wideInfoPanel = CatalogItem(
         ? context.buildChild(panelData.imageChildId!)
         : null;
 
-    final ValueNotifier<String?> titleNotifier = context.dataContext
-        .subscribeToString(panelData.title);
-    final ValueNotifier<String?> subtitleNotifier = context.dataContext
-        .subscribeToString(panelData.subtitle);
-    final ValueNotifier<String?> bodyNotifier = context.dataContext
-        .subscribeToString(panelData.body);
-
     return _WideInfoPanel(
       imageChild: imageChild,
-      titleNotifier: titleNotifier,
-      subtitleNotifier: subtitleNotifier,
-      bodyNotifier: bodyNotifier,
+      dataContext: context.dataContext,
+      title: panelData.title,
+      subtitle: panelData.subtitle,
+      body: panelData.body,
     );
   },
 );
 
 class _WideInfoPanel extends StatelessWidget {
   const _WideInfoPanel({
+    required this.dataContext,
+    required this.title,
+    required this.body,
     this.imageChild,
-    required this.titleNotifier,
-    required this.subtitleNotifier,
-    required this.bodyNotifier,
+    this.subtitle,
   });
 
+  final DataContext dataContext;
+  final Object title;
+  final Object body;
   final Widget? imageChild;
-  final ValueNotifier<String?> titleNotifier;
-  final ValueNotifier<String?> subtitleNotifier;
-  final ValueNotifier<String?> bodyNotifier;
+  final Object? subtitle;
 
   @override
   Widget build(BuildContext context) {
@@ -109,16 +105,18 @@ class _WideInfoPanel extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ValueListenableBuilder<String?>(
-                      valueListenable: titleNotifier,
-                      builder: (context, title, _) => Text(
+                    BoundString(
+                      dataContext: dataContext,
+                      value: title,
+                      builder: (context, title) => Text(
                         '${title ?? ''} - Wide',
                         style: Theme.of(context).textTheme.headlineSmall,
                       ),
                     ),
-                    ValueListenableBuilder<String?>(
-                      valueListenable: subtitleNotifier,
-                      builder: (context, subtitle, _) {
+                    BoundString(
+                      dataContext: dataContext,
+                      value: subtitle,
+                      builder: (context, subtitle) {
                         if (subtitle == null) return const SizedBox.shrink();
                         return Padding(
                           padding: const EdgeInsets.only(top: 4.0),
@@ -130,9 +128,10 @@ class _WideInfoPanel extends StatelessWidget {
                       },
                     ),
                     const SizedBox(height: 8.0),
-                    ValueListenableBuilder<String?>(
-                      valueListenable: bodyNotifier,
-                      builder: (context, body, _) => Text(body ?? ''),
+                    BoundString(
+                      dataContext: dataContext,
+                      value: body,
+                      builder: (context, body) => Text(body ?? ''),
                     ),
                   ],
                 ),

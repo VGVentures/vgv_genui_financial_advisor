@@ -79,8 +79,6 @@ final barChart = CatalogItem(
       context.data as Map<String, Object?>,
     );
 
-    final titleNotifier = context.dataContext.subscribeToString(data.title);
-
     final entries = data.bars
         .whereType<Map<String, Object?>>()
         .map(_BarEntry.fromMap)
@@ -93,7 +91,8 @@ final barChart = CatalogItem(
       final valueRef = entry.value;
       if (valueRef is Map && valueRef.containsKey('path')) {
         valueNotifiers.add(
-          context.dataContext.subscribe<num>(valueRef['path'] as String),
+          context.dataContext
+              .subscribe<num>(DataPath(valueRef['path'] as String)),
         );
       } else if (valueRef is num) {
         valueNotifiers.add(ValueNotifier(valueRef.toDouble()));
@@ -103,7 +102,7 @@ final barChart = CatalogItem(
     }
 
     return _BarChartWidget(
-      titleNotifier: titleNotifier,
+      title: data.title,
       entries: entries,
       valueNotifiers: valueNotifiers,
       dataContext: context.dataContext,
@@ -114,14 +113,14 @@ final barChart = CatalogItem(
 
 class _BarChartWidget extends StatelessWidget {
   const _BarChartWidget({
-    required this.titleNotifier,
+    required this.title,
     required this.entries,
     required this.valueNotifiers,
     required this.dataContext,
     required this.isHorizontal,
   });
 
-  final ValueNotifier<String?> titleNotifier;
+  final Object? title;
   final List<_BarEntry> entries;
   final List<ValueNotifier<num?>> valueNotifiers;
   final DataContext dataContext;
@@ -165,9 +164,10 @@ class _BarChartWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ValueListenableBuilder<String?>(
-              valueListenable: titleNotifier,
-              builder: (context, title, _) {
+            BoundString(
+              dataContext: dataContext,
+              value: title,
+              builder: (context, title) {
                 if (title == null) {
                   return const SizedBox.shrink();
                 }
@@ -269,11 +269,10 @@ class _BarLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final notifier = dataContext.subscribeToString(entry.label);
-
-    return ValueListenableBuilder<String?>(
-      valueListenable: notifier,
-      builder: (context, label, _) => Padding(
+    return BoundString(
+      dataContext: dataContext,
+      value: entry.label,
+      builder: (context, label) => Padding(
         padding: const EdgeInsets.only(top: 4),
         child: Text(
           label ?? '',

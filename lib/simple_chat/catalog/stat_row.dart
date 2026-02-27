@@ -131,26 +131,23 @@ class _StatCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ValueNotifier<String?> valueNotifier =
-        dataContext.subscribeToString(entry.value);
-    final ValueNotifier<String?> labelNotifier =
-        dataContext.subscribeToString(entry.label);
-
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        ValueListenableBuilder<String?>(
-          valueListenable: valueNotifier,
-          builder: (context, value, _) => Text(
+        BoundString(
+          dataContext: dataContext,
+          value: entry.value,
+          builder: (context, value) => Text(
             value ?? '',
             style: Theme.of(context).textTheme.headlineMedium,
             textAlign: TextAlign.center,
           ),
         ),
         const SizedBox(height: 4),
-        ValueListenableBuilder<String?>(
-          valueListenable: labelNotifier,
-          builder: (context, label, _) => Text(
+        BoundString(
+          dataContext: dataContext,
+          value: entry.label,
+          builder: (context, label) => Text(
             label ?? '',
             style: Theme.of(context)
                 .textTheme
