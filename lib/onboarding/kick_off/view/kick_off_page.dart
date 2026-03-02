@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:finance_app/app/presentation.dart';
 import 'package:finance_app/l10n/l10n.dart';
 import 'package:finance_app/onboarding/kick_off/view/desktop_kick_off_view.dart';
@@ -11,9 +13,11 @@ class KickOffPage extends StatelessWidget {
   const KickOffPage({super.key});
 
   void _onNextPressed(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => const PickProfilePage(),
+    unawaited(
+      Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (_) => const PickProfilePage(),
+        ),
       ),
     );
   }

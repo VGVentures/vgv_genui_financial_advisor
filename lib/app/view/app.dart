@@ -4,6 +4,7 @@ import 'package:finance_app/app/presentation.dart';
 import 'package:finance_app/feature_flag/feature_flag.dart';
 import 'package:finance_app/intro/intro.dart';
 import 'package:finance_app/l10n/l10n.dart';
+import 'package:finance_app/onboarding/kick_off/view/kick_off_page.dart';
 import 'package:finance_app/persona/persona.dart';
 import 'package:flutter/material.dart';
 import 'package:wiredash/wiredash.dart';
@@ -28,7 +29,7 @@ class App extends StatelessWidget {
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         navigatorObservers: navigatorObservers,
-        home: const _IntroPage(),
+        home: const KickOffPage(),
       ),
     );
   }
