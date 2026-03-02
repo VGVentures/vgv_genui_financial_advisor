@@ -1,4 +1,3 @@
-import 'package:finance_app/app/presentation/filter_chip_color.dart';
 import 'package:finance_app/app/presentation/filter_chip_palette.dart';
 import 'package:finance_app/app/presentation/widgets/category_filter_chip.dart';
 import 'package:flutter/gestures.dart';
