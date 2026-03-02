@@ -44,25 +44,25 @@ void main() {
 
   group('CategoryFilterChip', () {
     testWidgets('renders label text', (tester) async {
-      await pump(tester, label: 'Category 1');
+      await pump(tester);
       expect(find.text('Category 1'), findsOneWidget);
     });
 
     group('default state (isSelected: null)', () {
       testWidgets('shows white background', (tester) async {
-        await pump(tester, isSelected: null);
+        await pump(tester);
         expect(getDecoration(tester).color, equals(Colors.white));
       });
 
       testWidgets('shows base color border', (tester) async {
-        await pump(tester, color: FilterChipColor.pink, isSelected: null);
+        await pump(tester, color: FilterChipColor.pink);
         final base = FilterChipPalette.baseColors[FilterChipColor.pink]!;
         final border = getDecoration(tester).border! as Border;
         expect(border.top.color, equals(base));
       });
 
       testWidgets('shows dark text', (tester) async {
-        await pump(tester, isSelected: null);
+        await pump(tester);
         expect(
           getTextColor(tester, 'Category 1'),
           equals(const Color(0xFF5D5F5F)),
@@ -180,7 +180,7 @@ void main() {
     group('interaction', () {
       testWidgets('calls onTap when tapped and enabled', (tester) async {
         var tapped = false;
-        await pump(tester, isEnabled: true, onTap: () => tapped = true);
+        await pump(tester, onTap: () => tapped = true);
         await tester.tap(find.byType(CategoryFilterChip));
         expect(tapped, isTrue);
       });
@@ -250,7 +250,7 @@ void main() {
           await pump(tester, color: color, isSelected: true);
           expect(
             getDecoration(tester).color,
-            equals(FilterChipPalette.baseColors[color]!),
+            equals(FilterChipPalette.baseColors[color]),
           );
         });
       }
