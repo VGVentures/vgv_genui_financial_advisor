@@ -17,19 +17,25 @@ void main() {
   group(KickOffPage, () {
     group('renders', () {
       testWidgets('without errors', (tester) async {
-        await tester.pumpWidget(buildTestableWidget(child: const KickOffPage()));
+        await tester.pumpWidget(
+          buildTestableWidget(child: const KickOffPage()),
+        );
 
         expect(find.byType(KickOffPage), findsOneWidget);
       });
 
       testWidgets('two TrustBadge widgets', (tester) async {
-        await tester.pumpWidget(buildTestableWidget(child: const KickOffPage()));
+        await tester.pumpWidget(
+          buildTestableWidget(child: const KickOffPage()),
+        );
 
         expect(find.byType(TrustBadge), findsNWidgets(2));
       });
 
       testWidgets('trust badge text', (tester) async {
-        await tester.pumpWidget(buildTestableWidget(child: const KickOffPage()));
+        await tester.pumpWidget(
+          buildTestableWidget(child: const KickOffPage()),
+        );
 
         final context = tester.element(find.byType(KickOffPage));
         final l10n = AppLocalizations.of(context);
@@ -38,7 +44,9 @@ void main() {
       });
 
       testWidgets('not hardcoded badge text', (tester) async {
-        await tester.pumpWidget(buildTestableWidget(child: const KickOffPage()));
+        await tester.pumpWidget(
+          buildTestableWidget(child: const KickOffPage()),
+        );
 
         final context = tester.element(find.byType(KickOffPage));
         final l10n = AppLocalizations.of(context);
@@ -47,7 +55,9 @@ void main() {
       });
 
       testWidgets('title text', (tester) async {
-        await tester.pumpWidget(buildTestableWidget(child: const KickOffPage()));
+        await tester.pumpWidget(
+          buildTestableWidget(child: const KickOffPage()),
+        );
 
         final context = tester.element(find.byType(KickOffPage));
         final l10n = AppLocalizations.of(context);
@@ -56,7 +66,9 @@ void main() {
       });
 
       testWidgets('description text', (tester) async {
-        await tester.pumpWidget(buildTestableWidget(child: const KickOffPage()));
+        await tester.pumpWidget(
+          buildTestableWidget(child: const KickOffPage()),
+        );
 
         final context = tester.element(find.byType(KickOffPage));
         final l10n = AppLocalizations.of(context);
@@ -65,20 +77,26 @@ void main() {
       });
 
       testWidgets('next button with arrow icon', (tester) async {
-        await tester.pumpWidget(buildTestableWidget(child: const KickOffPage()));
+        await tester.pumpWidget(
+          buildTestableWidget(child: const KickOffPage()),
+        );
 
         expect(find.byType(OutlinedButton), findsOneWidget);
         expect(find.byIcon(Icons.arrow_forward), findsOneWidget);
       });
 
       testWidgets('ResponsiveScaffold', (tester) async {
-        await tester.pumpWidget(buildTestableWidget(child: const KickOffPage()));
+        await tester.pumpWidget(
+          buildTestableWidget(child: const KickOffPage()),
+        );
 
         expect(find.byType(ResponsiveScaffold), findsOneWidget);
       });
 
       testWidgets('Scaffold with correct background color', (tester) async {
-        await tester.pumpWidget(buildTestableWidget(child: const KickOffPage()));
+        await tester.pumpWidget(
+          buildTestableWidget(child: const KickOffPage()),
+        );
 
         final scaffold = tester.widget<Scaffold>(find.byType(Scaffold).first);
         final appColors = LightThemeColors();
@@ -89,7 +107,9 @@ void main() {
 
     group('interactions', () {
       testWidgets('next button is tappable', (tester) async {
-        await tester.pumpWidget(buildTestableWidget(child: const KickOffPage()));
+        await tester.pumpWidget(
+          buildTestableWidget(child: const KickOffPage()),
+        );
 
         final button = find.byType(OutlinedButton);
         expect(button, findsOneWidget);
