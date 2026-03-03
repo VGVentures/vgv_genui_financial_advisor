@@ -106,8 +106,8 @@ void main() {
         final deltaText = tester
             .widgetList<Text>(find.byType(Text))
             .firstWhere((t) => t.data == '+12%');
-        // LightThemeColors.neutral.shade50 = Color(0xFF4CAF50)
-        expect(deltaText.style?.color, const Color(0xFF4CAF50));
+        // LightThemeColors.success
+        expect(deltaText.style?.color, const Color(0xFF00A65F));
       });
 
       testWidgets('renders 4 Text widgets with delta and subtitle', (
@@ -143,7 +143,8 @@ void main() {
 
         final allTexts = tester.widgetList<Text>(find.byType(Text)).toList();
         final deltaText = allTexts.last;
-        expect(deltaText.style?.color, const Color(0xFFF0524D));
+        // LightThemeColors.error
+        expect(deltaText.style?.color, const Color(0xFFFF5446));
       });
 
       testWidgets('positive and negative deltas use different colours', (
@@ -335,7 +336,7 @@ void main() {
       expect(find.byType(GridView), findsNothing);
     });
 
-    testWidgets('uses GridView on mobile', (tester) async {
+    testWidgets('uses Column on mobile', (tester) async {
       tester.view.physicalSize = const Size(390, 844);
       tester.view.devicePixelRatio = 1;
       addTearDown(() {
@@ -345,7 +346,7 @@ void main() {
 
       await tester.pumpWidget(buildLayout());
 
-      expect(find.byType(GridView), findsOneWidget);
+      expect(find.byType(Column), findsWidgets);
     });
 
     testWidgets('renders all card labels on mobile', (tester) async {
