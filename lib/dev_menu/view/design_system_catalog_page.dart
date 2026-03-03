@@ -14,13 +14,19 @@ class DesignSystemCatalogPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF0F0F0),
+      backgroundColor: Colors.white,
       appBar: AppBar(title: const Text('Design System')),
       body: ListView(
         children: [
           ListTile(
-            title: const Text('MetricCard'),
-            subtitle: const Text('Key metric display with delta variants'),
+            title: const Text(
+              'MetricCard',
+              style: TextStyle(color: Colors.black),
+            ),
+            subtitle: const Text(
+              'Key metric display with delta variants',
+              style: TextStyle(color: Colors.black),
+            ),
             trailing: const Icon(Icons.chevron_right),
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
