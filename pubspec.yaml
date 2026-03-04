@@ -4,7 +4,7 @@ version: 1.0.0+1
 publish_to: none
 
 environment:
-  sdk: ^3.10.0
+  sdk: ^3.11.0
   flutter: ^3.38.1
 
 dependencies:
@@ -52,6 +52,8 @@ dev_dependencies:
 flutter_gen:
   output: lib/gen/
   line_length: 80
+  integrations:
+    flutter_svg: true
 
 flutter:
   generate: true

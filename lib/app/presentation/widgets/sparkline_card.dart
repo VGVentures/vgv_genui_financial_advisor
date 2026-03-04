@@ -42,9 +42,9 @@ class SparklineCard extends StatelessWidget {
     final textTheme = themeOf.textTheme;
 
     final trendLine = switch (trend) {
-      TrendType.negative => Assets.images.sparklineCards.negativeLine.image(),
-      TrendType.stable => Assets.images.sparklineCards.stableLine.image(),
-      TrendType.positive => Assets.images.sparklineCards.positiveLine.image(),
+      TrendType.negative => Assets.images.sparklineCards.negativeLine.svg(),
+      TrendType.stable => Assets.images.sparklineCards.stableLine.svg(),
+      TrendType.positive => Assets.images.sparklineCards.positiveLine.svg(),
     };
 
     return ConstrainedBox(
@@ -82,7 +82,7 @@ class SparklineCard extends StatelessWidget {
               ),
               Expanded(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     trendLine,
                   ],
