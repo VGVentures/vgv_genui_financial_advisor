@@ -36,21 +36,18 @@ class DesignSystemCatalogPage extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: const Icon(
-              Icons.palette_outlined,
-              color: Colors.black54,
-            ),
             title: const Text(
-              'Design System',
-              style: TextStyle(color: Colors.black87),
+              'HorizontalBar',
+              style: TextStyle(color: Colors.black),
             ),
-            trailing: const Icon(
-              Icons.chevron_right,
-              color: Colors.black54,
+            subtitle: const Text(
+              'Horizontal bar chart for comparisons',
+              style: TextStyle(color: Colors.black),
             ),
+            trailing: const Icon(Icons.chevron_right),
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
-                builder: (_) => const DesignSystemCatalogPage(),
+                builder: (_) => const HorizontalBarCatalogPage(),
               ),
             ),
           ),
