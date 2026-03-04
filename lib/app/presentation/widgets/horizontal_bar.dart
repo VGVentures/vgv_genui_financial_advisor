@@ -63,14 +63,12 @@ class HorizontalBar extends StatelessWidget {
             Text(
               category,
               style: theme.textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w500,
                 color: colors?.onSurface,
               ),
             ),
             Text(
               amount,
               style: theme.textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w500,
                 color: colors?.onSurface,
               ),
             ),
@@ -94,7 +92,6 @@ class HorizontalBar extends StatelessWidget {
               comparisonValue,
               style: theme.textTheme.labelLarge?.copyWith(
                 color: comparisonColor,
-                fontWeight: FontWeight.w500,
               ),
             ),
           ],
