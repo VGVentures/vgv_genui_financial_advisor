@@ -3,13 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 const _items = [
-  RankedTableItem(title: 'The French Laundry', amount: r'$350', delta: '+15%'),
+  RankedTableItem(
+    title: 'The French Laundry',
+    amount: r'$350',
+    delta: '+15%',
+  ),
   RankedTableItem(
     title: 'Osteria Francescana',
     amount: r'$310',
     delta: '+10%',
   ),
-  RankedTableItem(title: 'Alinea', amount: r'$300', delta: '+30%'),
+  RankedTableItem(
+    title: 'Alinea',
+    amount: r'$300',
+    delta: '+30%',
+  ),
 ];
 
 Future<void> _pumpTable(WidgetTester tester, {bool withTheme = true}) {
@@ -97,13 +105,13 @@ void main() {
       expect(text.style?.color, expectedColor);
     });
 
-    testWidgets('renders without AppColors extension', (tester) async {
+    testWidgets('without $AppColors extension', (tester) async {
       await _pumpTable(tester, withTheme: false);
 
       expect(find.byType(RankedTable), findsOneWidget);
     });
 
-    testWidgets('renders empty list without error', (tester) async {
+    testWidgets('empty list without error', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           theme: AppTheme(LightThemeColors()).themeData,
