@@ -33,8 +33,9 @@ void main() {
       expect(find.text('Fixed costs'), findsOneWidget);
     });
 
-    testWidgets('default state has surface background and no visible border',
-        (tester) async {
+    testWidgets('default state has surface background and no visible border', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         _buildTestApp(
           child: const EmojiCard(emoji: '📊', label: 'Fixed costs'),
@@ -49,30 +50,34 @@ void main() {
     });
 
     testWidgets(
-        'selected state has primaryContainer background and primary border',
-        (tester) async {
-      await tester.pumpWidget(
-        _buildTestApp(
-          child: const EmojiCard(
-            emoji: '📊',
-            label: 'Fixed costs',
-            isSelected: true,
+      'selected state has primaryContainer background and primary border',
+      (tester) async {
+        await tester.pumpWidget(
+          _buildTestApp(
+            child: const EmojiCard(
+              emoji: '📊',
+              label: 'Fixed costs',
+              isSelected: true,
+            ),
           ),
-        ),
-      );
+        );
 
-      final container = tester.widget<Container>(find.byType(Container).first);
-      final decoration = container.decoration! as BoxDecoration;
+        final container = tester.widget<Container>(
+          find.byType(Container).first,
+        );
+        final decoration = container.decoration! as BoxDecoration;
 
-      expect(decoration.color, const Color(0xFFF3F6FF));
-      expect(
-        decoration.border,
-        Border.all(color: const Color(0xFF6D92F5), width: 2),
-      );
-    });
+        expect(decoration.color, const Color(0xFFF3F6FF));
+        expect(
+          decoration.border,
+          Border.all(color: const Color(0xFF6D92F5), width: 2),
+        );
+      },
+    );
 
-    testWidgets('wraps content in InkWell when onTap is provided',
-        (tester) async {
+    testWidgets('wraps content in InkWell when onTap is provided', (
+      tester,
+    ) async {
       var tapped = false;
 
       await tester.pumpWidget(
@@ -125,8 +130,7 @@ void main() {
     });
 
     testWidgets('renders as GridView on mobile', (tester) async {
-      tester.view.physicalSize =
-          const Size(Breakpoints.mobile - 1, 800);
+      tester.view.physicalSize = const Size(Breakpoints.mobile - 1, 800);
       tester.view.devicePixelRatio = 1;
       addTeardownToResetView(tester);
 
