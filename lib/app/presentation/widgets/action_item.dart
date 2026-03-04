@@ -227,10 +227,6 @@ class _ActionButton extends StatelessWidget {
     final shape = RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(_ActionItemDimensions.buttonRadius),
     );
-    const padding = EdgeInsets.symmetric(
-      horizontal: Spacing.lg,
-      vertical: Spacing.xs,
-    );
 
     return switch (variant) {
       ActionItemButtonVariant.primary => FilledButton(
@@ -239,7 +235,15 @@ class _ActionButton extends StatelessWidget {
           backgroundColor: colors?.primary,
           foregroundColor: colors?.onInverseSurface,
           shape: shape,
-          padding: padding,
+          padding: const EdgeInsets.symmetric(
+            horizontal: Spacing.lg,
+            vertical: Spacing.xs,
+          ),
+          minimumSize: const Size(0, _ActionItemDimensions.buttonHeight),
+          maximumSize: const Size(
+            double.infinity,
+            _ActionItemDimensions.buttonHeight,
+          ),
         ),
         child: Text(
           label,
@@ -254,10 +258,19 @@ class _ActionButton extends StatelessWidget {
           backgroundColor: colors?.surfaceVariant,
           foregroundColor: colors?.onSurface,
           side: BorderSide(
+            width: _ActionItemDimensions.secondaryBorderWidth,
             color: colors?.primary ?? _ActionItemColors.secondaryBorder,
           ),
           shape: shape,
-          padding: padding,
+          padding: const EdgeInsets.symmetric(horizontal: Spacing.sm),
+          minimumSize: const Size(
+            _ActionItemDimensions.secondaryButtonMinWidth,
+            _ActionItemDimensions.buttonHeight,
+          ),
+          maximumSize: const Size(
+            _ActionItemDimensions.secondaryButtonMaxWidth,
+            _ActionItemDimensions.buttonHeight,
+          ),
         ),
         child: Text(
           label,
@@ -295,6 +308,10 @@ class ActionItemsGroup extends StatelessWidget {
 abstract final class _ActionItemDimensions {
   static const double buttonRadius = 100;
   static const double titleSubtitleGap = 2;
+  static const double secondaryBorderWidth = 1.5;
+  static const double buttonHeight = 45;
+  static const double secondaryButtonMinWidth = 72;
+  static const double secondaryButtonMaxWidth = 192;
 }
 
 abstract final class _ActionItemColors {
