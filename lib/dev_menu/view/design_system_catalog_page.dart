@@ -1,4 +1,7 @@
+import 'package:finance_app/dev_menu/view/action_item_catalog_page.dart';
+import 'package:finance_app/dev_menu/view/ai_button_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/emoji_card_catalog_page.dart';
+import 'package:finance_app/dev_menu/view/horizontal_bar_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/metric_card_catalog_page.dart';
 import 'package:flutter/material.dart';
 
@@ -21,17 +24,33 @@ class DesignSystemCatalogPage extends StatelessWidget {
         children: [
           ListTile(
             title: const Text(
-              'MetricCard',
+              'ActionItem',
               style: TextStyle(color: Colors.black),
             ),
             subtitle: const Text(
-              'Key metric display with delta variants',
+              'Task/recommendation row with primary, secondary, and no-button variants',
               style: TextStyle(color: Colors.black),
             ),
             trailing: const Icon(Icons.chevron_right),
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
-                builder: (_) => const MetricCardCatalogPage(),
+                builder: (_) => const ActionItemCatalogPage(),
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text(
+              'AiButton',
+              style: TextStyle(color: Colors.black),
+            ),
+            subtitle: const Text(
+              'AI suggestion button with gradient border',
+              style: TextStyle(color: Colors.black),
+            ),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const AiButtonCatalogPage(),
               ),
             ),
           ),
@@ -48,6 +67,38 @@ class DesignSystemCatalogPage extends StatelessWidget {
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
                 builder: (_) => const EmojiCardCatalogPage(),
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text(
+              'HorizontalBar',
+              style: TextStyle(color: Colors.black),
+            ),
+            subtitle: const Text(
+              'Horizontal bar chart for comparisons',
+              style: TextStyle(color: Colors.black),
+            ),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const HorizontalBarCatalogPage(),
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text(
+              'MetricCard',
+              style: TextStyle(color: Colors.black),
+            ),
+            subtitle: const Text(
+              'Key metric display with delta variants',
+              style: TextStyle(color: Colors.black),
+            ),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const MetricCardCatalogPage(),
               ),
             ),
           ),
