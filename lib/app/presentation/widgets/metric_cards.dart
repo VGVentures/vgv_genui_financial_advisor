@@ -23,7 +23,7 @@ enum MetricDeltaDirection {
 /// - **Selected** – any of the above with [isSelected] set to `true`.
 ///
 /// Use [MetricCardsLayout] to display a collection of cards with a responsive
-/// horizontal-row (desktop) or 2-column grid (mobile) arrangement.
+/// horizontal-row (desktop) or vertical-stack (mobile) arrangement.
 class MetricCard extends StatelessWidget {
   /// Creates a [MetricCard].
   const MetricCard({
@@ -279,8 +279,7 @@ class MetricCardsLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return responsiveValue(
-      context,
+    return ResponsiveScaffold(
       mobile: _MobileMetricCardsLayout(cards: cards),
       desktop: _DesktopMetricCardsLayout(cards: cards),
     );
@@ -314,12 +313,9 @@ class _MobileMetricCardsLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        for (var i = 0; i < cards.length; i++) ...[
-          cards[i],
-          if (i < cards.length - 1) const SizedBox(height: Spacing.md),
-        ],
-      ],
+      children:
+          cards.expand((c) => [c, const SizedBox(height: Spacing.md)]).toList()
+            ..removeLast(),
     );
   }
 }
