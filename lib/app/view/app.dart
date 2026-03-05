@@ -4,7 +4,6 @@ import 'package:finance_app/app/presentation.dart';
 import 'package:finance_app/feature_flag/feature_flag.dart';
 import 'package:finance_app/intro/intro.dart';
 import 'package:finance_app/l10n/l10n.dart';
-import 'package:finance_app/onboarding/kick_off/view/kick_off_page.dart';
 import 'package:finance_app/persona/persona.dart';
 import 'package:flutter/material.dart';
 import 'package:wiredash/wiredash.dart';
@@ -79,7 +78,7 @@ class _HomePage extends StatelessWidget {
         child: const Icon(Icons.feedback),
       ),
       endDrawer: const DevMenuDrawer(),
-      body: const KickOffPage(),
+      body: const PersonaSelectorPage(),
     );
   }
 }
