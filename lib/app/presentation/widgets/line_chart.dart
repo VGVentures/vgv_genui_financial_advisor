@@ -249,7 +249,7 @@ class _TooltipCard extends StatelessWidget {
     final left = selectedX + offsetX + tooltipWidth > chartWidth
         ? selectedX - tooltipWidth - offsetX
         : selectedX + offsetX;
-    final top = max(0.0, selectedY - offsetY);
+    final top = max<double>(0, selectedY - offsetY);
 
     final monthStyle = textTheme.bodySmall?.copyWith(
       color: colors?.onSurfaceVariant ?? _LineChartColors.indicator,
