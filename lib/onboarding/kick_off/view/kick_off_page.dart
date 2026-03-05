@@ -8,6 +8,7 @@ import 'package:finance_app/onboarding/kick_off/view/mobile_kick_off_view.dart';
 import 'package:finance_app/onboarding/kick_off/view/widgets/trust_badge.dart';
 import 'package:finance_app/onboarding/pick_profile/view/pick_profile_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class KickOffPage extends StatelessWidget {
   const KickOffPage({super.key});
@@ -22,19 +23,25 @@ class KickOffPage extends StatelessWidget {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    final appColors = Theme.of(context).extension<AppColors>()!;
-    final bgColor = appColors.accentBlue;
-
-    final body = Center(
+  Widget _buildBody({
+    required AppLocalizations l10n,
+    required AppColors appColors,
+    required TextStyle badgeLargeStyle,
+    required TextStyle badgeMediumStyle,
+    required TextStyle titleStyle,
+    required TextStyle descriptionStyle,
+    required String descriptionText,
+    Alignment alignment = Alignment.center,
+  }) {
+    return Align(
+      alignment: alignment,
       child: ConstrainedBox(
         constraints: const BoxConstraints(
           maxWidth: KickOffValues.maxContentWidth,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
             SizedBox(
               height: KickOffValues.badgesStackHeight,
@@ -44,27 +51,29 @@ class KickOffPage extends StatelessWidget {
                   Positioned(
                     bottom: 0,
                     child: Transform.rotate(
-                      angle: -KickOffValues.badgeRotationAngle,
+                      angle: -KickOffValues.badgeRotationAngleSmall,
                       child: TrustBadge(
                         text: l10n.notHardcodedBadgeText,
-                        backgroundColor: appColors.badgeDarkBlue,
+                        backgroundColor: appColors.primaryStrong,
                         textColor: Colors.white,
+                        textStyle: badgeLargeStyle,
                       ),
                     ),
                   ),
                   Positioned(
-                    top: 0,
+                    top: 5,
                     child: Transform.rotate(
                       angle: KickOffValues.badgeRotationAngle,
                       child: TrustBadge(
                         text: l10n.trustBadgeText,
-                        backgroundColor: appColors.badgeWhite,
-                        textColor: appColors.badgeTextBlueColor,
-                        icon: Image.asset(
-                          'assets/icons_kick_off/check_icon.png',
-                          width: Spacing.md,
-                          height: Spacing.md,
+                        backgroundColor: const Color(0xFFF0F0F0),
+                        textColor: appColors.onPrimaryContainer,
+                        icon: SvgPicture.asset(
+                          'assets/icons_kick_off/trust_icon.svg',
+                          width: 30,
+                          height: 30,
                         ),
+                        textStyle: badgeMediumStyle,
                       ),
                     ),
                   ),
@@ -74,21 +83,15 @@ class KickOffPage extends StatelessWidget {
             const SizedBox(height: KickOffValues.titleTopGap),
             Text(
               l10n.kickOffTitle,
-              style: AppTextStyles.titleLarge?.copyWith(
-                fontSize: 48,
-                height: 80 / 64,
-                letterSpacing: -1,
+              style: titleStyle.copyWith(
                 color: const Color(0xFFF9FAFB),
               ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: KickOffValues.titleDescriptionGap),
             Text(
-              l10n.kickOffDescription,
-              style: AppTextStyles.bodyLarge?.copyWith(
-                fontSize: 20,
-                height: 1.5,
-                letterSpacing: 0,
+              descriptionText,
+              style: descriptionStyle.copyWith(
                 color: const Color(0xFFF9FAFB),
               ),
               textAlign: TextAlign.center,
@@ -96,6 +99,42 @@ class KickOffPage extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final appColors = Theme.of(context).extension<AppColors>()!;
+    final bgColor = appColors.primary;
+
+    final mobileBody = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30),
+      child: _buildBody(
+        l10n: l10n,
+        appColors: appColors,
+        badgeLargeStyle: AppTextStyles.titleLargeMobile,
+        badgeMediumStyle: AppTextStyles.titleMediumMobile,
+        titleStyle: AppTextStyles.displayLargeDesktop,
+        descriptionStyle: AppTextStyles.titleSmallDesktop,
+        descriptionText: l10n.kickOffDescriptionMobile,
+        alignment: const Alignment(0, -0.2),
+      ),
+    );
+
+    final desktopBody = _buildBody(
+      l10n: l10n,
+      appColors: appColors,
+      badgeLargeStyle: AppTextStyles.titleLargeDesktop,
+      badgeMediumStyle: AppTextStyles.titleMediumDesktop,
+      titleStyle: AppTextStyles.titleLargeDesktop.copyWith(
+        fontWeight: FontWeight.w700,
+        fontSize: 64,
+        height: 80 / 64,
+        letterSpacing: -1,
+      ),
+      descriptionStyle: AppTextStyles.headlineLargeDesktop,
+      descriptionText: l10n.kickOffDescription,
     );
 
     final baseButton = OutlinedButton(
@@ -116,12 +155,12 @@ class KickOffPage extends StatelessWidget {
 
     return ResponsiveScaffold(
       mobile: MobileKickOffView(
-        body: body,
+        body: mobileBody,
         backgroundColor: bgColor,
         floatingActionButton: baseButton,
       ),
       desktop: DesktopKickOffView(
-        body: body,
+        body: desktopBody,
         backgroundColor: bgColor,
         floatingActionButton: baseButton,
       ),

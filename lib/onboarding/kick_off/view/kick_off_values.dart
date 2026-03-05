@@ -1,8 +1,9 @@
 /// Custom spacing and sizing values specific to KickOff views
 abstract class KickOffValues {
   // Badge stack
-  static const double badgesStackHeight = 70;
-  static const double badgeRotationAngle = 0.03;
+  static const double badgesStackHeight = 100;
+  static const double badgeRotationAngle = 0.08;
+  static const double badgeRotationAngleSmall = 0.02;
 
   // Content spacing
   static const double maxContentWidth = 700;
@@ -26,7 +27,7 @@ abstract class KickOffValues {
 
   // Mobile decorations
   static const double mobileDecorationOffset = 20;
-  static const double mobileTopDecorationTop = 80;
+  static const double mobileTopDecorationTop = 5;
   static const double mobileBottomDecorationBottom = 60;
   static const double mobileDecorationWidth = 120;
   static const double mobileTopDecorationHeight = 130;

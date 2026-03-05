@@ -6,6 +6,7 @@ class TrustBadge extends StatelessWidget {
     required this.text,
     required this.backgroundColor,
     required this.textColor,
+    required this.textStyle,
     this.icon,
     super.key,
   });
@@ -13,14 +14,17 @@ class TrustBadge extends StatelessWidget {
   final String text;
   final Color backgroundColor;
   final Color textColor;
+  final TextStyle textStyle;
   final Widget? icon;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: Spacing.lg,
-        vertical: Spacing.xs,
+      padding: EdgeInsets.only(
+        left: icon != null ? Spacing.xs : Spacing.lg,
+        right: Spacing.lg,
+        top: Spacing.xs,
+        bottom: Spacing.xs,
       ),
       decoration: BoxDecoration(
         color: backgroundColor,
@@ -31,14 +35,12 @@ class TrustBadge extends StatelessWidget {
         children: [
           if (icon != null) ...[
             icon!,
-            const SizedBox(width: Spacing.xxs),
+            const SizedBox(width: Spacing.xs),
           ],
           Text(
             text,
-            style: AppTextStyles.bodySmall?.copyWith(
+            style: textStyle.copyWith(
               color: textColor,
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
             ),
           ),
         ],
