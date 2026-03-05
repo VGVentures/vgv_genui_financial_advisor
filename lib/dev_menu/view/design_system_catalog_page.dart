@@ -1,3 +1,4 @@
+import 'package:finance_app/app/presentation/app_colors.dart';
 import 'package:finance_app/dev_menu/view/ai_button_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/category_filter_chip_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/emoji_card_catalog_page.dart';
@@ -5,6 +6,8 @@ import 'package:finance_app/dev_menu/view/filter_bar_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/header_selector_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/horizontal_bar_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/metric_card_catalog_page.dart';
+import 'package:finance_app/dev_menu/view/ranked_table_page.dart';
+import 'package:finance_app/dev_menu/view/transaction_list_catalog_page.dart';
 import 'package:flutter/material.dart';
 
 /// {@template design_system_catalog_page}
@@ -19,8 +22,11 @@ class DesignSystemCatalogPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<AppColors>();
+    final textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: colors?.onPrimary,
       appBar: AppBar(title: const Text('Design System')),
       body: ListView(
         children: [
@@ -90,12 +96,13 @@ class DesignSystemCatalogPage extends StatelessWidget {
           ),
           ListTile(
             title: const Text(
+            title: Text(
               'HorizontalBar',
-              style: TextStyle(color: Colors.black),
+              style: textTheme.titleSmall,
             ),
-            subtitle: const Text(
+            subtitle: Text(
               'Horizontal bar chart for comparisons',
-              style: TextStyle(color: Colors.black),
+              style: textTheme.bodyMedium,
             ),
             trailing: const Icon(Icons.chevron_right),
             onTap: () => Navigator.of(context).push(
@@ -133,6 +140,38 @@ class DesignSystemCatalogPage extends StatelessWidget {
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
                 builder: (_) => const MetricCardCatalogPage(),
+              ),
+            ),
+          ),
+          ListTile(
+            title: Text(
+              'Ranked Table',
+              style: textTheme.titleSmall,
+            ),
+            subtitle: Text(
+              'Ranked Table for different items with delta variants',
+              style: textTheme.bodyMedium,
+            ),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const RankedTablePage(),
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text(
+              'Transaction List',
+              style: TextStyle(color: Colors.black),
+            ),
+            subtitle: const Text(
+              'Transaction rows with optional View button',
+              style: TextStyle(color: Colors.black),
+            ),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const TransactionListCatalogPage(),
               ),
             ),
           ),
