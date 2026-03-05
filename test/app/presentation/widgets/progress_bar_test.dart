@@ -35,35 +35,37 @@ Color _barColor(WidgetTester tester) {
 
 void main() {
   group(ProgressBar, () {
-    testWidgets('renders title', (tester) async {
-      await _pump(tester, title: 'Dining', value: 200, total: 400);
+    group('renders', () {
+      testWidgets('renders title', (tester) async {
+        await _pump(tester, title: 'Dining', value: 200, total: 400);
 
-      expect(find.text('Dining'), findsOneWidget);
-    });
+        expect(find.text('Dining'), findsOneWidget);
+      });
 
-    testWidgets('renders default formatted current value', (tester) async {
-      await _pump(tester, title: 'Dining', value: 200, total: 400);
+      testWidgets('renders default formatted current value', (tester) async {
+        await _pump(tester, title: 'Dining', value: 200, total: 400);
 
-      expect(find.text(r'$200'), findsOneWidget);
-    });
+        expect(find.text(r'$200'), findsOneWidget);
+      });
 
-    testWidgets('renders default formatted budget value', (tester) async {
-      await _pump(tester, title: 'Dining', value: 200, total: 400);
+      testWidgets('renders default formatted budget value', (tester) async {
+        await _pump(tester, title: 'Dining', value: 200, total: 400);
 
-      expect(find.text(r' / $400'), findsOneWidget);
-    });
+        expect(find.text(r' / $400'), findsOneWidget);
+      });
 
-    testWidgets('uses custom formatValue for both amounts', (tester) async {
-      await _pump(
-        tester,
-        title: 'Dining',
-        value: 200,
-        total: 400,
-        formatValue: (v) => '€${v.toStringAsFixed(0)}',
-      );
+      testWidgets('uses custom formatValue for both amounts', (tester) async {
+        await _pump(
+          tester,
+          title: 'Dining',
+          value: 200,
+          total: 400,
+          formatValue: (v) => '€${v.toStringAsFixed(0)}',
+        );
 
-      expect(find.text('€200'), findsOneWidget);
-      expect(find.text(' / €400'), findsOneWidget);
+        expect(find.text('€200'), findsOneWidget);
+        expect(find.text(' / €400'), findsOneWidget);
+      });
     });
 
     group('bar color', () {
@@ -73,36 +75,38 @@ void main() {
         expect(_barColor(tester), LightThemeColors().success);
       });
 
-      testWidgets('is warning when progress is at 65%', (tester) async {
-        await _pump(tester, title: 'x', value: 65, total: 100);
+      group('is warning', () {
+        testWidgets('when progress is at 65%', (tester) async {
+          await _pump(tester, title: 'x', value: 65, total: 100);
 
-        expect(_barColor(tester), LightThemeColors().warning);
+          expect(_barColor(tester), LightThemeColors().warning);
+        });
+
+        testWidgets('when progress is between 65% and 85%', (tester) async {
+          await _pump(tester, title: 'x', value: 75, total: 100);
+
+          expect(_barColor(tester), LightThemeColors().warning);
+        });
+
+        testWidgets('when progress is at 85%', (tester) async {
+          await _pump(tester, title: 'x', value: 85, total: 100);
+
+          expect(_barColor(tester), LightThemeColors().warning);
+        });
       });
 
-      testWidgets('is warning when progress is between 65% and 85%', (
-        tester,
-      ) async {
-        await _pump(tester, title: 'x', value: 75, total: 100);
+      group('is error', () {
+        testWidgets('when progress is above 85%', (tester) async {
+          await _pump(tester, title: 'x', value: 90, total: 100);
 
-        expect(_barColor(tester), LightThemeColors().warning);
-      });
+          expect(_barColor(tester), LightThemeColors().error);
+        });
 
-      testWidgets('is warning when progress is at 85%', (tester) async {
-        await _pump(tester, title: 'x', value: 85, total: 100);
+        testWidgets('when over budget', (tester) async {
+          await _pump(tester, title: 'x', value: 420, total: 400);
 
-        expect(_barColor(tester), LightThemeColors().warning);
-      });
-
-      testWidgets('is error when progress is above 85%', (tester) async {
-        await _pump(tester, title: 'x', value: 90, total: 100);
-
-        expect(_barColor(tester), LightThemeColors().error);
-      });
-
-      testWidgets('is error when over budget', (tester) async {
-        await _pump(tester, title: 'x', value: 420, total: 400);
-
-        expect(_barColor(tester), LightThemeColors().error);
+          expect(_barColor(tester), LightThemeColors().error);
+        });
       });
     });
 
