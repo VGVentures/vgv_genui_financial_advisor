@@ -1,5 +1,7 @@
 export 'ai_button.dart';
+export 'category_filter_chip.dart';
 export 'emoji_card.dart';
+export 'filter_bar.dart';
 export 'header_selector.dart';
 export 'horizontal_bar.dart';
 export 'metric_cards.dart';

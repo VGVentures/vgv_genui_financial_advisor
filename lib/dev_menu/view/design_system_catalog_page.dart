@@ -1,6 +1,7 @@
 import 'package:finance_app/dev_menu/view/ai_button_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/category_filter_chip_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/emoji_card_catalog_page.dart';
+import 'package:finance_app/dev_menu/view/filter_bar_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/header_selector_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/horizontal_bar_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/metric_card_catalog_page.dart';
@@ -68,6 +69,22 @@ class DesignSystemCatalogPage extends StatelessWidget {
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
                 builder: (_) => const EmojiCardCatalogPage(),
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text(
+              'FilterBar',
+              style: TextStyle(color: Colors.black),
+            ),
+            subtitle: const Text(
+              'Filter bar with category chips and All toggle',
+              style: TextStyle(color: Colors.black),
+            ),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const FilterBarCatalogPage(),
               ),
             ),
           ),
