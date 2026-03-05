@@ -88,6 +88,7 @@
     "@writeYourOwnLabel": {
         "description": "Option label for a custom user-entered focus"
     },
+<<<<<<< 56-lets-kick-this-off-screen
     "kickOffTitle": "Let's kick things off!",
     "@kickOffTitle": {
         "description": "Title text on the KickOff onboarding page"
@@ -107,5 +108,10 @@
     "notHardcodedBadgeText": "Nothing is hardcoded!",
     "@notHardcodedBadgeText": {
         "description": "Text for the 'not hardcoded' badge on the KickOff page"
+=======
+    "viewLabel": "View",
+    "@viewLabel": {
+        "description": "Label for see a transaction detail"
+>>>>>>> main
     }
 }
