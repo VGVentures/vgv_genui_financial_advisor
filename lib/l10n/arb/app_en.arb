@@ -87,5 +87,9 @@
     "writeYourOwnLabel": "Write your own...",
     "@writeYourOwnLabel": {
         "description": "Option label for a custom user-entered focus"
+    },
+    "viewLabel": "View",
+    "@viewLabel": {
+        "description": "Label for see a transaction detail"
     }
 }

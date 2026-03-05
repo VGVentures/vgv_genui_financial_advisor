@@ -1,6 +1,7 @@
 import 'package:finance_app/dev_menu/view/ai_button_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/horizontal_bar_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/metric_card_catalog_page.dart';
+import 'package:finance_app/dev_menu/view/transaction_list_catalog_page.dart';
 import 'package:flutter/material.dart';
 
 /// {@template design_system_catalog_page}
@@ -65,6 +66,22 @@ class DesignSystemCatalogPage extends StatelessWidget {
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
                 builder: (_) => const AiButtonCatalogPage(),
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text(
+              'Transaction List',
+              style: TextStyle(color: Colors.black),
+            ),
+            subtitle: const Text(
+              'Transaction rows with optional View button',
+              style: TextStyle(color: Colors.black),
+            ),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const TransactionListCatalogPage(),
               ),
             ),
           ),
