@@ -19,8 +19,9 @@ class _HeaderSelectorCatalogPageState extends State<HeaderSelectorCatalogPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<AppColors>();
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: colors?.surfaceVariant,
       appBar: AppBar(title: const Text('HeaderSelector')),
       body: ListView(
         padding: const EdgeInsets.all(Spacing.md),
