@@ -113,7 +113,7 @@ class DesignSystemCatalogPage extends StatelessWidget {
           ),
           ListTile(
             title: const Text(
-              'HorizontalBar',
+              'HeaderSelector',
               style: TextStyle(color: Colors.black),
             ),
             subtitle: const Text(
@@ -124,6 +124,22 @@ class DesignSystemCatalogPage extends StatelessWidget {
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
                 builder: (_) => const HeaderSelectorCatalogPage(),
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text(
+              'HorizontalBar',
+              style: TextStyle(color: Colors.black),
+            ),
+            subtitle: const Text(
+              'Pill-shaped chip group for selecting time periods',
+              style: TextStyle(color: Colors.black),
+            ),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const HorizontalBarCatalogPage(),
               ),
             ),
           ),
