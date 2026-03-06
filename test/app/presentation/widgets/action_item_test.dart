@@ -12,9 +12,9 @@ Future<void> _pump(WidgetTester tester, Widget widget) {
 }
 
 void main() {
-  group('ActionItem', () {
+  group(ActionItem, () {
     group('no-button variant', () {
-      testWidgets('renders title and subtitle', (tester) async {
+      testWidgets('renders', (tester) async {
         await _pump(
           tester,
           const ActionItem(
@@ -26,45 +26,9 @@ void main() {
 
         expect(find.text('Restaurant'), findsOneWidget);
         expect(find.text('Dining • Feb 18'), findsOneWidget);
-      });
-
-      testWidgets('renders amount', (tester) async {
-        await _pump(
-          tester,
-          const ActionItem(
-            title: 'Restaurant',
-            subtitle: 'Dining • Feb 18',
-            amount: r'$87',
-          ),
-        );
-
         expect(find.text(r'$87'), findsOneWidget);
-      });
-
-      testWidgets('renders no button', (tester) async {
-        await _pump(
-          tester,
-          const ActionItem(
-            title: 'Restaurant',
-            subtitle: 'Dining • Feb 18',
-            amount: r'$87',
-          ),
-        );
-
         expect(find.byType(FilledButton), findsNothing);
         expect(find.byType(OutlinedButton), findsNothing);
-      });
-
-      testWidgets('renders divider', (tester) async {
-        await _pump(
-          tester,
-          const ActionItem(
-            title: 'Restaurant',
-            subtitle: 'Dining • Feb 18',
-            amount: r'$87',
-          ),
-        );
-
         expect(find.byType(Divider), findsOneWidget);
       });
     });
