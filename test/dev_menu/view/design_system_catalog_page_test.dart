@@ -49,5 +49,34 @@ void main() {
 
       expect(find.byType(EmojiCardCatalogPage), findsOneWidget);
     });
+
+    testWidgets('renders RadioCard list tile', (tester) async {
+      await _pumpPage(tester);
+
+      await tester.dragUntilVisible(
+        find.text('RadioCard'),
+        find.byType(ListView),
+        const Offset(0, -100),
+      );
+
+      expect(find.text('RadioCard'), findsOneWidget);
+    });
+
+    testWidgets('tapping RadioCard navigates to RadioCardCatalogPage', (
+      tester,
+    ) async {
+      await _pumpPage(tester);
+
+      await tester.dragUntilVisible(
+        find.text('RadioCard'),
+        find.byType(ListView),
+        const Offset(0, -100),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('RadioCard'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(RadioCardCatalogPage), findsOneWidget);
+    });
   });
 }

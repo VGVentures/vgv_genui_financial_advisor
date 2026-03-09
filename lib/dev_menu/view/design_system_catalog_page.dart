@@ -6,6 +6,7 @@ import 'package:finance_app/dev_menu/view/emoji_card_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/header_selector_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/horizontal_bar_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/metric_card_catalog_page.dart';
+import 'package:finance_app/dev_menu/view/radio_card_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/ranked_table_page.dart';
 import 'package:finance_app/dev_menu/view/transaction_list_catalog_page.dart';
 import 'package:flutter/material.dart';
@@ -139,6 +140,22 @@ class DesignSystemCatalogPage extends StatelessWidget {
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
                 builder: (_) => const MetricCardCatalogPage(),
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text(
+              'RadioCard',
+              style: TextStyle(color: Colors.black),
+            ),
+            subtitle: const Text(
+              'Selectable card with radio indicator',
+              style: TextStyle(color: Colors.black),
+            ),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const RadioCardCatalogPage(),
               ),
             ),
           ),
