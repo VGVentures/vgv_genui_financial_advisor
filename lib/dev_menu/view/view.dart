@@ -4,6 +4,7 @@ export 'category_filter_chip_catalog_page.dart';
 export 'design_system_catalog_page.dart';
 export 'drawer_catalog_page.dart';
 export 'emoji_card_catalog_page.dart';
+export 'filter_bar_catalog_page.dart';
 export 'header_selector_catalog_page.dart';
 export 'horizontal_bar_catalog_page.dart';
 export 'metric_card_catalog_page.dart';
