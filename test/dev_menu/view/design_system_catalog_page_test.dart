@@ -57,6 +57,7 @@ void main() {
     testWidgets('renders SectionHeader list tile', (tester) async {
       await _pumpPage(tester);
 
+      await tester.scrollUntilVisible(find.text('SectionHeader'), 200);
       expect(find.text('SectionHeader'), findsOneWidget);
     });
 
