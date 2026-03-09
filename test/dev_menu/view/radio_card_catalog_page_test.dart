@@ -11,32 +11,33 @@ Future<void> _pumpPage(WidgetTester tester) {
 
 void main() {
   group('RadioCardCatalogPage', () {
-    testWidgets('renders RadioCard app bar title', (tester) async {
-      await _pumpPage(tester);
+    group('renders', () {
+      testWidgets('RadioCard app bar title', (tester) async {
+        await _pumpPage(tester);
 
-      expect(find.text('RadioCard'), findsOneWidget);
-    });
+        expect(find.text('RadioCard'), findsOneWidget);
+      });
 
-    testWidgets('renders selected state section', (tester) async {
-      await _pumpPage(tester);
+      testWidgets('Monthly and Yearly cards', (tester) async {
+        await _pumpPage(tester);
 
-      expect(find.text('Selected state'), findsOneWidget);
-      expect(find.text('Option A'), findsOneWidget);
-    });
+        expect(find.text('Monthly'), findsOneWidget);
+        expect(find.text('Yearly'), findsOneWidget);
+      });
 
-    testWidgets('renders unselected state section', (tester) async {
-      await _pumpPage(tester);
+      testWidgets('Monthly selected by default', (tester) async {
+        await _pumpPage(tester);
 
-      expect(find.text('Unselected state'), findsOneWidget);
-      expect(find.text('Option B'), findsOneWidget);
-    });
+        final monthlyCard = tester.widget<RadioCard>(
+          find.widgetWithText(RadioCard, 'Monthly'),
+        );
+        expect(monthlyCard.isSelected, isTrue);
 
-    testWidgets('renders interactive group section', (tester) async {
-      await _pumpPage(tester);
-
-      expect(find.text('Interactive group'), findsOneWidget);
-      expect(find.text('Monthly'), findsOneWidget);
-      expect(find.text('Yearly'), findsOneWidget);
+        final yearlyCard = tester.widget<RadioCard>(
+          find.widgetWithText(RadioCard, 'Yearly'),
+        );
+        expect(yearlyCard.isSelected, isFalse);
+      });
     });
 
     testWidgets('tapping Yearly card updates selection', (tester) async {
