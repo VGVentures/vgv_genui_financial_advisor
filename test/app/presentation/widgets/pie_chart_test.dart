@@ -187,8 +187,8 @@ void main() {
 
     group('donut hover', () {
       Finder findDonutPaint() => find.byWidgetPredicate(
-            (w) => w is CustomPaint && w.painter is DonutPainter,
-          );
+        (w) => w is CustomPaint && w.painter is DonutPainter,
+      );
 
       testWidgets('selects segment when hovering donut ring', (tester) async {
         int? selectedIndex;
@@ -207,8 +207,7 @@ void main() {
         expect(selectedIndex, 0);
       });
 
-      testWidgets('deselects when hover moves to center hole',
-          (tester) async {
+      testWidgets('deselects when hover moves to center hole', (tester) async {
         int? selectedIndex;
         await _pumpChart(
           tester,
@@ -221,8 +220,10 @@ void main() {
         const ringMid = donutSize / 2 - strokeWidth / 2;
 
         // First hover on ring
-        final gesture =
-            await _hoverAt(tester, center + const Offset(0, -ringMid));
+        final gesture = await _hoverAt(
+          tester,
+          center + const Offset(0, -ringMid),
+        );
         expect(selectedIndex, 0);
 
         // Move to center (hole)
@@ -243,8 +244,10 @@ void main() {
         const strokeWidth = 41.0;
         const ringMid = donutSize / 2 - strokeWidth / 2;
 
-        final gesture =
-            await _hoverAt(tester, center + const Offset(0, -ringMid));
+        final gesture = await _hoverAt(
+          tester,
+          center + const Offset(0, -ringMid),
+        );
         expect(selectedIndex, 0);
 
         // Move pointer completely outside
@@ -336,8 +339,7 @@ void main() {
         expect(find.text(r'$4,260'), findsOneWidget);
       });
 
-      testWidgets('donut hover does nothing with zero values',
-          (tester) async {
+      testWidgets('donut hover does nothing with zero values', (tester) async {
         int? selectedIndex;
         await _pumpChart(
           tester,

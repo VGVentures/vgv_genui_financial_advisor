@@ -25,7 +25,7 @@ class DonutChart extends StatelessWidget {
   final String? percentage;
   final AppColors? colors;
 
-  int? _hitTestSegment(Offset localPosition) {
+  int? _hitSegment(Offset localPosition) {
     final total = items.fold<double>(0, (sum, item) => sum + item.value);
     if (total == 0) return null;
 
@@ -39,7 +39,8 @@ class DonutChart extends StatelessWidget {
 
     if (distance < innerRadius || distance > outerRadius) return null;
 
-    var angle = atan2(
+    var angle =
+        atan2(
           localPosition.dy - center.dy,
           localPosition.dx - center.dx,
         ) +
@@ -55,7 +56,7 @@ class DonutChart extends StatelessWidget {
   }
 
   void _onHover(PointerEvent event) {
-    final index = _hitTestSegment(event.localPosition);
+    final index = _hitSegment(event.localPosition);
     if (index != null) {
       onSegmentHover(index);
     } else {
