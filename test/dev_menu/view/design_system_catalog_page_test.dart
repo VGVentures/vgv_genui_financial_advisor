@@ -71,8 +71,7 @@ void main() {
       await tester.tap(find.text('SectionHeader'));
       await tester.pumpAndSettle();
       expect(find.byType(SectionHeaderCatalogPage), findsOneWidget);
-
-  });
+    });
 
     testWidgets('renders FilterBar list tile', (tester) async {
       await _pumpPage(tester);
@@ -91,4 +90,5 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.byType(FilterBarCatalogPage), findsOneWidget);
     });
+  });
 }
