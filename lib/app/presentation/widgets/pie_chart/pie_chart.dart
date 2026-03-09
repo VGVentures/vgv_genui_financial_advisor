@@ -1,0 +1,183 @@
+import 'package:finance_app/app/presentation.dart';
+import 'package:flutter/material.dart';
+
+/// Data for a single segment in a [PieChart].
+class PieChartItem {
+  /// Creates a [PieChartItem].
+  const PieChartItem({
+    required this.label,
+    required this.value,
+    required this.amount,
+    required this.color,
+  });
+
+  /// Category name (e.g. "Groceries").
+  final String label;
+
+  /// Numeric value used to compute the segment's arc proportion.
+  final double value;
+
+  /// Pre-formatted display string (e.g. "\$1,420").
+  final String amount;
+
+  /// Segment color from the extended palette.
+  final Color color;
+}
+
+/// Layout direction for the [PieChart] widget.
+enum PieChartDirection {
+  /// Donut on left, legend on right.
+  horizontal,
+
+  /// Donut on top, legend below.
+  vertical,
+}
+
+/// {@template pie_chart}
+/// An interactive donut chart with a color-coded legend.
+///
+/// Supports two layout directions via [direction]:
+/// - [PieChartDirection.horizontal]: chart left, legend right.
+/// - [PieChartDirection.vertical]: chart top, legend below.
+///
+/// Hovering over a segment or legend row selects it, showing its details
+/// in the donut center. Moving the pointer away deselects.
+/// {@endtemplate}
+class PieChart extends StatefulWidget {
+  /// {@macro pie_chart}
+  const PieChart({
+    required this.items,
+    required this.totalLabel,
+    required this.totalAmount,
+    this.direction = PieChartDirection.vertical,
+    this.selectedIndex,
+    this.onSelectedIndexChanged,
+    super.key,
+  });
+
+  /// Segments to display.
+  final List<PieChartItem> items;
+
+  /// Label shown in the donut center when no segment is selected (e.g.
+  /// "Total").
+  final String totalLabel;
+
+  /// Formatted total shown in the donut center when no segment is selected
+  /// (e.g. "\$4,225").
+  final String totalAmount;
+
+  /// Layout direction.
+  final PieChartDirection direction;
+
+  /// Externally controlled selected segment index.
+  ///
+  /// When provided, the widget uses this instead of internal state.
+  final int? selectedIndex;
+
+  /// Called when selection changes.
+  final ValueChanged<int?>? onSelectedIndexChanged;
+
+  @override
+  State<PieChart> createState() => _PieChartState();
+}
+
+class _PieChartState extends State<PieChart> {
+  int? _selectedIndex;
+
+  int? get _effectiveSelectedIndex => widget.selectedIndex ?? _selectedIndex;
+
+  double get _totalValue =>
+      widget.items.fold(0, (sum, item) => sum + item.value);
+
+  String _percentage(double value) {
+    final total = _totalValue;
+    if (total == 0) return '0%';
+    return '${(value / total * 100).round()}%';
+  }
+
+  void _handleHover(int index) {
+    if (widget.selectedIndex == null) {
+      setState(() => _selectedIndex = index);
+    }
+    widget.onSelectedIndexChanged?.call(index);
+  }
+
+  void _handleHoverExit() {
+    if (widget.selectedIndex == null) {
+      setState(() => _selectedIndex = null);
+    }
+    widget.onSelectedIndexChanged?.call(null);
+  }
+
+  @override
+  void didUpdateWidget(PieChart oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.selectedIndex != null && oldWidget.selectedIndex == null) {
+      _selectedIndex = null;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<AppColors>();
+
+    final selected = _effectiveSelectedIndex;
+    final String amount;
+    final String label;
+    final String? percentage;
+
+    if (selected != null && selected < widget.items.length) {
+      final item = widget.items[selected];
+      amount = item.amount;
+      label = item.label;
+      percentage = _percentage(item.value);
+    } else {
+      amount = widget.totalAmount;
+      label = widget.totalLabel;
+      percentage = null;
+    }
+
+    final donut = DonutChart(
+      items: widget.items,
+      selectedIndex: _effectiveSelectedIndex,
+      onSegmentHover: _handleHover,
+      onHoverExit: _handleHoverExit,
+      amount: amount,
+      label: label,
+      percentage: percentage,
+      colors: colors,
+    );
+
+    final legend = Legend(
+      items: widget.items,
+      totalValue: _totalValue,
+      selectedIndex: _effectiveSelectedIndex,
+      onItemHover: _handleHover,
+      onHoverExit: _handleHoverExit,
+      colors: colors,
+    );
+
+    return widget.direction == PieChartDirection.horizontal
+        ? Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: _Dimensions.rowSpacing,
+            children: [
+              donut,
+              Expanded(child: legend),
+            ],
+          )
+        : Column(
+            spacing: _Dimensions.columnSpacing,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              donut,
+              legend,
+            ],
+          );
+  }
+}
+
+abstract final class _Dimensions {
+  static const double columnSpacing = 46;
+  static const double rowSpacing = 40;
+}
