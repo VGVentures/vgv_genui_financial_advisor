@@ -24,15 +24,6 @@ class PieChartItem {
   final Color color;
 }
 
-/// Layout direction for the [PieChartComponent] widget.
-enum PieChartDirection {
-  /// Donut on left, legend on right.
-  horizontal,
-
-  /// Donut on top, legend below.
-  vertical,
-}
-
 /// {@template pie_chart}
 /// An interactive donut chart with a color-coded legend.
 ///
