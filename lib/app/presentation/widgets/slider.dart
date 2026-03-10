@@ -83,26 +83,24 @@ class GcnSlider extends StatelessWidget {
           children: [
             Text(
               title,
-              style: theme.textTheme.titleMedium?.copyWith(
+              style: theme.textTheme.titleSmall?.copyWith(
                 color: colors?.onSurface,
-                fontWeight: FontWeight.bold,
               ),
             ),
             if (valueLabel != null)
               Text(
                 valueLabel!,
-                style: theme.textTheme.titleMedium?.copyWith(
+                style: theme.textTheme.titleSmall?.copyWith(
                   color: colors?.onSurface,
-                  fontWeight: FontWeight.bold,
                 ),
               ),
           ],
         ),
         Text(
           subtitle,
-          style: theme.textTheme.bodySmall?.copyWith(color: mutedColor),
+          style: theme.textTheme.bodyMedium?.copyWith(color: mutedColor),
         ),
-        const SizedBox(height: Spacing.xs),
+        const SizedBox(height: Spacing.xxs),
         SliderTheme(
           data: SliderTheme.of(context).copyWith(
             trackHeight: 8,
@@ -114,9 +112,11 @@ class GcnSlider extends StatelessWidget {
               gradient: gradient,
               trackColor: trackColor,
             ),
-            thumbShape: _RingThumbShape(thumbColor: thumbColor),
+            thumbShape: _RingThumbShape(gradient: gradient),
             tickMarkShape: divisions != null
-                ? _VerticalTickMarkShape(color: trackColor)
+                ? _VerticalTickMarkShape(
+                    color: colors?.outlineStrong ?? const Color(0xFFAAABAB),
+                  )
                 : SliderTickMarkShape.noTickMark,
             showValueIndicator: ShowValueIndicator.never,
           ),
@@ -136,6 +136,7 @@ class GcnSlider extends StatelessWidget {
             max: max,
             theme: theme,
             mutedColor: mutedColor,
+            onSurfaceColor: colors?.onSurface ?? Colors.black,
           )
         else
           _RangeLabels(
@@ -150,9 +151,6 @@ class GcnSlider extends StatelessWidget {
   }
 }
 
-// Private helpers
-
-const double _kSliderLabelPadding = 24;
 
 class _RangeLabels extends StatelessWidget {
   const _RangeLabels({
@@ -171,21 +169,18 @@ class _RangeLabels extends StatelessWidget {
   Widget build(BuildContext context) {
     if (minLabel == null && maxLabel == null) return const SizedBox.shrink();
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: _kSliderLabelPadding),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            minLabel ?? '',
-            style: theme.textTheme.bodySmall?.copyWith(color: mutedColor),
-          ),
-          Text(
-            maxLabel ?? '',
-            style: theme.textTheme.bodySmall?.copyWith(color: mutedColor),
-          ),
-        ],
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          minLabel ?? '',
+          style: theme.textTheme.bodyMedium?.copyWith(color: mutedColor),
+        ),
+        Text(
+          maxLabel ?? '',
+          style: theme.textTheme.bodyMedium?.copyWith(color: mutedColor),
+        ),
+      ],
     );
   }
 }
@@ -198,6 +193,7 @@ class _SplitLabels extends StatelessWidget {
     required this.max,
     required this.theme,
     required this.mutedColor,
+    required this.onSurfaceColor,
   });
 
   final List<String> labels;
@@ -206,6 +202,7 @@ class _SplitLabels extends StatelessWidget {
   final double max;
   final ThemeData theme;
   final Color mutedColor;
+  final Color onSurfaceColor;
 
   int get _selectedIndex {
     if (labels.isEmpty || max == min) return 0;
@@ -219,27 +216,41 @@ class _SplitLabels extends StatelessWidget {
   Widget build(BuildContext context) {
     final selected = _selectedIndex;
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: _kSliderLabelPadding),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          for (var i = 0; i < labels.length; i++)
-            Text(
-              labels[i],
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: mutedColor,
-                fontWeight:
-                    i == selected ? FontWeight.bold : FontWeight.normal,
+    final n = labels.length;
+    final textStyle = theme.textTheme.bodyMedium;
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.maxWidth;
+        return SizedBox(
+          width: width,
+          child: Stack(
+            children: [
+              Opacity(opacity: 0, child: Text(labels.first, style: textStyle)),
+            for (var i = 0; i < n; i++)
+              Positioned(
+                left: i < n - 1 ? i / (n - 1) * width : null,
+                right: i == n - 1 ? 0 : null,
+                child: FractionalTranslation(
+                  translation: Offset(
+                    i == 0 || i == n - 1 ? 0 : -0.5,
+                    0,
+                  ),
+                  child: Text(
+                    labels[i],
+                    style: textStyle?.copyWith(
+                      color: i == selected ? onSurfaceColor : mutedColor,
+                    ),
+                  ),
+                ),
               ),
-            ),
-        ],
-      ),
+          ],
+          ),
+        );
+      },
     );
   }
 }
-
-// Custom slider shapes
 
 class _GradientTrackShape extends SliderTrackShape
     with BaseSliderTrackShape {
@@ -247,6 +258,25 @@ class _GradientTrackShape extends SliderTrackShape
     required this.gradient,
     required this.trackColor,
   });
+
+  @override
+  Rect getPreferredRect({
+    required RenderBox parentBox,
+    required SliderThemeData sliderTheme,
+    Offset offset = Offset.zero,
+    bool isEnabled = false,
+    bool isDiscrete = false,
+  }) {
+    final trackHeight = sliderTheme.trackHeight ?? 2.0;
+    final trackTop =
+        offset.dy + (parentBox.size.height - trackHeight) / 2;
+    return Rect.fromLTWH(
+      offset.dx,
+      trackTop,
+      parentBox.size.width,
+      trackHeight,
+    );
+  }
 
   final LinearGradient gradient;
   final Color trackColor;
@@ -273,13 +303,11 @@ class _GradientTrackShape extends SliderTrackShape
     );
     final radius = Radius.circular(trackRect.height / 2);
 
-    // Full inactive track.
     context.canvas.drawRRect(
       RRect.fromRectAndRadius(trackRect, radius),
       Paint()..color = trackColor,
     );
 
-    // Active gradient (left of thumb).
     final activeRight =
         thumbCenter.dx.clamp(trackRect.left, trackRect.right);
     if (activeRight > trackRect.left) {
@@ -301,12 +329,12 @@ class _GradientTrackShape extends SliderTrackShape
 }
 
 class _RingThumbShape extends SliderComponentShape {
-  const _RingThumbShape({required this.thumbColor});
+  const _RingThumbShape({required this.gradient});
 
-  final Color thumbColor;
+  final LinearGradient gradient;
 
-  static const double _radius = 10;
-  static const double _ringWidth = 2;
+  static const double _radius = 7;
+  static const double _ringWidth = 4;
 
   @override
   Size getPreferredSize(bool isEnabled, bool isDiscrete) =>
@@ -327,11 +355,24 @@ class _RingThumbShape extends SliderComponentShape {
     required double textScaleFactor,
     required Size sizeWithOverflow,
   }) {
+    final rect = Rect.fromCircle(center: center, radius: _radius);
     context.canvas
+      ..drawCircle(
+        center,
+        _radius + _ringWidth + 2,
+        Paint()
+          ..color = Colors.black.withValues(alpha: 0.12)
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6),
+      )
       ..drawCircle(center, _radius + _ringWidth, Paint()..color = Colors.white)
-      ..drawCircle(center, _radius, Paint()..color = thumbColor);
+      ..drawCircle(
+        center,
+        _radius,
+        Paint()..shader = gradient.createShader(rect),
+      );
   }
 }
+
 
 class _VerticalTickMarkShape extends SliderTickMarkShape {
   const _VerticalTickMarkShape({required this.color});
@@ -356,18 +397,20 @@ class _VerticalTickMarkShape extends SliderTickMarkShape {
     required Offset thumbCenter,
     required bool isEnabled,
   }) {
+    if (center.dx <= thumbCenter.dx ||
+        center.dx >= parentBox.size.width - 4) {
+      return;
+    }
     final halfTrack = (sliderTheme.trackHeight ?? 8.0) / 2;
     context.canvas.drawLine(
-      Offset(center.dx, center.dy - halfTrack),
-      Offset(center.dx, center.dy + halfTrack),
+      Offset(center.dx, center.dy - halfTrack - 3),
+      Offset(center.dx, center.dy + halfTrack + 3),
       Paint()
         ..color = color
         ..strokeWidth = 1.0,
     );
   }
 }
-
-// Fallback colors
 
 abstract final class _SliderColors {
   static const fillStart = Color(0xFF2461EB);
