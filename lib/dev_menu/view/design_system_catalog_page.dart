@@ -4,10 +4,13 @@ import 'package:finance_app/dev_menu/view/ai_button_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/app_button_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/category_filter_chip_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/emoji_card_catalog_page.dart';
+import 'package:finance_app/dev_menu/view/filter_bar_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/header_selector_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/horizontal_bar_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/metric_card_catalog_page.dart';
+import 'package:finance_app/dev_menu/view/radio_card_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/ranked_table_page.dart';
+import 'package:finance_app/dev_menu/view/section_header_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/transaction_list_catalog_page.dart';
 import 'package:flutter/material.dart';
 
@@ -113,6 +116,22 @@ class DesignSystemCatalogPage extends StatelessWidget {
           ),
           ListTile(
             title: const Text(
+              'FilterBar',
+              style: TextStyle(color: Colors.black),
+            ),
+            subtitle: const Text(
+              'Filter bar with category chips and All toggle',
+              style: TextStyle(color: Colors.black),
+            ),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const FilterBarCatalogPage(),
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text(
               'HeaderSelector',
               style: TextStyle(color: Colors.black),
             ),
@@ -128,13 +147,13 @@ class DesignSystemCatalogPage extends StatelessWidget {
             ),
           ),
           ListTile(
-            title: Text(
+            title: const Text(
               'HorizontalBar',
-              style: textTheme.titleSmall,
+              style: TextStyle(color: Colors.black),
             ),
-            subtitle: Text(
-              'Horizontal bar chart for comparisons',
-              style: textTheme.bodyMedium,
+            subtitle: const Text(
+              'Pill-shaped chip group for selecting time periods',
+              style: TextStyle(color: Colors.black),
             ),
             trailing: const Icon(Icons.chevron_right),
             onTap: () => Navigator.of(context).push(
@@ -160,6 +179,22 @@ class DesignSystemCatalogPage extends StatelessWidget {
             ),
           ),
           ListTile(
+            title: const Text(
+              'RadioCard',
+              style: TextStyle(color: Colors.black),
+            ),
+            subtitle: const Text(
+              'Selectable card with radio indicator',
+              style: TextStyle(color: Colors.black),
+            ),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const RadioCardCatalogPage(),
+              ),
+            ),
+          ),
+          ListTile(
             title: Text(
               'Ranked Table',
               style: textTheme.titleSmall,
@@ -172,6 +207,22 @@ class DesignSystemCatalogPage extends StatelessWidget {
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
                 builder: (_) => const RankedTablePage(),
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text(
+              'SectionHeader',
+              style: TextStyle(color: Colors.black),
+            ),
+            subtitle: const Text(
+              'Section label with optional subtitle and selector',
+              style: TextStyle(color: Colors.black),
+            ),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const SectionHeaderCatalogPage(),
               ),
             ),
           ),
