@@ -182,7 +182,7 @@ void main() {
         expect(slider.divisions, 5);
       });
 
-      testWidgets('bolds the label matching current value', (tester) async {
+      testWidgets('highlights the label matching current value', (tester) async {
         await tester.pumpApp(
           Scaffold(
             body: GcnSlider(
@@ -198,12 +198,14 @@ void main() {
           ),
         );
 
-        // value=2, min=1, max=6 → index 1 → label '2' is bold.
+        // value=2, min=1, max=6 → index 1 → label '2' uses onSurface colour,
+        // unselected labels use onSurfaceMuted (a different colour).
         final selected = tester.widget<Text>(find.text('2'));
-        expect(selected.style?.fontWeight, FontWeight.bold);
-
         final unselected = tester.widget<Text>(find.text('1'));
-        expect(unselected.style?.fontWeight, FontWeight.normal);
+        expect(
+          selected.style?.color,
+          isNot(equals(unselected.style?.color)),
+        );
       });
 
       testWidgets('calls onChanged when slider is dragged', (tester) async {
