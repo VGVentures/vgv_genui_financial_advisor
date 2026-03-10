@@ -8,6 +8,7 @@ import 'package:finance_app/dev_menu/view/header_selector_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/horizontal_bar_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/metric_card_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/ranked_table_page.dart';
+import 'package:finance_app/dev_menu/view/section_header_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/transaction_list_catalog_page.dart';
 import 'package:flutter/material.dart';
 
@@ -172,6 +173,22 @@ class DesignSystemCatalogPage extends StatelessWidget {
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
                 builder: (_) => const RankedTablePage(),
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text(
+              'SectionHeader',
+              style: TextStyle(color: Colors.black),
+            ),
+            subtitle: const Text(
+              'Section label with optional subtitle and selector',
+              style: TextStyle(color: Colors.black),
+            ),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const SectionHeaderCatalogPage(),
               ),
             ),
           ),

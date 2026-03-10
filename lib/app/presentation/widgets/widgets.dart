@@ -9,5 +9,6 @@ export 'metric_cards.dart';
 export 'radio_card.dart';
 export 'ranked_table.dart';
 export 'responsive_scaffold.dart';
+export 'section_header.dart';
 export 'sparkline_card.dart';
 export 'transaction_list.dart';
