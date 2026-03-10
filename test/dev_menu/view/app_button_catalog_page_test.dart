@@ -16,7 +16,7 @@ Future<void> _pumpPage(WidgetTester tester) {
 }
 
 void main() {
-  group('AppButtonCatalogPage', () {
+  group(AppButtonCatalogPage, () {
     testWidgets('renders AppButton app bar title', (tester) async {
       await _pumpPage(tester);
 
