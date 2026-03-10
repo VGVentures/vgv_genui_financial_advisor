@@ -8,7 +8,9 @@ import 'package:finance_app/dev_menu/view/emoji_card_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/filter_bar_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/header_selector_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/horizontal_bar_catalog_page.dart';
+import 'package:finance_app/dev_menu/view/line_chart_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/metric_card_catalog_page.dart';
+import 'package:finance_app/dev_menu/view/progress_bar_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/radio_card_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/ranked_table_page.dart';
 import 'package:finance_app/dev_menu/view/section_header_catalog_page.dart';
@@ -149,6 +151,22 @@ class DesignSystemCatalogPage extends StatelessWidget {
           ),
           ListTile(
             title: const Text(
+              'ProgressBar',
+              style: TextStyle(color: Colors.black),
+            ),
+            subtitle: const Text(
+              'Threshold-based color-coded progress bar',
+              style: TextStyle(color: Colors.black),
+            ),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const ProgressBarCatalogPage(),
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text(
               'HeaderSelector',
               style: TextStyle(color: Colors.black),
             ),
@@ -224,6 +242,22 @@ class DesignSystemCatalogPage extends StatelessWidget {
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
                 builder: (_) => const RankedTablePage(),
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text(
+              'LineChart',
+              style: TextStyle(color: Colors.black),
+            ),
+            subtitle: const Text(
+              'Line chart with tooltip on data point tap',
+              style: TextStyle(color: Colors.black),
+            ),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const LineChartCatalogPage(),
               ),
             ),
           ),
