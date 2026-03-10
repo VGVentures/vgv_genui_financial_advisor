@@ -73,9 +73,28 @@ void main() {
       expect(find.byType(EmojiCardCatalogPage), findsOneWidget);
     });
 
-    testWidgets('renders FilterBar list tile', (tester) async {
+    testWidgets('renders SectionHeader list tile', (tester) async {
       await _pumpPage(tester);
 
+      await tester.scrollUntilVisible(find.text('SectionHeader'), 200);
+      expect(find.text('SectionHeader'), findsOneWidget);
+    });
+
+    testWidgets('tapping SectionHeader navigates to SectionHeaderCatalogPage', (
+      tester,
+    ) async {
+      await _pumpPage(tester);
+      await tester.scrollUntilVisible(
+        find.text('SectionHeader'),
+        200,
+      );
+      await tester.tap(find.text('SectionHeader'));
+      await tester.pumpAndSettle();
+      expect(find.byType(SectionHeaderCatalogPage), findsOneWidget);
+    });
+
+    testWidgets('renders FilterBar list tile', (tester) async {
+      await _pumpPage(tester);
       expect(find.text('FilterBar'), findsOneWidget);
     });
 
@@ -83,10 +102,12 @@ void main() {
       tester,
     ) async {
       await _pumpPage(tester);
-
+      await tester.scrollUntilVisible(
+        find.text('FilterBar'),
+        200,
+      );
       await tester.tap(find.text('FilterBar'));
       await tester.pumpAndSettle();
-
       expect(find.byType(FilterBarCatalogPage), findsOneWidget);
     });
   });
