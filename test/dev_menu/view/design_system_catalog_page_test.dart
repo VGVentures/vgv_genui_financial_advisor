@@ -23,6 +23,7 @@ void main() {
     testWidgets('renders MetricCard list tile', (tester) async {
       await _pumpPage(tester);
 
+      await tester.scrollUntilVisible(find.text('MetricCard'), 200);
       expect(find.text('MetricCard'), findsOneWidget);
     });
 
@@ -31,6 +32,7 @@ void main() {
     ) async {
       await _pumpPage(tester);
 
+      await tester.scrollUntilVisible(find.text('MetricCard'), 200);
       await tester.tap(find.text('MetricCard'));
       await tester.pumpAndSettle();
 
@@ -54,9 +56,57 @@ void main() {
       expect(find.byType(EmojiCardCatalogPage), findsOneWidget);
     });
 
-    testWidgets('renders FilterBar list tile', (tester) async {
+    testWidgets('renders RadioCard list tile', (tester) async {
       await _pumpPage(tester);
 
+      await tester.dragUntilVisible(
+        find.text('RadioCard'),
+        find.byType(ListView),
+        const Offset(0, -100),
+      );
+
+      expect(find.text('RadioCard'), findsOneWidget);
+    });
+
+    testWidgets('tapping RadioCard navigates to RadioCardCatalogPage', (
+      tester,
+    ) async {
+      await _pumpPage(tester);
+
+      await tester.dragUntilVisible(
+        find.text('RadioCard'),
+        find.byType(ListView),
+        const Offset(0, -100),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('RadioCard'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(RadioCardCatalogPage), findsOneWidget);
+    });
+
+    testWidgets('renders SectionHeader list tile', (tester) async {
+      await _pumpPage(tester);
+
+      await tester.scrollUntilVisible(find.text('SectionHeader'), 200);
+      expect(find.text('SectionHeader'), findsOneWidget);
+    });
+
+    testWidgets('tapping SectionHeader navigates to SectionHeaderCatalogPage', (
+      tester,
+    ) async {
+      await _pumpPage(tester);
+      await tester.scrollUntilVisible(
+        find.text('SectionHeader'),
+        200,
+      );
+      await tester.tap(find.text('SectionHeader'));
+      await tester.pumpAndSettle();
+      expect(find.byType(SectionHeaderCatalogPage), findsOneWidget);
+    });
+
+    testWidgets('renders FilterBar list tile', (tester) async {
+      await _pumpPage(tester);
       expect(find.text('FilterBar'), findsOneWidget);
     });
 
@@ -64,10 +114,12 @@ void main() {
       tester,
     ) async {
       await _pumpPage(tester);
-
+      await tester.scrollUntilVisible(
+        find.text('FilterBar'),
+        200,
+      );
       await tester.tap(find.text('FilterBar'));
       await tester.pumpAndSettle();
-
       expect(find.byType(FilterBarCatalogPage), findsOneWidget);
     });
   });
