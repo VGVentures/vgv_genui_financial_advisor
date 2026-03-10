@@ -1,7 +1,7 @@
 import 'package:finance_app/app/presentation.dart';
 import 'package:flutter/material.dart';
 
-/// Data for a single segment in a [PieChart].
+/// Data for a single segment in a [PieChartComponent].
 class PieChartItem {
   /// Creates a [PieChartItem].
   const PieChartItem({
@@ -24,7 +24,7 @@ class PieChartItem {
   final Color color;
 }
 
-/// Layout direction for the [PieChart] widget.
+/// Layout direction for the [PieChartComponent] widget.
 enum PieChartDirection {
   /// Donut on left, legend on right.
   horizontal,
@@ -36,20 +36,15 @@ enum PieChartDirection {
 /// {@template pie_chart}
 /// An interactive donut chart with a color-coded legend.
 ///
-/// Supports two layout directions via [direction]:
-/// - [PieChartDirection.horizontal]: chart left, legend right.
-/// - [PieChartDirection.vertical]: chart top, legend below.
-///
 /// Hovering over a segment or legend row selects it, showing its details
 /// in the donut center. Moving the pointer away deselects.
 /// {@endtemplate}
-class PieChart extends StatefulWidget {
+class PieChartComponent extends StatefulWidget {
   /// {@macro pie_chart}
-  const PieChart({
+  const PieChartComponent({
     required this.items,
     required this.totalLabel,
     required this.totalAmount,
-    this.direction = PieChartDirection.vertical,
     this.selectedIndex,
     this.onSelectedIndexChanged,
     super.key,
@@ -66,9 +61,6 @@ class PieChart extends StatefulWidget {
   /// (e.g. "\$4,225").
   final String totalAmount;
 
-  /// Layout direction.
-  final PieChartDirection direction;
-
   /// Externally controlled selected segment index.
   ///
   /// When provided, the widget uses this instead of internal state.
@@ -78,10 +70,10 @@ class PieChart extends StatefulWidget {
   final ValueChanged<int?>? onSelectedIndexChanged;
 
   @override
-  State<PieChart> createState() => _PieChartState();
+  State<PieChartComponent> createState() => _PieChartComponentState();
 }
 
-class _PieChartState extends State<PieChart> {
+class _PieChartComponentState extends State<PieChartComponent> {
   int? _selectedIndex;
 
   int? get _effectiveSelectedIndex => widget.selectedIndex ?? _selectedIndex;
@@ -110,7 +102,7 @@ class _PieChartState extends State<PieChart> {
   }
 
   @override
-  void didUpdateWidget(PieChart oldWidget) {
+  void didUpdateWidget(PieChartComponent oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.selectedIndex != null && oldWidget.selectedIndex == null) {
       _selectedIndex = null;
@@ -157,23 +149,24 @@ class _PieChartState extends State<PieChart> {
       colors: colors,
     );
 
-    return widget.direction == PieChartDirection.horizontal
-        ? Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: _Dimensions.rowSpacing,
-            children: [
-              donut,
-              Expanded(child: legend),
-            ],
-          )
-        : Column(
-            spacing: _Dimensions.columnSpacing,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              donut,
-              legend,
-            ],
-          );
+    return ResponsiveScaffold(
+      mobile: Column(
+        spacing: _Dimensions.columnSpacing,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          donut,
+          legend,
+        ],
+      ),
+      desktop: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: _Dimensions.rowSpacing,
+        children: [
+          donut,
+          Expanded(child: legend),
+        ],
+      ),
+    );
   }
 }
 

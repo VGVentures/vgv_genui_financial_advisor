@@ -2,7 +2,8 @@ import 'package:finance_app/app/presentation.dart';
 import 'package:flutter/material.dart';
 
 /// {@template pie_chart_catalog_page}
-/// A dev-menu page that showcases the [PieChart] widget with sample data.
+/// A dev-menu page that showcases the [PieChartComponent] widget
+/// with sample data.
 /// {@endtemplate}
 class PieChartCatalogPage extends StatelessWidget {
   /// {@macro pie_chart_catalog_page}
@@ -55,25 +56,12 @@ class PieChartCatalogPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: Spacing.xxxl,
           children: [
-            PieChart(
-              items: items,
-              totalLabel: 'Total',
-              totalAmount: r'$4,225',
-              direction: PieChartDirection.horizontal,
-            ),
-            PieChart(
-              items: items,
-              totalLabel: 'Total',
-              totalAmount: r'$4,225',
-              direction: PieChartDirection.horizontal,
-              selectedIndex: 0,
-            ),
-            PieChart(
+            PieChartComponent(
               items: items,
               totalLabel: 'Total',
               totalAmount: r'$4,225',
             ),
-            PieChart(
+            PieChartComponent(
               items: items,
               totalLabel: 'Total',
               totalAmount: r'$4,225',

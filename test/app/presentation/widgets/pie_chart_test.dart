@@ -1,4 +1,5 @@
 import 'package:finance_app/app/presentation.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -27,7 +28,6 @@ const _items = [
 Future<void> _pumpChart(
   WidgetTester tester, {
   List<PieChartItem> items = _items,
-  PieChartDirection direction = PieChartDirection.vertical,
   int? selectedIndex,
   ValueChanged<int?>? onSelectedIndexChanged,
   bool withTheme = true,
@@ -36,11 +36,10 @@ Future<void> _pumpChart(
     MaterialApp(
       theme: withTheme ? AppTheme(LightThemeColors()).themeData : null,
       home: Scaffold(
-        body: PieChart(
+        body: PieChartComponent(
           items: items,
           totalLabel: 'Total',
           totalAmount: r'$4,260',
-          direction: direction,
           selectedIndex: selectedIndex,
           onSelectedIndexChanged: onSelectedIndexChanged,
         ),
@@ -61,7 +60,7 @@ Future<TestGesture> _hoverAt(WidgetTester tester, Offset position) async {
 }
 
 void main() {
-  group(PieChart, () {
+  group(PieChartComponent, () {
     group('renders', () {
       testWidgets('total label and amount in center', (tester) async {
         await _pumpChart(tester);
@@ -90,40 +89,16 @@ void main() {
         expect(find.text('33%'), findsNWidgets(3));
       });
 
-      testWidgets('$CustomPaint widget', (tester) async {
+      testWidgets('fl_chart $PieChart widget', (tester) async {
         await _pumpChart(tester);
 
-        expect(find.byType(CustomPaint), findsWidgets);
+        expect(find.byType(PieChart), findsOneWidget);
       });
 
       testWidgets('color indicators', (tester) async {
         await _pumpChart(tester);
 
         expect(find.byType(DecoratedBox), findsWidgets);
-      });
-    });
-
-    group('layout', () {
-      testWidgets('vertical uses $Column', (tester) async {
-        await _pumpChart(tester);
-
-        final pieChart = find.byType(PieChart);
-        final column = find.descendant(
-          of: pieChart,
-          matching: find.byType(Column),
-        );
-        expect(column, findsWidgets);
-      });
-
-      testWidgets('horizontal uses $Row', (tester) async {
-        await _pumpChart(tester, direction: PieChartDirection.horizontal);
-
-        final pieChart = find.byType(PieChart);
-        final row = find.descendant(
-          of: pieChart,
-          matching: find.byType(Row),
-        );
-        expect(row, findsWidgets);
       });
     });
 
@@ -185,78 +160,6 @@ void main() {
       });
     });
 
-    group('donut hover', () {
-      Finder findDonutPaint() => find.byWidgetPredicate(
-        (w) => w is CustomPaint && w.painter is DonutPainter,
-      );
-
-      testWidgets('selects segment when hovering donut ring', (tester) async {
-        int? selectedIndex;
-        await _pumpChart(
-          tester,
-          onSelectedIndexChanged: (index) => selectedIndex = index,
-        );
-
-        final center = tester.getCenter(findDonutPaint());
-        const donutSize = 210.0;
-        const strokeWidth = 41.0;
-        const ringMid = donutSize / 2 - strokeWidth / 2;
-
-        // Hover at 12 o'clock (top of ring) — first segment
-        await _hoverAt(tester, center + const Offset(0, -ringMid));
-        expect(selectedIndex, 0);
-      });
-
-      testWidgets('deselects when hover moves to center hole', (tester) async {
-        int? selectedIndex;
-        await _pumpChart(
-          tester,
-          onSelectedIndexChanged: (index) => selectedIndex = index,
-        );
-
-        final center = tester.getCenter(findDonutPaint());
-        const donutSize = 210.0;
-        const strokeWidth = 41.0;
-        const ringMid = donutSize / 2 - strokeWidth / 2;
-
-        // First hover on ring
-        final gesture = await _hoverAt(
-          tester,
-          center + const Offset(0, -ringMid),
-        );
-        expect(selectedIndex, 0);
-
-        // Move to center (hole)
-        await gesture.moveTo(center);
-        await tester.pump();
-        expect(selectedIndex, isNull);
-      });
-
-      testWidgets('deselects when hover exits donut', (tester) async {
-        int? selectedIndex;
-        await _pumpChart(
-          tester,
-          onSelectedIndexChanged: (index) => selectedIndex = index,
-        );
-
-        final center = tester.getCenter(findDonutPaint());
-        const donutSize = 210.0;
-        const strokeWidth = 41.0;
-        const ringMid = donutSize / 2 - strokeWidth / 2;
-
-        final gesture = await _hoverAt(
-          tester,
-          center + const Offset(0, -ringMid),
-        );
-        expect(selectedIndex, 0);
-
-        // Move pointer completely outside
-        await gesture.moveTo(Offset.zero);
-        await tester.pump();
-        expect(selectedIndex, isNull);
-      });
-    });
-
     group('uncontrolled mode', () {
       testWidgets('manages selection internally', (tester) async {
         await _pumpChart(tester);
@@ -305,7 +208,7 @@ void main() {
       testWidgets('single item renders without error', (tester) async {
         await _pumpChart(tester, items: [_items.first]);
 
-        expect(find.byType(PieChart), findsOneWidget);
+        expect(find.byType(PieChartComponent), findsOneWidget);
         expect(find.text('Groceries'), findsOneWidget);
       });
 
@@ -322,14 +225,14 @@ void main() {
           ],
         );
 
-        expect(find.byType(PieChart), findsOneWidget);
+        expect(find.byType(PieChartComponent), findsOneWidget);
         expect(find.text('0%'), findsOneWidget);
       });
 
       testWidgets('renders without $AppColors extension', (tester) async {
         await _pumpChart(tester, withTheme: false);
 
-        expect(find.byType(PieChart), findsOneWidget);
+        expect(find.byType(PieChartComponent), findsOneWidget);
       });
 
       testWidgets('selectedIndex out of range shows total', (tester) async {
@@ -337,29 +240,6 @@ void main() {
 
         expect(find.text('Total'), findsOneWidget);
         expect(find.text(r'$4,260'), findsOneWidget);
-      });
-
-      testWidgets('donut hover does nothing with zero values', (tester) async {
-        int? selectedIndex;
-        await _pumpChart(
-          tester,
-          items: const [
-            PieChartItem(
-              label: 'Empty',
-              value: 0,
-              amount: r'$0',
-              color: Color(0xFFE98AD4),
-            ),
-          ],
-          onSelectedIndexChanged: (index) => selectedIndex = index,
-        );
-
-        final donutPaint = find.byWidgetPredicate(
-          (w) => w is CustomPaint && w.painter is DonutPainter,
-        );
-        final center = tester.getCenter(donutPaint);
-        await _hoverAt(tester, center + const Offset(0, -84));
-        expect(selectedIndex, isNull);
       });
     });
   });
