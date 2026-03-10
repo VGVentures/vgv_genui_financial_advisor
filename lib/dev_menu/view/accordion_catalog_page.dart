@@ -62,7 +62,7 @@ class AccordionCatalogPage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(title: const Text('AppAccordion')),
+      appBar: AppBar(title: const Text('Accordion')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(Spacing.md),
         child: Column(
@@ -70,7 +70,7 @@ class AccordionCatalogPage extends StatelessWidget {
           children: [
             const _SectionLabel('Collapsed state (tap to expand)'),
             AppAccordion(
-              title: 'Accordion Title',
+              title: 'Drawer Title',
               content: actionItems,
             ),
           ],
