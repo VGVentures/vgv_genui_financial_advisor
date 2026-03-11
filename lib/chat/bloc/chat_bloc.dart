@@ -93,8 +93,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     );
 
     // Send the initial user message to kick off the conversation
-    final initialMessage =
-        app_prompt.PromptBuilder.buildInitialUserMessage(
+    final initialMessage = app_prompt.PromptBuilder.buildInitialUserMessage(
       profileType: event.profileType,
       focusOptions: event.focusOptions,
       customOption: event.customOption,

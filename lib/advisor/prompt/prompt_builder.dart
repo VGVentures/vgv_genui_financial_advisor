@@ -41,7 +41,7 @@ When populating the UserSummaryCard, ask the user for the information you need t
     final focusSection = focusAreas.isEmpty
         ? "I don't have specific focus areas yet."
         : 'I want to focus on:\n'
-            '${focusAreas.map((a) => '- $a').join('\n')}';
+              '${focusAreas.map((a) => '- $a').join('\n')}';
 
     return '''
 Hi! I'm ${_profileLabel(profileType)}. $focusSection
