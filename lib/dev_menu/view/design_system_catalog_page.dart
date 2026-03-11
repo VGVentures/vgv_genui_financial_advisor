@@ -1,4 +1,5 @@
 import 'package:finance_app/app/presentation/app_colors.dart';
+import 'package:finance_app/dev_menu/view/accordion_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/action_item_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/ai_button_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/app_button_catalog_page.dart';
@@ -7,7 +8,9 @@ import 'package:finance_app/dev_menu/view/emoji_card_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/filter_bar_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/header_selector_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/horizontal_bar_catalog_page.dart';
+import 'package:finance_app/dev_menu/view/line_chart_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/metric_card_catalog_page.dart';
+import 'package:finance_app/dev_menu/view/progress_bar_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/radio_card_catalog_page.dart';
 import 'package:finance_app/dev_menu/view/ranked_table_page.dart';
 import 'package:finance_app/dev_menu/view/section_header_catalog_page.dart';
@@ -100,6 +103,22 @@ class DesignSystemCatalogPage extends StatelessWidget {
           ),
           ListTile(
             title: const Text(
+              'Accordion',
+              style: TextStyle(color: Colors.black),
+            ),
+            subtitle: const Text(
+              'Expandable content panel with collapsed and open states',
+              style: TextStyle(color: Colors.black),
+            ),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const AccordionCatalogPage(),
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text(
               'EmojiCard',
               style: TextStyle(color: Colors.black),
             ),
@@ -127,6 +146,22 @@ class DesignSystemCatalogPage extends StatelessWidget {
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
                 builder: (_) => const FilterBarCatalogPage(),
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text(
+              'ProgressBar',
+              style: TextStyle(color: Colors.black),
+            ),
+            subtitle: const Text(
+              'Threshold-based color-coded progress bar',
+              style: TextStyle(color: Colors.black),
+            ),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const ProgressBarCatalogPage(),
               ),
             ),
           ),
@@ -207,6 +242,22 @@ class DesignSystemCatalogPage extends StatelessWidget {
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
                 builder: (_) => const RankedTablePage(),
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text(
+              'LineChart',
+              style: TextStyle(color: Colors.black),
+            ),
+            subtitle: const Text(
+              'Line chart with tooltip on data point tap',
+              style: TextStyle(color: Colors.black),
+            ),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const LineChartCatalogPage(),
               ),
             ),
           ),
