@@ -60,8 +60,8 @@ void main() {
       testWidgets('Last month and This month column labels', (tester) async {
         await _pumpTable(tester);
 
-        expect(find.text('Last Month'), findsNWidgets(_items.length));
-        expect(find.text('This Month'), findsNWidgets(_items.length));
+        expect(find.text('Last month'), findsNWidgets(_items.length));
+        expect(find.text('This month'), findsNWidgets(_items.length));
       });
 
       testWidgets('calculated delta percentages', (tester) async {
