@@ -35,6 +35,8 @@ FOCUS AREAS:
 $focusSection
 
 WIDGET INSTRUCTIONS:
+Use CategoryFilterChip to display a toggleable filter chip for category selection (e.g. spending categories or tags). Each chip requires a label and a color. Set isSelected to true to show the chip in its selected state. Set isEnabled to false to render it in a disabled/muted state.
+
 When populating the UserSummaryCard, ask the user for the information you need to populate the card, or provide reasonable example values and invite the user to correct them.
 - totalAssets: Total value of depository + investment accounts.
 - totalDebt: Total value of credit + loan balances owed.
