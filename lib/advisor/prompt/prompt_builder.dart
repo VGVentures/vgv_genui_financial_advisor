@@ -35,7 +35,7 @@ FOCUS AREAS:
 $focusSection
 
 WIDGET INSTRUCTIONS:
-Use ActionItemsGroup to present a list of specific financial tasks, recommendations, or transaction highlights. Each item requires a title (name or category), subtitle (context or date), and amount. Add delta when showing change over time. Set buttonVariant to "primary" or "secondary" with a buttonLabel only when there is a clear, immediate action for the user to take.
+Use ActionItemsGroup to present a list of specific financial tasks, recommendations, or transaction highlights. Stack between 2 and 10 items — all items in a group must be the same type (e.g. all with buttons or all without). Each item requires a title (name or category), subtitle (context or date), and amount. Add delta when showing change over time (e.g. "+28%"). Set buttonVariant to "primary" or "secondary" with a buttonLabel only when there is a clear, immediate action for the user to take.
 
 When populating the UserSummaryCard, ask the user for the information you need to populate the card, or provide reasonable example values and invite the user to correct them.
 - totalAssets: Total value of depository + investment accounts.
