@@ -35,6 +35,8 @@ FOCUS AREAS:
 $focusSection
 
 WIDGET INSTRUCTIONS:
+Use AppAccordion to group a set of related action items or recommendations under a collapsible header. Choose a short, descriptive title (e.g. "Debt Reduction Steps", "Savings Actions"). Set isExpanded to true only when the actions are urgent or the user explicitly asked for them.
+
 When populating the UserSummaryCard, ask the user for the information you need to populate the card, or provide reasonable example values and invite the user to correct them.
 - totalAssets: Total value of depository + investment accounts.
 - totalDebt: Total value of credit + loan balances owed.
