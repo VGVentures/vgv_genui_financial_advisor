@@ -9,9 +9,9 @@ import 'package:flutter/material.dart';
 /// - **Splits**: discrete slider with tick marks and per-division labels,
 ///   enabled by providing [divisions] and [splitLabels].
 /// {@endtemplate}
-class GcnSlider extends StatelessWidget {
+class GCNSlider extends StatelessWidget {
   /// {@macro gcn_slider}
-  const GcnSlider({
+  const GCNSlider({
     required this.title,
     required this.subtitle,
     required this.value,
@@ -64,15 +64,16 @@ class GcnSlider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
     final colors = theme.extension<AppColors>();
 
-    final gradient = colors?.geniusGradient ??
+    final gradient =
+        colors?.geniusGradient ??
         const LinearGradient(
           colors: [_SliderColors.fillStart, _SliderColors.fillEnd],
         );
-    final trackColor = colors?.outlineVariant ?? _SliderColors.track;
+    final trackColor = colors?.surfaceContainer ?? _SliderColors.track;
     final thumbColor = colors?.primary ?? _SliderColors.thumb;
-    final mutedColor = colors?.onSurfaceMuted ?? _SliderColors.labelMuted;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -83,14 +84,14 @@ class GcnSlider extends StatelessWidget {
           children: [
             Text(
               title,
-              style: theme.textTheme.titleSmall?.copyWith(
+              style: textTheme.titleSmall?.copyWith(
                 color: colors?.onSurface,
               ),
             ),
             if (valueLabel != null)
               Text(
                 valueLabel!,
-                style: theme.textTheme.titleSmall?.copyWith(
+                style: textTheme.bodyLarge?.copyWith(
                   color: colors?.onSurface,
                 ),
               ),
@@ -98,12 +99,12 @@ class GcnSlider extends StatelessWidget {
         ),
         Text(
           subtitle,
-          style: theme.textTheme.bodyMedium?.copyWith(color: mutedColor),
+          style: textTheme.bodyMedium?.copyWith(color: colors?.onSurfaceMuted),
         ),
-        const SizedBox(height: Spacing.xxs),
+        const SizedBox(height: Spacing.sm),
         SliderTheme(
           data: SliderTheme.of(context).copyWith(
-            trackHeight: 8,
+            trackHeight: Spacing.sm,
             inactiveTrackColor: trackColor,
             activeTrackColor: Colors.transparent,
             thumbColor: thumbColor,
@@ -128,45 +129,41 @@ class GcnSlider extends StatelessWidget {
             onChanged: onChanged,
           ),
         ),
+        const SizedBox(height: Spacing.xxs),
         if (divisions != null && splitLabels != null)
           _SplitLabels(
             labels: splitLabels!,
             value: value,
             min: min,
             max: max,
-            theme: theme,
-            mutedColor: mutedColor,
-            onSurfaceColor: colors?.onSurface ?? Colors.black,
           )
         else
           _RangeLabels(
             minLabel: minLabel,
             maxLabel: maxLabel,
-            theme: theme,
-            mutedColor: mutedColor,
           ),
+        const SizedBox(height: Spacing.md),
         const Divider(),
       ],
     );
   }
 }
 
-
 class _RangeLabels extends StatelessWidget {
   const _RangeLabels({
     required this.minLabel,
     required this.maxLabel,
-    required this.theme,
-    required this.mutedColor,
   });
 
   final String? minLabel;
   final String? maxLabel;
-  final ThemeData theme;
-  final Color mutedColor;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+    final colors = theme.extension<AppColors>();
+
     if (minLabel == null && maxLabel == null) return const SizedBox.shrink();
 
     return Row(
@@ -174,11 +171,15 @@ class _RangeLabels extends StatelessWidget {
       children: [
         Text(
           minLabel ?? '',
-          style: theme.textTheme.bodyMedium?.copyWith(color: mutedColor),
+          style: textTheme.bodyMedium?.copyWith(
+            color: colors?.onSurfaceMuted,
+          ),
         ),
         Text(
           maxLabel ?? '',
-          style: theme.textTheme.bodyMedium?.copyWith(color: mutedColor),
+          style: textTheme.bodyMedium?.copyWith(
+            color: colors?.onSurfaceMuted,
+          ),
         ),
       ],
     );
@@ -191,32 +192,30 @@ class _SplitLabels extends StatelessWidget {
     required this.value,
     required this.min,
     required this.max,
-    required this.theme,
-    required this.mutedColor,
-    required this.onSurfaceColor,
   });
 
   final List<String> labels;
   final double value;
   final double min;
   final double max;
-  final ThemeData theme;
-  final Color mutedColor;
-  final Color onSurfaceColor;
 
   int get _selectedIndex {
     if (labels.isEmpty || max == min) return 0;
     final normalized = (value - min) / (max - min);
-    return (normalized * (labels.length - 1))
-        .round()
-        .clamp(0, labels.length - 1);
+    return (normalized * (labels.length - 1)).round().clamp(
+      0,
+      labels.length - 1,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colors = theme.extension<AppColors>();
+
     final selected = _selectedIndex;
 
-    final n = labels.length;
+    final labelsLength = labels.length;
     final textStyle = theme.textTheme.bodyMedium;
 
     return LayoutBuilder(
@@ -227,24 +226,28 @@ class _SplitLabels extends StatelessWidget {
           child: Stack(
             children: [
               Opacity(opacity: 0, child: Text(labels.first, style: textStyle)),
-            for (var i = 0; i < n; i++)
-              Positioned(
-                left: i < n - 1 ? i / (n - 1) * width : null,
-                right: i == n - 1 ? 0 : null,
-                child: FractionalTranslation(
-                  translation: Offset(
-                    i == 0 || i == n - 1 ? 0 : -0.5,
-                    0,
-                  ),
-                  child: Text(
-                    labels[i],
-                    style: textStyle?.copyWith(
-                      color: i == selected ? onSurfaceColor : mutedColor,
+              for (var i = 0; i < labelsLength; i++)
+                Positioned(
+                  left: i < labelsLength - 1
+                      ? i / (labelsLength - 1) * width
+                      : null,
+                  right: i == labelsLength - 1 ? 0 : null,
+                  child: FractionalTranslation(
+                    translation: Offset(
+                      i == 0 || i == labelsLength - 1 ? 0 : -0.5,
+                      0,
+                    ),
+                    child: Text(
+                      labels[i],
+                      style: textStyle?.copyWith(
+                        color: i == selected
+                            ? colors?.onSurface
+                            : colors?.onSurfaceMuted,
+                      ),
                     ),
                   ),
                 ),
-              ),
-          ],
+            ],
           ),
         );
       },
@@ -252,8 +255,7 @@ class _SplitLabels extends StatelessWidget {
   }
 }
 
-class _GradientTrackShape extends SliderTrackShape
-    with BaseSliderTrackShape {
+class _GradientTrackShape extends SliderTrackShape with BaseSliderTrackShape {
   const _GradientTrackShape({
     required this.gradient,
     required this.trackColor,
@@ -268,8 +270,7 @@ class _GradientTrackShape extends SliderTrackShape
     bool isDiscrete = false,
   }) {
     final trackHeight = sliderTheme.trackHeight ?? 2.0;
-    final trackTop =
-        offset.dy + (parentBox.size.height - trackHeight) / 2;
+    final trackTop = offset.dy + (parentBox.size.height - trackHeight) / 2;
     return Rect.fromLTWH(
       offset.dx,
       trackTop,
@@ -308,8 +309,7 @@ class _GradientTrackShape extends SliderTrackShape
       Paint()..color = trackColor,
     );
 
-    final activeRight =
-        thumbCenter.dx.clamp(trackRect.left, trackRect.right);
+    final activeRight = thumbCenter.dx.clamp(trackRect.left, trackRect.right);
     if (activeRight > trackRect.left) {
       context.canvas
         ..save()
@@ -373,7 +373,6 @@ class _RingThumbShape extends SliderComponentShape {
   }
 }
 
-
 class _VerticalTickMarkShape extends SliderTickMarkShape {
   const _VerticalTickMarkShape({required this.color});
 
@@ -383,8 +382,7 @@ class _VerticalTickMarkShape extends SliderTickMarkShape {
   Size getPreferredSize({
     required SliderThemeData sliderTheme,
     required bool isEnabled,
-  }) =>
-      const Size(1, 8);
+  }) => const Size(1, 8);
 
   @override
   void paint(
@@ -397,8 +395,7 @@ class _VerticalTickMarkShape extends SliderTickMarkShape {
     required Offset thumbCenter,
     required bool isEnabled,
   }) {
-    if (center.dx <= thumbCenter.dx ||
-        center.dx >= parentBox.size.width - 4) {
+    if (center.dx <= thumbCenter.dx || center.dx >= parentBox.size.width - 4) {
       return;
     }
     final halfTrack = (sliderTheme.trackHeight ?? 8.0) / 2;
@@ -417,5 +414,4 @@ abstract final class _SliderColors {
   static const fillEnd = Color(0xFFD4C6FB);
   static const track = Color(0xFFE2E8F9);
   static const thumb = Color(0xFF7C8FF5);
-  static const labelMuted = Color(0xFF94A3B8);
 }

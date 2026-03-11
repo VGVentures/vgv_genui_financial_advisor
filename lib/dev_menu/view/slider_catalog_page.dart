@@ -1,8 +1,10 @@
 import 'package:finance_app/app/presentation.dart';
 import 'package:flutter/material.dart';
 
+const _splitLabels = ['1', '2', '3', '4', '5', '6'];
+
 /// {@template slider_catalog_page}
-/// Catalog page showcasing all [GcnSlider] variants.
+/// Catalog page showcasing all [GCNSlider] variants.
 /// {@endtemplate}
 class SliderCatalogPage extends StatefulWidget {
   /// {@macro slider_catalog_page}
@@ -18,13 +20,15 @@ class _SliderCatalogPageState extends State<SliderCatalogPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<AppColors>();
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: colors?.onPrimary,
       appBar: AppBar(title: const Text('Slider')),
       body: ListView(
         padding: const EdgeInsets.all(Spacing.md),
         children: [
-          GcnSlider(
+          GCNSlider(
             title: 'Slider Title',
             subtitle: 'Dining • Feb 18',
             value: _basicValue,
@@ -33,18 +37,18 @@ class _SliderCatalogPageState extends State<SliderCatalogPage> {
             valueLabel: '\$${_basicValue.toStringAsFixed(0)}',
             minLabel: r'$1',
             maxLabel: r'$1270',
-            onChanged: (v) => setState(() => _basicValue = v),
+            onChanged: (value) => setState(() => _basicValue = value),
           ),
           const SizedBox(height: Spacing.lg),
-          GcnSlider(
+          GCNSlider(
             title: 'Slider Title',
             subtitle: 'Dining • Feb 18',
             value: _splitsValue,
             min: 1,
             max: 6,
             divisions: 5,
-            splitLabels: const ['1', '2', '3', '4', '5', '6'],
-            onChanged: (v) => setState(() => _splitsValue = v),
+            splitLabels: _splitLabels,
+            onChanged: (value) => setState(() => _splitsValue = value),
           ),
         ],
       ),
