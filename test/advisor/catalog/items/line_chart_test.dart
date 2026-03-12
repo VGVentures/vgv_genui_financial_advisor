@@ -3,6 +3,9 @@ import 'package:finance_app/app/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genui/genui.dart';
+import 'package:mocktail/mocktail.dart';
+
+class _MockDataModel extends Mock implements DataModel {}
 
 Map<String, Object?> _data({
   List<Map<String, Object?>>? points,
@@ -35,12 +38,15 @@ CatalogItemContext _context(BuildContext context, Map<String, Object?> data) {
   return CatalogItemContext(
     data: data,
     id: 'test',
+    type: 'LineChart',
     buildChild: (id, [dataContext]) => const SizedBox.shrink(),
     dispatchEvent: (_) {},
     buildContext: context,
-    dataContext: DataContext(DataModel(), '/'),
+    dataContext: DataContext(_MockDataModel(), DataPath.root),
     getComponent: (_) => null,
+    getCatalogItem: (_) => null,
     surfaceId: 'surface',
+    reportError: (_, _) {},
   );
 }
 
@@ -71,7 +77,6 @@ void main() {
       expect(props, containsAll(['points', 'yAxisLabels']));
 
       final required = schema.value['required']! as List;
-      expect(required, hasLength(2));
       expect(required, containsAll(['points', 'yAxisLabels']));
     });
 

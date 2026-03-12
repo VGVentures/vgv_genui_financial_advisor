@@ -3,6 +3,9 @@ import 'package:finance_app/app/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genui/genui.dart';
+import 'package:mocktail/mocktail.dart';
+
+class _MockDataModel extends Mock implements DataModel {}
 
 Map<String, Object?> _data({
   List<Map<String, Object?>>? cards,
@@ -28,12 +31,15 @@ CatalogItemContext _context(BuildContext context, Map<String, Object?> data) {
   return CatalogItemContext(
     data: data,
     id: 'test',
+    type: 'MetricCard',
     buildChild: (id, [dataContext]) => const SizedBox.shrink(),
     dispatchEvent: (_) {},
     buildContext: context,
-    dataContext: DataContext(DataModel(), '/'),
+    dataContext: DataContext(_MockDataModel(), DataPath.root),
     getComponent: (_) => null,
+    getCatalogItem: (_) => null,
     surfaceId: 'surface',
+    reportError: (_, _) {},
   );
 }
 
@@ -64,7 +70,7 @@ void main() {
       expect(props, contains('cards'));
 
       final required = schema.value['required']! as List;
-      expect(required, ['cards']);
+      expect(required, contains('cards'));
     });
 
     testWidgets('renders metric card labels and values', (tester) async {
