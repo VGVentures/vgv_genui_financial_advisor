@@ -3,9 +3,7 @@ import 'package:genui/genui.dart';
 
 /// Builds the full catalog of financial widgets for GenUI.
 Catalog buildFinanceCatalog() {
-  return CoreCatalogItems.asCatalog().copyWith([
-    headerSelectorItem,
-    sectionHeaderItem,
-    userSummaryCardItem,
-  ]);
+  return BasicCatalogItems.asCatalog().copyWith(
+    newItems: [headerSelectorItem, sectionHeaderItem, userSummaryCardItem],
+  );
 }
