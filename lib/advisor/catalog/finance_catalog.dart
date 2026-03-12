@@ -38,6 +38,7 @@ Catalog buildFinanceCatalog() {
       lineChartItem,
       metricCardsItem,
       radioCardItem,
+      rankedTableItem,
       userSummaryCardItem,
     ],
     systemPromptFragments: [_financeWidgetRules],
