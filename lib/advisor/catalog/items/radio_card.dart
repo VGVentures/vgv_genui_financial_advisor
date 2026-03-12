@@ -4,6 +4,9 @@ import 'package:genui/genui.dart';
 import 'package:json_schema_builder/json_schema_builder.dart';
 
 final _schema = S.object(
+  description:
+      'A set of mutually exclusive choices (e.g. profile type, plan '
+      'selection). Exactly one option should have isSelected: true.',
   properties: {
     'options': S.list(
       description: 'List of selectable radio card options.',

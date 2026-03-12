@@ -3,6 +3,9 @@ import 'package:genui/genui.dart';
 import 'package:json_schema_builder/json_schema_builder.dart';
 
 final _schema = S.object(
+  description:
+      'A grid of cards highlighting key financial metrics '
+      '(e.g. total spending, savings rate, net worth).',
   properties: {
     'cards': S.list(
       description: 'List of metric cards to display in a responsive layout.',

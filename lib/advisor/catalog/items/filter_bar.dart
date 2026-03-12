@@ -17,6 +17,9 @@ const _colorValues = [
 ];
 
 final _schema = S.object(
+  description:
+      'A horizontal bar of filter chips for narrowing data by category '
+      '(e.g. spending categories, account types).',
   properties: {
     'categories': S.list(
       description: 'List of filter category chips to display.',

@@ -6,6 +6,9 @@ import 'package:genui/genui.dart';
 import 'package:json_schema_builder/json_schema_builder.dart';
 
 final _schema = S.object(
+  description:
+      'A line chart for visualizing trends over time '
+      '(e.g. monthly spending, account balance history).',
   properties: {
     'points': S.list(
       description: 'Data points defining the line.',

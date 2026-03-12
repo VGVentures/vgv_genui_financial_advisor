@@ -3,6 +3,9 @@ import 'package:genui/genui.dart';
 import 'package:json_schema_builder/json_schema_builder.dart';
 
 final _schema = S.object(
+  description:
+      'A set of categorized options or highlights displayed as '
+      'emoji-labelled cards in a responsive grid.',
   properties: {
     'cards': S.list(
       description: 'List of emoji cards to display in a responsive grid.',

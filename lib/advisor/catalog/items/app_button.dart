@@ -3,6 +3,9 @@ import 'package:genui/genui.dart';
 import 'package:json_schema_builder/json_schema_builder.dart';
 
 final _schema = S.object(
+  description:
+      'A call-to-action button for navigating to a detail view, '
+      'confirming a choice, or starting a workflow.',
   properties: {
     'label': S.string(description: 'The button text.'),
     'variant': S.string(
