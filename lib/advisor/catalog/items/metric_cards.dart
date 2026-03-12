@@ -9,7 +9,8 @@ final _schema = S.object(
       items: S.object(
         properties: {
           'label': S.string(
-            description: 'Short label describing the metric (e.g. "Fixed costs").',
+            description:
+                'Short label describing the metric (e.g. "Fixed costs").',
           ),
           'value': S.string(
             description: r'Primary metric value (e.g. "$4,319").',

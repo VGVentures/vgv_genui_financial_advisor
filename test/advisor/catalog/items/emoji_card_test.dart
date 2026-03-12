@@ -10,10 +10,12 @@ class _MockDataModel extends Mock implements DataModel {}
 Map<String, Object?> _data({
   List<Map<String, Object?>>? cards,
 }) => {
-  'cards': cards ?? [
-    {'emoji': '💰', 'label': 'Savings', 'isSelected': true},
-    {'emoji': '🏠', 'label': 'Housing', 'isSelected': false},
-  ],
+  'cards':
+      cards ??
+      [
+        {'emoji': '💰', 'label': 'Savings', 'isSelected': true},
+        {'emoji': '🏠', 'label': 'Housing', 'isSelected': false},
+      ],
 };
 
 CatalogItemContext _context(BuildContext context, Map<String, Object?> data) {
@@ -54,8 +56,8 @@ void main() {
       expect(emojiCardItem.name, 'EmojiCard');
 
       final schema = emojiCardItem.dataSchema;
-      final props =
-          (schema.value['properties']! as Map<String, Object?>).keys.toList();
+      final props = (schema.value['properties']! as Map<String, Object?>).keys
+          .toList();
       expect(props, contains('cards'));
 
       final required = schema.value['required']! as List;
@@ -80,9 +82,11 @@ void main() {
     testWidgets('defaults isSelected to false when omitted', (tester) async {
       await _pump(
         tester,
-        _data(cards: [
-          {'emoji': '📊', 'label': 'Budget'},
-        ]),
+        _data(
+          cards: [
+            {'emoji': '📊', 'label': 'Budget'},
+          ],
+        ),
       );
 
       expect(find.text('📊'), findsOneWidget);

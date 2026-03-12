@@ -19,7 +19,8 @@ final _schema = S.object(
             description: 'Header text shown in the tooltip.',
           ),
           'tooltipValue': S.string(
-            description: 'Body text shown in the tooltip (e.g. "Spend: \$1580").',
+            description:
+                r'Body text shown in the tooltip (e.g. "Spend: \$1580").',
           ),
         },
         required: ['xLabel', 'value', 'tooltipLabel', 'tooltipValue'],
@@ -28,7 +29,7 @@ final _schema = S.object(
     'yAxisLabels': S.list(
       description:
           'Pre-formatted y-axis labels ordered bottom to top '
-          '(e.g. ["\$0k", "\$2k", "\$4k"]).',
+          r'(e.g. ["\$0k", "\$2k", "\$4k"]).',
       items: S.string(),
     ),
   },

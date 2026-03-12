@@ -10,10 +10,12 @@ class _MockDataModel extends Mock implements DataModel {}
 Map<String, Object?> _data({
   List<Map<String, Object?>>? categories,
 }) => {
-  'categories': categories ?? [
-    {'label': 'Food', 'color': 'orange', 'isSelected': true},
-    {'label': 'Shopping', 'color': 'lightBlue', 'isSelected': false},
-  ],
+  'categories':
+      categories ??
+      [
+        {'label': 'Food', 'color': 'orange', 'isSelected': true},
+        {'label': 'Shopping', 'color': 'lightBlue', 'isSelected': false},
+      ],
 };
 
 CatalogItemContext _context(BuildContext context, Map<String, Object?> data) {
@@ -55,8 +57,8 @@ void main() {
       expect(filterBarItem.name, 'FilterBar');
 
       final schema = filterBarItem.dataSchema;
-      final props =
-          (schema.value['properties']! as Map<String, Object?>).keys.toList();
+      final props = (schema.value['properties']! as Map<String, Object?>).keys
+          .toList();
       expect(props, contains('categories'));
 
       final required = schema.value['required']! as List;

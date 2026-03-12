@@ -10,10 +10,12 @@ class _MockDataModel extends Mock implements DataModel {}
 Map<String, Object?> _data({
   List<Map<String, Object?>>? options,
 }) => {
-  'options': options ?? [
-    {'label': 'Beginner', 'isSelected': true},
-    {'label': 'Optimizer', 'isSelected': false},
-  ],
+  'options':
+      options ??
+      [
+        {'label': 'Beginner', 'isSelected': true},
+        {'label': 'Optimizer', 'isSelected': false},
+      ],
 };
 
 CatalogItemContext _context(BuildContext context, Map<String, Object?> data) {
@@ -55,8 +57,8 @@ void main() {
       expect(radioCardItem.name, 'RadioCard');
 
       final schema = radioCardItem.dataSchema;
-      final props =
-          (schema.value['properties']! as Map<String, Object?>).keys.toList();
+      final props = (schema.value['properties']! as Map<String, Object?>).keys
+          .toList();
       expect(props, contains('options'));
 
       final required = schema.value['required']! as List;
@@ -79,9 +81,11 @@ void main() {
     testWidgets('renders single option', (tester) async {
       await _pump(
         tester,
-        _data(options: [
-          {'label': 'Solo', 'isSelected': true},
-        ]),
+        _data(
+          options: [
+            {'label': 'Solo', 'isSelected': true},
+          ],
+        ),
       );
 
       expect(find.text('Solo'), findsOneWidget);

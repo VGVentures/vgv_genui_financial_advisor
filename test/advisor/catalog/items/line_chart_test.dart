@@ -11,26 +11,28 @@ Map<String, Object?> _data({
   List<Map<String, Object?>>? points,
   List<String>? yAxisLabels,
 }) => {
-  'points': points ?? [
-    {
-      'xLabel': 'Jan',
-      'value': 1000,
-      'tooltipLabel': 'January',
-      'tooltipValue': r'Spend: $1,000',
-    },
-    {
-      'xLabel': 'Feb',
-      'value': 1500,
-      'tooltipLabel': 'February',
-      'tooltipValue': r'Spend: $1,500',
-    },
-    {
-      'xLabel': 'Mar',
-      'value': 1200,
-      'tooltipLabel': 'March',
-      'tooltipValue': r'Spend: $1,200',
-    },
-  ],
+  'points':
+      points ??
+      [
+        {
+          'xLabel': 'Jan',
+          'value': 1000,
+          'tooltipLabel': 'January',
+          'tooltipValue': r'Spend: $1,000',
+        },
+        {
+          'xLabel': 'Feb',
+          'value': 1500,
+          'tooltipLabel': 'February',
+          'tooltipValue': r'Spend: $1,500',
+        },
+        {
+          'xLabel': 'Mar',
+          'value': 1200,
+          'tooltipLabel': 'March',
+          'tooltipValue': r'Spend: $1,200',
+        },
+      ],
   'yAxisLabels': yAxisLabels ?? [r'$0k', r'$1k', r'$2k'],
 };
 
@@ -72,8 +74,8 @@ void main() {
       expect(lineChartItem.name, 'LineChart');
 
       final schema = lineChartItem.dataSchema;
-      final props =
-          (schema.value['properties']! as Map<String, Object?>).keys.toList();
+      final props = (schema.value['properties']! as Map<String, Object?>).keys
+          .toList();
       expect(props, containsAll(['points', 'yAxisLabels']));
 
       final required = schema.value['required']! as List;

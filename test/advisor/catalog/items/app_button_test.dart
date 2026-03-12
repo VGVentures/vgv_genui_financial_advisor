@@ -59,8 +59,8 @@ void main() {
       expect(appButtonItem.name, 'AppButton');
 
       final schema = appButtonItem.dataSchema;
-      final props =
-          (schema.value['properties']! as Map<String, Object?>).keys.toList();
+      final props = (schema.value['properties']! as Map<String, Object?>).keys
+          .toList();
       expect(
         props,
         containsAll(['label', 'variant', 'size', 'isLoading']),

@@ -10,21 +10,23 @@ class _MockDataModel extends Mock implements DataModel {}
 Map<String, Object?> _data({
   List<Map<String, Object?>>? cards,
 }) => {
-  'cards': cards ?? [
-    {
-      'label': 'Total Spending',
-      'value': r'$4,319',
-      'delta': '+1.2%',
-      'deltaDirection': 'negative',
-      'subtitle': 'vs last month',
-    },
-    {
-      'label': 'Savings',
-      'value': r'$1,200',
-      'delta': '+5%',
-      'deltaDirection': 'positive',
-    },
-  ],
+  'cards':
+      cards ??
+      [
+        {
+          'label': 'Total Spending',
+          'value': r'$4,319',
+          'delta': '+1.2%',
+          'deltaDirection': 'negative',
+          'subtitle': 'vs last month',
+        },
+        {
+          'label': 'Savings',
+          'value': r'$1,200',
+          'delta': '+5%',
+          'deltaDirection': 'positive',
+        },
+      ],
 };
 
 CatalogItemContext _context(BuildContext context, Map<String, Object?> data) {
@@ -65,8 +67,8 @@ void main() {
       expect(metricCardsItem.name, 'MetricCard');
 
       final schema = metricCardsItem.dataSchema;
-      final props =
-          (schema.value['properties']! as Map<String, Object?>).keys.toList();
+      final props = (schema.value['properties']! as Map<String, Object?>).keys
+          .toList();
       expect(props, contains('cards'));
 
       final required = schema.value['required']! as List;
@@ -98,9 +100,11 @@ void main() {
     testWidgets('renders plain card without delta', (tester) async {
       await _pump(
         tester,
-        _data(cards: [
-          {'label': 'Net Worth', 'value': r'$50,000'},
-        ]),
+        _data(
+          cards: [
+            {'label': 'Net Worth', 'value': r'$50,000'},
+          ],
+        ),
       );
 
       expect(find.text('Net Worth'), findsOneWidget);
