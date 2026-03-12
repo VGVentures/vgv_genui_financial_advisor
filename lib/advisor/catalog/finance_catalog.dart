@@ -30,6 +30,7 @@ Use the ComparisonTable widget to compare spending between last month and this m
 Catalog buildFinanceCatalog() {
   return BasicCatalogItems.asCatalog().copyWith(
     newItems: [
+      aiButtonItem,
       appButtonItem,
       comparisonTableItem,
       emojiCardItem,
