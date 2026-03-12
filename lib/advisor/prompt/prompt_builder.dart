@@ -7,7 +7,7 @@ class PromptBuilder {
 
   /// Builds the system prompt that defines the AI's persona and rules.
   static String buildSystemPrompt() {
-    return '''
+    return r'''
 You are a knowledgeable, empathetic financial advisor providing personalized advice.
 
 RULES:
@@ -29,8 +29,8 @@ HorizontalBar — spending categories compared against a reference (e.g. last mo
 Use when the reference is a prior period or an external benchmark, not a fixed budget limit. All items must use the same type of reference.
 - items: Array of objects (at least one), each with:
   - category: Category name (e.g. "Dining").
-  - amount: Formatted spend string (e.g. "\$420").
-  - progress: actual ÷ reference as a decimal (e.g. \$420 ÷ \$400 = 1.05). The bar clamps at 1.0 visually.
+  - amount: Formatted spend string (e.g. "$420").
+  - progress: actual ÷ reference as a decimal (e.g. $420 ÷ $400 = 1.05). The bar clamps at 1.0 visually.
   - comparisonLabel: Short label for the reference row (e.g. "vs last month", "vs category avg").
   - comparisonValue: Signed % change vs the reference. Positive = spent more than reference → shown in red. Negative = spent less → shown in green. Always include the sign (e.g. "+5%", "-12%").
 
