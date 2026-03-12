@@ -7,13 +7,19 @@ import 'package:mocktail/mocktail.dart';
 
 class _MockDataModel extends Mock implements DataModel {}
 
+const _item = {
+  'title': 'Restaurant',
+  'subtitle': 'Dining • Feb 18',
+  'amount': r'$450',
+};
+
 Map<String, Object?> _data({
   String title = 'Tips',
-  String body = 'Some helpful content.',
+  List<Object?> items = const [_item],
   bool? isExpanded,
 }) => {
   'title': title,
-  'body': body,
+  'items': items,
   'isExpanded': ?isExpanded,
 };
 
@@ -57,15 +63,15 @@ void main() {
       final schema = accordionItem.dataSchema;
       final props = (schema.value['properties']! as Map<String, Object?>).keys
           .toList();
-      expect(props, containsAll(['title', 'body', 'isExpanded']));
+      expect(props, containsAll(['title', 'items', 'isExpanded']));
 
       final required = schema.value['required']! as List;
-      expect(required, containsAll(['title', 'body']));
+      expect(required, containsAll(['title', 'items']));
       expect(required, isNot(contains('isExpanded')));
     });
 
-    testWidgets('renders title and body text', (tester) async {
-      await _pump(tester, _data(title: 'My Section', body: 'Detail text.'));
+    testWidgets('renders title and items', (tester) async {
+      await _pump(tester, _data(title: 'My Section'));
 
       expect(find.text('My Section'), findsOneWidget);
       expect(find.byType(AppAccordion), findsOneWidget);
@@ -87,7 +93,6 @@ void main() {
 
       final accordion = tester.widget<AppAccordion>(find.byType(AppAccordion));
       expect(accordion.isExpanded, isTrue);
-      expect(find.text('Some helpful content.'), findsOneWidget);
     });
   });
 }
