@@ -20,8 +20,11 @@ final _schema = S.object(
         required: ['label', 'isSelected'],
       ),
     ),
+    'action': A2uiSchemas.action(
+      description: 'The action to perform when a radio card is selected.',
+    ),
   },
-  required: ['options'],
+  required: ['options', 'action'],
 );
 
 /// CatalogItem that renders a list of [RadioCard] widgets.
@@ -31,12 +34,27 @@ final radioCardItem = CatalogItem(
   widgetBuilder: (ctx) {
     final json = ctx.data as Map<String, Object?>;
     final rawOptions = json['options']! as List;
+    final action = json['action'] as Map<String, Object?>?;
 
     final cards = rawOptions.cast<Map<String, Object?>>().map((o) {
+      final label = o['label']! as String;
       return RadioCard(
-        label: o['label']! as String,
+        label: label,
         isSelected: o['isSelected']! as bool,
-        onTap: () {},
+        onTap: () {
+          if (action case {'event': final Map<String, Object?> event}) {
+            ctx.dispatchEvent(
+              UserActionEvent(
+                name: event['name']! as String,
+                sourceComponentId: ctx.id,
+                context: {
+                  ...?event['context'] as Map<String, Object?>?,
+                  'label': label,
+                },
+              ),
+            );
+          }
+        },
       );
     }).toList();
 

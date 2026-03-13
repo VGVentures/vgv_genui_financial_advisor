@@ -37,8 +37,11 @@ final _schema = S.object(
         required: ['label', 'color', 'isSelected'],
       ),
     ),
+    'action': A2uiSchemas.action(
+      description: 'The action to perform when a filter category is toggled.',
+    ),
   },
-  required: ['categories'],
+  required: ['categories', 'action'],
 );
 
 FilterChipColor _parseColor(String value) {
@@ -64,6 +67,7 @@ final filterBarItem = CatalogItem(
   widgetBuilder: (ctx) {
     final json = ctx.data as Map<String, Object?>;
     final rawCategories = json['categories']! as List;
+    final action = json['action'] as Map<String, Object?>?;
 
     final categories = rawCategories.cast<Map<String, Object?>>().map((c) {
       return FilterCategory(
@@ -73,10 +77,29 @@ final filterBarItem = CatalogItem(
       );
     }).toList();
 
+    void dispatchFilterEvent(String label) {
+      if (action case {'event': final Map<String, Object?> event}) {
+        ctx.dispatchEvent(
+          UserActionEvent(
+            name: event['name']! as String,
+            sourceComponentId: ctx.id,
+            context: {
+              ...?event['context'] as Map<String, Object?>?,
+              'label': label,
+            },
+          ),
+        );
+      }
+    }
+
     return FilterBar(
       categories: categories,
-      onCategoryToggled: (_) {},
-      onAllToggled: () {},
+      onCategoryToggled: (index) {
+        dispatchFilterEvent(categories[index].label);
+      },
+      onAllToggled: () {
+        dispatchFilterEvent('All');
+      },
     );
   },
 );

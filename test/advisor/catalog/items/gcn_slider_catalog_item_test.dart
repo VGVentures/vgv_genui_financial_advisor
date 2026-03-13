@@ -7,6 +7,10 @@ import 'package:mocktail/mocktail.dart';
 
 class _MockDataModel extends Mock implements DataModel {}
 
+const _defaultAction = {
+  'event': {'name': 'slider_changed'},
+};
+
 Map<String, Object?> _data({
   String title = 'Budget',
   String subtitle = 'Dining • Feb 18',
@@ -18,6 +22,7 @@ Map<String, Object?> _data({
   String? maxLabel,
   int? divisions,
   List<String>? splitLabels,
+  Map<String, Object?> action = _defaultAction,
 }) => {
   'title': title,
   'subtitle': subtitle,
@@ -29,15 +34,20 @@ Map<String, Object?> _data({
   'maxLabel': maxLabel,
   'divisions': divisions,
   'splitLabels': splitLabels,
+  'action': action,
 };
 
-CatalogItemContext _context(BuildContext context, Map<String, Object?> data) {
+CatalogItemContext _context(
+  BuildContext context,
+  Map<String, Object?> data, {
+  void Function(UiEvent)? dispatchEvent,
+}) {
   return CatalogItemContext(
     data: data,
     id: 'test',
     type: 'GCNSlider',
     buildChild: (id, [dataContext]) => const SizedBox.shrink(),
-    dispatchEvent: (_) {},
+    dispatchEvent: dispatchEvent ?? (_) {},
     buildContext: context,
     dataContext: DataContext(_MockDataModel(), DataPath.root),
     getComponent: (_) => null,
@@ -49,15 +59,17 @@ CatalogItemContext _context(BuildContext context, Map<String, Object?> data) {
 
 Future<void> _pump(
   WidgetTester tester,
-  Map<String, Object?> data,
-) async {
+  Map<String, Object?> data, {
+  void Function(UiEvent)? dispatchEvent,
+}) async {
   await tester.pumpWidget(
     MaterialApp(
       theme: AppTheme(LightThemeColors()).themeData,
       home: Scaffold(
         body: Builder(
-          builder: (context) =>
-              gcnSliderItem.widgetBuilder(_context(context, data)),
+          builder: (context) => gcnSliderItem.widgetBuilder(
+            _context(context, data, dispatchEvent: dispatchEvent),
+          ),
         ),
       ),
     ),
@@ -85,13 +97,14 @@ void main() {
           'maxLabel',
           'divisions',
           'splitLabels',
+          'action',
         ]),
       );
 
       final required = schema.value['required']! as List;
       expect(
         required,
-        containsAll(['title', 'subtitle', 'value', 'min', 'max']),
+        containsAll(['title', 'subtitle', 'value', 'min', 'max', 'action']),
       );
     });
 
@@ -133,6 +146,24 @@ void main() {
         expect(find.text('Med'), findsWidgets);
         expect(find.text('High'), findsWidgets);
         expect(find.text('Max'), findsWidgets);
+      });
+
+      testWidgets('dispatches event on value change', (tester) async {
+        final events = <UiEvent>[];
+        await _pump(
+          tester,
+          _data(value: 0, max: 100),
+          dispatchEvent: events.add,
+        );
+
+        // Drag the slider thumb to the right
+        await tester.drag(find.byType(Slider), const Offset(100, 0));
+        await tester.pump();
+
+        expect(events, isNotEmpty);
+        final event = events.last as UserActionEvent;
+        expect(event.name, 'slider_changed');
+        expect(event.context, containsPair('value', isA<double>()));
       });
     });
   });

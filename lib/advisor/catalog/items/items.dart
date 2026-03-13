@@ -16,4 +16,3 @@ export 'ranked_table.dart';
 export 'section_header_catalog_item.dart';
 export 'sparkline_card.dart';
 export 'transaction_list.dart';
-export 'user_summary_card_catalog_item.dart';

@@ -19,8 +19,11 @@ final _schema = S.object(
     'isLoading': S.boolean(
       description: 'Whether the button shows a loading indicator.',
     ),
+    'action': A2uiSchemas.action(
+      description: 'The action to perform when the button is pressed.',
+    ),
   },
-  required: ['label', 'variant', 'size'],
+  required: ['label', 'variant', 'size', 'action'],
 );
 
 /// CatalogItem that renders an [AppButton] widget.
@@ -40,13 +43,24 @@ final appButtonItem = CatalogItem(
       _ => AppButtonSize.large,
     };
     final isLoading = json['isLoading'] as bool? ?? false;
+    final action = json['action'] as Map<String, Object?>?;
 
     return AppButton(
       label: label,
       variant: variant,
       size: size,
       isLoading: isLoading,
-      onPressed: () {},
+      onPressed: () {
+        if (action case {'event': final Map<String, Object?> event}) {
+          ctx.dispatchEvent(
+            UserActionEvent(
+              name: event['name']! as String,
+              sourceComponentId: ctx.id,
+              context: event['context'] as Map<String, Object?>? ?? {},
+            ),
+          );
+        }
+      },
     );
   },
 );

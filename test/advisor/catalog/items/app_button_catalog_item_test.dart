@@ -7,25 +7,35 @@ import 'package:mocktail/mocktail.dart';
 
 class _MockDataModel extends Mock implements DataModel {}
 
+const _defaultAction = {
+  'event': {'name': 'button_pressed'},
+};
+
 Map<String, Object?> _data({
   String label = 'Get Started',
   String variant = 'filled',
   String size = 'large',
   bool? isLoading,
+  Map<String, Object?> action = _defaultAction,
 }) => {
   'label': label,
   'variant': variant,
   'size': size,
   'isLoading': isLoading,
+  'action': action,
 };
 
-CatalogItemContext _context(BuildContext context, Map<String, Object?> data) {
+CatalogItemContext _context(
+  BuildContext context,
+  Map<String, Object?> data, {
+  void Function(UiEvent)? dispatchEvent,
+}) {
   return CatalogItemContext(
     data: data,
     id: 'test',
     type: 'AppButton',
     buildChild: (id, [dataContext]) => const SizedBox.shrink(),
-    dispatchEvent: (_) {},
+    dispatchEvent: dispatchEvent ?? (_) {},
     buildContext: context,
     dataContext: DataContext(_MockDataModel(), DataPath.root),
     getComponent: (_) => null,
@@ -37,16 +47,18 @@ CatalogItemContext _context(BuildContext context, Map<String, Object?> data) {
 
 Future<void> _pump(
   WidgetTester tester,
-  Map<String, Object?> data,
-) async {
+  Map<String, Object?> data, {
+  void Function(UiEvent)? dispatchEvent,
+}) async {
   await tester.pumpWidget(
     MaterialApp(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: Scaffold(
         body: Builder(
-          builder: (context) =>
-              appButtonItem.widgetBuilder(_context(context, data)),
+          builder: (context) => appButtonItem.widgetBuilder(
+            _context(context, data, dispatchEvent: dispatchEvent),
+          ),
         ),
       ),
     ),
@@ -63,11 +75,11 @@ void main() {
           .toList();
       expect(
         props,
-        containsAll(['label', 'variant', 'size', 'isLoading']),
+        containsAll(['label', 'variant', 'size', 'isLoading', 'action']),
       );
 
       final required = schema.value['required']! as List;
-      expect(required, containsAll(['label', 'variant', 'size']));
+      expect(required, containsAll(['label', 'variant', 'size', 'action']));
     });
 
     group('renders', () {
@@ -96,6 +108,30 @@ void main() {
 
         expect(find.byType(CircularProgressIndicator), findsNothing);
         expect(find.text('Get Started'), findsOneWidget);
+      });
+
+      testWidgets('dispatches event on press', (tester) async {
+        final events = <UiEvent>[];
+        await _pump(
+          tester,
+          _data(
+            action: {
+              'event': {
+                'name': 'get_started',
+                'context': {'page': 'home'},
+              },
+            },
+          ),
+          dispatchEvent: events.add,
+        );
+
+        await tester.tap(find.text('Get Started'));
+        await tester.pump();
+
+        expect(events, hasLength(1));
+        final event = events.single as UserActionEvent;
+        expect(event.name, 'get_started');
+        expect(event.context, {'page': 'home'});
       });
     });
   });
