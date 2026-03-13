@@ -65,7 +65,7 @@ void main() {
       expect(props, containsAll(['items']));
 
       final required = schema.value['required']! as List;
-      expect(required, hasLength(1));
+      expect(required, contains('items'));
     });
 
     testWidgets('renders one HorizontalBar per item', (tester) async {
