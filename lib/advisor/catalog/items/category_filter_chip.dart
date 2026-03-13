@@ -7,6 +7,9 @@ final List<String> _colorValues = FilterChipColor.values
     .toList();
 
 final _schema = S.object(
+  description:
+      'A toggleable filter chip for category selection '
+      '(e.g. spending categories or tags).',
   properties: {
     'label': S.string(description: 'Text displayed inside the chip.'),
     'color': S.string(
