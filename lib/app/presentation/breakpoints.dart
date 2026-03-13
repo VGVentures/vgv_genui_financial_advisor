@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 
 /// Breakpoint constants for responsive layout decisions.
 abstract class Breakpoints {
-  static const double breakpoint = 900;
+  static const double breakpoint = 1000;
   static bool isMobile(double width) => width < breakpoint;
   static bool isDesktop(double width) => width >= breakpoint;
 }
