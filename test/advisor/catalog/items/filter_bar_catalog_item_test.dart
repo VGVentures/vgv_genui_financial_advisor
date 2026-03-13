@@ -7,8 +7,13 @@ import 'package:mocktail/mocktail.dart';
 
 class _MockDataModel extends Mock implements DataModel {}
 
+const _defaultAction = {
+  'event': {'name': 'filter_toggled'},
+};
+
 Map<String, Object?> _data({
   List<Map<String, Object?>>? categories,
+  Map<String, Object?> action = _defaultAction,
 }) => {
   'categories':
       categories ??
@@ -16,15 +21,20 @@ Map<String, Object?> _data({
         {'label': 'Food', 'color': 'orange', 'isSelected': true},
         {'label': 'Shopping', 'color': 'lightBlue', 'isSelected': false},
       ],
+  'action': action,
 };
 
-CatalogItemContext _context(BuildContext context, Map<String, Object?> data) {
+CatalogItemContext _context(
+  BuildContext context,
+  Map<String, Object?> data, {
+  void Function(UiEvent)? dispatchEvent,
+}) {
   return CatalogItemContext(
     data: data,
     id: 'test',
     type: 'FilterBar',
     buildChild: (id, [dataContext]) => const SizedBox.shrink(),
-    dispatchEvent: (_) {},
+    dispatchEvent: dispatchEvent ?? (_) {},
     buildContext: context,
     dataContext: DataContext(_MockDataModel(), DataPath.root),
     getComponent: (_) => null,
@@ -36,15 +46,17 @@ CatalogItemContext _context(BuildContext context, Map<String, Object?> data) {
 
 Future<void> _pump(
   WidgetTester tester,
-  Map<String, Object?> data,
-) async {
+  Map<String, Object?> data, {
+  void Function(UiEvent)? dispatchEvent,
+}) async {
   await tester.pumpWidget(
     MaterialApp(
       theme: AppTheme(LightThemeColors()).themeData,
       home: Scaffold(
         body: Builder(
-          builder: (context) =>
-              filterBarItem.widgetBuilder(_context(context, data)),
+          builder: (context) => filterBarItem.widgetBuilder(
+            _context(context, data, dispatchEvent: dispatchEvent),
+          ),
         ),
       ),
     ),
@@ -59,10 +71,10 @@ void main() {
       final schema = filterBarItem.dataSchema;
       final props = (schema.value['properties']! as Map<String, Object?>).keys
           .toList();
-      expect(props, contains('categories'));
+      expect(props, containsAll(['categories', 'action']));
 
       final required = schema.value['required']! as List;
-      expect(required, contains('categories'));
+      expect(required, containsAll(['categories', 'action']));
     });
 
     group('renders', () {
@@ -93,6 +105,32 @@ void main() {
         await _pump(tester, _data());
 
         expect(find.byType(FilterBar), findsOneWidget);
+      });
+
+      testWidgets('dispatches event on category tap', (tester) async {
+        final events = <UiEvent>[];
+        await _pump(tester, _data(), dispatchEvent: events.add);
+
+        await tester.tap(find.text('Shopping'));
+        await tester.pump();
+
+        expect(events, hasLength(1));
+        final event = events.single as UserActionEvent;
+        expect(event.name, 'filter_toggled');
+        expect(event.context, containsPair('label', 'Shopping'));
+      });
+
+      testWidgets('dispatches event on All tap', (tester) async {
+        final events = <UiEvent>[];
+        await _pump(tester, _data(), dispatchEvent: events.add);
+
+        await tester.tap(find.text('All'));
+        await tester.pump();
+
+        expect(events, hasLength(1));
+        final event = events.single as UserActionEvent;
+        expect(event.name, 'filter_toggled');
+        expect(event.context, containsPair('label', 'All'));
       });
     });
   });

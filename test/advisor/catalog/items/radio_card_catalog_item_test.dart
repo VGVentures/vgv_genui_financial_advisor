@@ -7,8 +7,13 @@ import 'package:mocktail/mocktail.dart';
 
 class _MockDataModel extends Mock implements DataModel {}
 
+const _defaultAction = {
+  'event': {'name': 'option_selected'},
+};
+
 Map<String, Object?> _data({
   List<Map<String, Object?>>? options,
+  Map<String, Object?> action = _defaultAction,
 }) => {
   'options':
       options ??
@@ -16,15 +21,20 @@ Map<String, Object?> _data({
         {'label': 'Beginner', 'isSelected': true},
         {'label': 'Optimizer', 'isSelected': false},
       ],
+  'action': action,
 };
 
-CatalogItemContext _context(BuildContext context, Map<String, Object?> data) {
+CatalogItemContext _context(
+  BuildContext context,
+  Map<String, Object?> data, {
+  void Function(UiEvent)? dispatchEvent,
+}) {
   return CatalogItemContext(
     data: data,
     id: 'test',
     type: 'RadioCard',
     buildChild: (id, [dataContext]) => const SizedBox.shrink(),
-    dispatchEvent: (_) {},
+    dispatchEvent: dispatchEvent ?? (_) {},
     buildContext: context,
     dataContext: DataContext(_MockDataModel(), DataPath.root),
     getComponent: (_) => null,
@@ -36,15 +46,17 @@ CatalogItemContext _context(BuildContext context, Map<String, Object?> data) {
 
 Future<void> _pump(
   WidgetTester tester,
-  Map<String, Object?> data,
-) async {
+  Map<String, Object?> data, {
+  void Function(UiEvent)? dispatchEvent,
+}) async {
   await tester.pumpWidget(
     MaterialApp(
       theme: AppTheme(LightThemeColors()).themeData,
       home: Scaffold(
         body: Builder(
-          builder: (context) =>
-              radioCardItem.widgetBuilder(_context(context, data)),
+          builder: (context) => radioCardItem.widgetBuilder(
+            _context(context, data, dispatchEvent: dispatchEvent),
+          ),
         ),
       ),
     ),
@@ -59,10 +71,10 @@ void main() {
       final schema = radioCardItem.dataSchema;
       final props = (schema.value['properties']! as Map<String, Object?>).keys
           .toList();
-      expect(props, contains('options'));
+      expect(props, containsAll(['options', 'action']));
 
       final required = schema.value['required']! as List;
-      expect(required, contains('options'));
+      expect(required, containsAll(['options', 'action']));
     });
 
     group('renders', () {
@@ -91,6 +103,19 @@ void main() {
 
         expect(find.text('Solo'), findsOneWidget);
         expect(find.byType(RadioCard), findsOneWidget);
+      });
+
+      testWidgets('dispatches event on tap', (tester) async {
+        final events = <UiEvent>[];
+        await _pump(tester, _data(), dispatchEvent: events.add);
+
+        await tester.tap(find.text('Optimizer'));
+        await tester.pump();
+
+        expect(events, hasLength(1));
+        final event = events.single as UserActionEvent;
+        expect(event.name, 'option_selected');
+        expect(event.context, containsPair('label', 'Optimizer'));
       });
     });
   });

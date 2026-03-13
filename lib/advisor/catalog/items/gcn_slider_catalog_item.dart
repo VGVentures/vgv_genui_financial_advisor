@@ -35,8 +35,11 @@ final _schema = S.object(
           'Should contain divisions + 1 elements.',
       items: S.string(),
     ),
+    'action': A2uiSchemas.action(
+      description: 'The action to perform when the slider value changes.',
+    ),
   },
-  required: ['title', 'subtitle', 'value', 'min', 'max'],
+  required: ['title', 'subtitle', 'value', 'min', 'max', 'action'],
 );
 
 /// CatalogItem that renders a [GCNSlider] widget.
@@ -51,6 +54,7 @@ final gcnSliderItem = CatalogItem(
     final max = (json['max']! as num).toDouble();
     final divisions = (json['divisions'] as num?)?.toInt();
     final rawSplitLabels = json['splitLabels'] as List?;
+    final action = json['action'] as Map<String, Object?>?;
 
     return GCNSlider(
       title: json['title']! as String,
@@ -63,7 +67,20 @@ final gcnSliderItem = CatalogItem(
       maxLabel: json['maxLabel'] as String?,
       divisions: divisions,
       splitLabels: rawSplitLabels?.cast<String>(),
-      onChanged: (_) {},
+      onChanged: (newValue) {
+        if (action case {'event': final Map<String, Object?> event}) {
+          ctx.dispatchEvent(
+            UserActionEvent(
+              name: event['name']! as String,
+              sourceComponentId: ctx.id,
+              context: {
+                ...?event['context'] as Map<String, Object?>?,
+                'value': newValue,
+              },
+            ),
+          );
+        }
+      },
     );
   },
 );

@@ -1,10 +1,29 @@
 import 'package:finance_app/advisor/catalog/items/items.dart';
 import 'package:genui/genui.dart';
 
+/// The catalog ID for the finance catalog.
+///
+/// All components — both standard and custom finance widgets — are registered
+/// under this single catalog. The LLM must use this exact value in
+/// createSurface messages.
+const financeCatalogId = 'com.vgv.finance_catalog';
+
 /// Usage guidance appended to the system prompt so the LLM knows when and how
 /// to use the finance-specific widgets beyond what the JSON schema describes.
 const _financeWidgetRules = '''
-When populating the UserSummaryCard, ask the user for the information you need to populate the card, or provide reasonable example values and invite the user to correct them.
+IMPORTANT: Every A2UI JSON message MUST include "version": "v0.9" at the top level, and when creating a surface you MUST use this exact catalogId: "$financeCatalogId". Do NOT invent or guess a different catalogId.
+
+Example createSurface:
+```json
+{
+  "version": "v0.9",
+  "createSurface": {
+    "surfaceId": "unique_id",
+    "catalogId": "$financeCatalogId",
+    "sendDataModel": true
+  }
+}
+```
 
 Use the AppButton widget to present clear calls-to-action, such as navigating to a detailed view, confirming a choice, or starting a workflow.
 - variant: "filled" for primary actions, "outlined" for secondary actions.
@@ -29,6 +48,7 @@ Use the ComparisonTable widget to compare spending between last month and this m
 /// Builds the full catalog of financial widgets for GenUI.
 Catalog buildFinanceCatalog() {
   return BasicCatalogItems.asCatalog().copyWith(
+    catalogId: financeCatalogId,
     newItems: [
       appButtonItem,
       comparisonTableItem,
@@ -38,7 +58,6 @@ Catalog buildFinanceCatalog() {
       lineChartItem,
       metricCardsItem,
       radioCardItem,
-      userSummaryCardItem,
     ],
     systemPromptFragments: [_financeWidgetRules],
   );
