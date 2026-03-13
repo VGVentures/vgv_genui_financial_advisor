@@ -28,6 +28,8 @@ Use the ComparisonTable widget to compare spending between last month and this m
 Use the AppAccordion to display a group of related action items under a collapsible header. Set isExpanded to true only when the content is urgent or the user explicitly asked for it.
 
 Use the CategoryFilterChip widget to display a toggleable filter chip for category selection (e.g. spending categories or tags). Set isSelected to true to show it in its selected state. Set isEnabled to false to render it in a disabled/muted state.
+
+Use the TransactionList widget to display a list of recent transactions. Each item shows a title (merchant name), description (category), and formatted amount.
 ''';
 
 /// Builds the full catalog of financial widgets for GenUI.
