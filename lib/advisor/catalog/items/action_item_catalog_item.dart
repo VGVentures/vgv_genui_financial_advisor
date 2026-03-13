@@ -69,6 +69,7 @@ final actionItemsGroupItem = CatalogItem(
         delta: item['delta'] as String?,
         buttonLabel: item['buttonLabel'] as String?,
         buttonVariant: variant,
+        onButtonTap: () {},
       );
     }).toList();
 
