@@ -36,6 +36,8 @@ Use HeaderSelector to show chip-style toggles for switching between views or tim
 Use HorizontalBar to compare spending categories against a prior period or external benchmark (e.g. last month, category average). Set progress as actual ÷ reference. Use ProgressBar instead when the reference is a fixed budget limit.
 
 Use ProgressBar to show spending categories vs. a fixed budget limit. Set value to actual spend and total to the budget. Do not use when the reference is a prior period — use HorizontalBar instead.
+
+Use the SparklineCard widget to display a financial category with its amount and a trend sparkline. Set trend to "positive" (green) for growing values, "negative" (red) for declining values, or "stable" (blue) for flat trends.
 ''';
 
 /// Builds the full catalog of financial widgets for GenUI.
@@ -57,6 +59,7 @@ Catalog buildFinanceCatalog() {
       progressBarItem,
       metricCardsItem,
       radioCardItem,
+      sparklineCardItem,
       userSummaryCardItem,
     ],
     systemPromptFragments: [_financeWidgetRules],
