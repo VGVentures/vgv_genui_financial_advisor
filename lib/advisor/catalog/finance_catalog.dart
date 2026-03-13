@@ -42,6 +42,7 @@ Use ProgressBar to show spending categories vs. a fixed budget limit. Set value 
 Catalog buildFinanceCatalog() {
   return BasicCatalogItems.asCatalog().copyWith(
     newItems: [
+      aiButtonItem,
       headerSelectorItem,
       sectionHeaderItem,
       accordionItem,
