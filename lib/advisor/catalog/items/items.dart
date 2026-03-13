@@ -1,4 +1,5 @@
 export 'accordion_catalog_item.dart';
+export 'action_item_catalog_item.dart';
 export 'ai_button.dart';
 export 'app_button_catalog_item.dart';
 export 'category_filter_chip.dart';
