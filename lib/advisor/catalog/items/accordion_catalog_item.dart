@@ -27,7 +27,8 @@ final _itemSchema = S.object(
 
 final _schema = S.object(
   description:
-      'A collapsible panel that groups related action items under a header.',
+      'A collapsible panel that groups related financial action items '
+      'under a header (e.g. "Debt Reduction Steps", "Savings Actions").',
   properties: {
     'title': S.string(description: 'Header text displayed in the accordion.'),
     'items': S.list(
