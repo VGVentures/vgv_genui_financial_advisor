@@ -20,16 +20,10 @@ final _itemSchema = S.object(
     'delta': A2uiSchemas.stringReference(
       description: 'Optional change indicator, e.g. "+28%".',
     ),
-    'buttonLabel': S.string(
+    'child': S.string(
       description:
-          'CTA button label. Required when buttonVariant is not "none".',
-    ),
-    'buttonVariant': S.string(
-      description: 'Button style to render. Defaults to "none".',
-      enumValues: ['primary', 'secondary', 'none'],
-    ),
-    'action': A2uiSchemas.action(
-      description: 'The action to perform when the button is pressed.',
+          'Optional component ID rendered as a trailing widget '
+          '(e.g. an AppButton). Use for per-item actions.',
     ),
   },
   required: ['title', 'subtitle', 'amount'],
@@ -38,11 +32,10 @@ final _itemSchema = S.object(
 final _schema = S.object(
   description:
       'A list of financial tasks, recommendations, or transaction highlights. '
-      'Stack between 2 and 10 items — all items must be the same type '
-      '(e.g. all with buttons or all without). '
+      'Stack between 2 and 10 items. '
       'Add delta when showing change over time (e.g. "+28%"). '
-      'Set buttonVariant to "primary" or "secondary" with a buttonLabel '
-      'only when there is a clear, immediate action for the user to take.',
+      'Use the optional child property to add a trailing widget '
+      '(e.g. an AppButton) to individual items.',
   properties: {
     'items': S.list(
       items: _itemSchema,
@@ -52,19 +45,7 @@ final _schema = S.object(
   required: ['items'],
 );
 
-ActionItemButtonVariant _parseVariant(String? value) {
-  return switch (value) {
-    'primary' => ActionItemButtonVariant.primary,
-    'secondary' => ActionItemButtonVariant.secondary,
-    _ => ActionItemButtonVariant.none,
-  };
-}
-
 /// CatalogItem that renders a group of financial action items.
-///
-/// String fields (`title`, `subtitle`, `amount`, `delta`) support data model
-/// bindings via `{"path": "..."}` for reactive values. Buttons dispatch
-/// actions immediately when tapped.
 final actionItemsGroupItem = CatalogItem(
   name: 'ActionItemsGroup',
   dataSchema: _schema,
@@ -79,12 +60,12 @@ final actionItemsGroupItem = CatalogItem(
           .indexed
           .map((entry) {
             final (index, item) = entry;
+            final childId = item['child'] as String?;
             return _BoundActionItem(
               key: ValueKey('action_item_$index'),
               dataContext: ctx.dataContext,
               itemData: item,
-              dispatchEvent: ctx.dispatchEvent,
-              componentId: ctx.id,
+              trailing: childId != null ? ctx.buildChild(childId) : null,
             );
           })
           .toList(),
@@ -96,35 +77,13 @@ class _BoundActionItem extends StatelessWidget {
   const _BoundActionItem({
     required this.dataContext,
     required this.itemData,
-    required this.dispatchEvent,
-    required this.componentId,
+    this.trailing,
     super.key,
   });
 
   final DataContext dataContext;
   final Map<String, Object?> itemData;
-  final DispatchEventCallback dispatchEvent;
-  final String componentId;
-
-  VoidCallback? _buildOnButtonTap(String? title) {
-    final action = itemData['action'] as Map<String, Object?>?;
-    if (action == null) return null;
-    if (action case {'event': final Map<String, Object?> event}) {
-      return () {
-        dispatchEvent(
-          UserActionEvent(
-            name: event['name']! as String,
-            sourceComponentId: componentId,
-            context: {
-              ...event['context'] as Map<String, Object?>? ?? {},
-              'title': ?title,
-            },
-          ),
-        );
-      };
-    }
-    return null;
-  }
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -146,11 +105,7 @@ class _BoundActionItem extends StatelessWidget {
                     title: title ?? '',
                     subtitle: subtitle ?? '',
                     amount: amount ?? '',
-                    buttonLabel: itemData['buttonLabel'] as String?,
-                    buttonVariant: _parseVariant(
-                      itemData['buttonVariant'] as String?,
-                    ),
-                    onButtonTap: _buildOnButtonTap(title),
+                    trailing: trailing,
                   );
                 }
                 return BoundString(
@@ -162,11 +117,7 @@ class _BoundActionItem extends StatelessWidget {
                       subtitle: subtitle ?? '',
                       amount: amount ?? '',
                       delta: delta,
-                      buttonLabel: itemData['buttonLabel'] as String?,
-                      buttonVariant: _parseVariant(
-                        itemData['buttonVariant'] as String?,
-                      ),
-                      onButtonTap: _buildOnButtonTap(title),
+                      trailing: trailing,
                     );
                   },
                 );

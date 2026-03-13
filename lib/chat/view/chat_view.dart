@@ -5,6 +5,7 @@ import 'package:finance_app/chat/bloc/bloc.dart';
 import 'package:finance_app/chat/chat.dart';
 import 'package:finance_app/gen/fonts.gen.dart';
 import 'package:finance_app/l10n/l10n.dart';
+import 'package:finance_app/onboarding/intro/view/intro_page.dart';
 import 'package:finance_app/onboarding/pick_profile/models/profile_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -162,7 +163,11 @@ class _ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
               gradient: gradient,
               icon: Icons.refresh,
               label: 'Restart Demo',
-              onTap: () {},
+              onTap: () => Navigator.of(context).pushReplacement(
+                MaterialPageRoute<void>(
+                  builder: (_) => const IntroPage(),
+                ),
+              ),
             ),
             const SizedBox(width: Spacing.sm),
             // Profile chip

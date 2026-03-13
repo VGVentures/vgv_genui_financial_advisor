@@ -1,6 +1,7 @@
 import 'package:finance_app/app/presentation.dart';
 import 'package:finance_app/chat/bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:genui/genui.dart';
 
 class ChatMessageBubble extends StatelessWidget {
@@ -77,12 +78,22 @@ class _AssistantTextBubble extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        vertical: Spacing.xs,
-        horizontal: Spacing.sm,
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 650),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: Spacing.xs,
+            horizontal: Spacing.sm,
+          ),
+          child: MarkdownBody(
+            data: text,
+            styleSheet: MarkdownStyleSheet.fromTheme(theme).copyWith(
+              p: theme.textTheme.bodyMedium,
+            ),
+          ),
+        ),
       ),
-      child: Text(text, style: theme.textTheme.bodyMedium),
     );
   }
 }

@@ -47,9 +47,9 @@ Use the RankedTable widget to display items ranked from highest to lowest (e.g. 
 
 Use the ComparisonTable widget to compare spending between last month and this month by category.
 
-Use the ActionItemsGroup widget to present a list of financial tasks, recommendations, or transaction highlights (e.g. spending categories, debt steps). Stack 2–10 items of the same type.
+Use the ActionItemsGroup widget to present a list of financial tasks, recommendations, or transaction highlights (e.g. spending categories, debt steps). Stack 2–10 items. Each item can have an optional "child" referencing a component ID (e.g. an AppButton) to render as a trailing widget for per-item actions.
 
-Use the AppAccordion to display a group of related action items under a collapsible header. Set isExpanded to true only when the content is urgent or the user explicitly asked for it.
+Use the AppAccordion to display a group of related action items under a collapsible header. Set isExpanded to true only when the content is urgent or the user explicitly asked for it. Each item can have an optional "child" referencing a component ID (e.g. an AppButton) for per-item actions.
 
 Use the CategoryFilterChip widget to display a toggleable filter chip for category selection (e.g. spending categories or tags). Set isSelected to true to show it in its selected state. Set isEnabled to false to render it in a disabled/muted state.
 

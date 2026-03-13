@@ -7,26 +7,16 @@ import 'package:mocktail/mocktail.dart';
 
 class _MockDataModel extends Mock implements DataModel {}
 
-Map<String, Object?> _action({String name = 'itemAction'}) => {
-  'event': <String, Object?>{'name': name},
-};
-
 Map<String, Object?> _item({
   String title = 'Restaurant',
   String subtitle = 'Dining • Feb 18',
   String amount = r'$450',
   String? delta,
-  String? buttonLabel,
-  String? buttonVariant,
-  Map<String, Object?>? action,
 }) => {
   'title': title,
   'subtitle': subtitle,
   'amount': amount,
   'delta': ?delta,
-  'buttonLabel': ?buttonLabel,
-  'buttonVariant': ?buttonVariant,
-  'action': ?action,
 };
 
 Map<String, Object?> _data({List<Map<String, Object?>>? items}) => {
@@ -122,63 +112,8 @@ void main() {
       expect(find.text('+28%'), findsNothing);
     });
 
-    testWidgets('renders primary button when buttonVariant is primary', (
-      tester,
-    ) async {
-      await _pump(
-        tester,
-        _data(
-          items: [
-            _item(
-              buttonVariant: 'primary',
-              buttonLabel: 'Pay now',
-              action: _action(),
-            ),
-          ],
-        ),
-      );
-
-      expect(find.byType(FilledButton), findsOneWidget);
-      expect(find.text('Pay now'), findsOneWidget);
-    });
-
-    testWidgets('renders outlined button when buttonVariant is secondary', (
-      tester,
-    ) async {
-      await _pump(
-        tester,
-        _data(
-          items: [
-            _item(
-              buttonVariant: 'secondary',
-              buttonLabel: 'Details',
-              action: _action(),
-            ),
-          ],
-        ),
-      );
-
-      expect(find.byType(OutlinedButton), findsOneWidget);
-    });
-
-    testWidgets('defaults to no button when buttonVariant is omitted', (
-      tester,
-    ) async {
+    testWidgets('does not render any buttons', (tester) async {
       await _pump(tester, _data());
-
-      expect(find.byType(FilledButton), findsNothing);
-      expect(find.byType(OutlinedButton), findsNothing);
-    });
-
-    testWidgets('defaults to no button for unknown buttonVariant', (
-      tester,
-    ) async {
-      await _pump(
-        tester,
-        _data(
-          items: [_item(buttonVariant: 'unknown', buttonLabel: 'Tap')],
-        ),
-      );
 
       expect(find.byType(FilledButton), findsNothing);
       expect(find.byType(OutlinedButton), findsNothing);

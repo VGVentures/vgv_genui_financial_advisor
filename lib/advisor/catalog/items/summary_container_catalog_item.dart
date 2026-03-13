@@ -1,11 +1,12 @@
-import 'package:flutter/widgets.dart';
+import 'package:finance_app/app/presentation.dart';
+import 'package:flutter/material.dart';
 import 'package:genui/genui.dart';
 import 'package:json_schema_builder/json_schema_builder.dart';
 
 final _schema = S.object(
   description:
       'A centered container for summary and analysis screens. '
-      'Constrains content to 1000px max width. '
+      'Constrains content to 1000px max width with a branded background. '
       'Use this as the root component for the final summary step.',
   properties: {
     'child': S.string(description: 'The ID of the child component.'),
@@ -21,11 +22,23 @@ final summaryContainerItem = CatalogItem(
     final json = ctx.data as Map<String, Object?>;
     final childId = json['child']! as String;
 
-    return Center(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 1000),
-        child: ctx.buildChild(childId),
-      ),
+    return Builder(
+      builder: (context) {
+        final colors = Theme.of(context).extension<AppColors>();
+
+        return Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 1000),
+            child: ColoredBox(
+              color: colors?.onPrimary ?? const Color(0xFFFFFFFF),
+              child: Padding(
+                padding: const EdgeInsets.all(Spacing.lg),
+                child: ctx.buildChild(childId),
+              ),
+            ),
+          ),
+        );
+      },
     );
   },
 );

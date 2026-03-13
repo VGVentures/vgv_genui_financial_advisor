@@ -195,7 +195,16 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     if (message is AiTextDisplayMessage && currentPage.isNotEmpty) {
       final last = currentPage.last;
       if (last is AiTextDisplayMessage) {
-        final merged = AiTextDisplayMessage(last.text + message.text);
+        // Add a space if the two chunks would run together.
+        final needsSpace = last.text.isNotEmpty &&
+            message.text.isNotEmpty &&
+            last.text[last.text.length - 1] != ' ' &&
+            last.text[last.text.length - 1] != '\n' &&
+            message.text[0] != ' ' &&
+            message.text[0] != '\n';
+        final separator = needsSpace ? ' ' : '';
+        final merged =
+            AiTextDisplayMessage(last.text + separator + message.text);
         pages = [
           for (var i = 0; i < pages.length; i++)
             if (i == currentPageIndex)

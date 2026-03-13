@@ -58,11 +58,19 @@ final appButtonItem = CatalogItem(
           isLoading: isLoading,
           onPressed: () {
             if (action case {'event': final Map<String, Object?> event}) {
+              // Snapshot the current data model so the LLM sees
+              // all input widget values (slider, radio card, etc.).
+              final dataModel = ctx.dataContext.dataModel
+                  .getValue<Map<String, Object?>>(DataPath.root);
+
               ctx.dispatchEvent(
                 UserActionEvent(
                   name: event['name']! as String,
                   sourceComponentId: ctx.id,
-                  context: event['context'] as Map<String, Object?>? ?? {},
+                  context: {
+                    ...event['context'] as Map<String, Object?>? ?? {},
+                    if (dataModel != null) ...dataModel,
+                  },
                 ),
               );
             }
