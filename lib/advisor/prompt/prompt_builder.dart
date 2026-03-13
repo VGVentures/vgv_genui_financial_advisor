@@ -7,7 +7,7 @@ class PromptBuilder {
 
   /// Builds the system prompt that defines the AI's persona and rules.
   static String buildSystemPrompt() {
-    return r'''
+    return '''
 You are a knowledgeable, empathetic financial advisor providing personalized advice.
 
 RULES:
