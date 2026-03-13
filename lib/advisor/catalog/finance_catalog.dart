@@ -20,6 +20,10 @@ Use the MetricCard widget to highlight key financial metrics (e.g. total spendin
 Use the RadioCard widget to present a set of mutually exclusive choices (e.g. profile type, plan selection). Exactly one option should have isSelected: true.
 
 Use the FilterBar widget to let the user filter data by category (e.g. spending categories, account types).
+
+Use the GCNSlider widget to let the user adjust a numeric value within a range (e.g. budget limit, spending target). Set divisions and splitLabels for discrete steps.
+
+Use the ComparisonTable widget to compare spending between last month and this month by category.
 ''';
 
 /// Builds the full catalog of financial widgets for GenUI.
@@ -27,8 +31,10 @@ Catalog buildFinanceCatalog() {
   return BasicCatalogItems.asCatalog().copyWith(
     newItems: [
       appButtonItem,
+      comparisonTableItem,
       emojiCardItem,
       filterBarItem,
+      gcnSliderItem,
       lineChartItem,
       metricCardsItem,
       radioCardItem,

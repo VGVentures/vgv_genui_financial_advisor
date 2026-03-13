@@ -1,6 +1,8 @@
 export 'app_button.dart';
+export 'comparison_table.dart';
 export 'emoji_card.dart';
 export 'filter_bar.dart';
+export 'gcn_slider.dart';
 export 'line_chart.dart';
 export 'metric_cards.dart';
 export 'radio_card.dart';
