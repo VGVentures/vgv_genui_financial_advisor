@@ -50,6 +50,7 @@ final categoryFilterChipItem = CatalogItem(
       color: color,
       isSelected: isSelected,
       isEnabled: isEnabled,
+      onTap: () {},
     );
   },
 );
