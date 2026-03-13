@@ -22,6 +22,10 @@ final _itemSchema = S.object(
 );
 
 final _schema = S.object(
+  description:
+      'Spending categories vs. a fixed budget limit. '
+      'Use when the user has a defined budget per category. '
+      'Color codes automatically: green < 65%, orange 65–85%, red > 85%.',
   properties: {
     'items': S.list(
       description: 'List of progress bars to display stacked vertically.',

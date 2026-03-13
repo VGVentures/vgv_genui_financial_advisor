@@ -1,4 +1,4 @@
-import 'package:finance_app/advisor/catalog/items/horizontal_bar.dart';
+import 'package:finance_app/advisor/catalog/items/horizontal_bar_catalog_item.dart';
 import 'package:finance_app/app/presentation/widgets/horizontal_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';

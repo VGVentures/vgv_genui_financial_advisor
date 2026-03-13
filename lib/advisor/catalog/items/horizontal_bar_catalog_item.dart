@@ -13,15 +13,21 @@ final _itemSchema = S.object(
       description: r'Formatted amount string (e.g. "$420").',
     ),
     'progress': S.number(
-      description: 'Bar fill ratio from 0.0 (empty) to 1.0 (full).',
+      description:
+          r'Actual ÷ reference as a decimal (e.g. $420 ÷ $400 = 1.05). '
+          'The bar clamps at 1.0 visually.',
     ),
     'comparisonLabel': S.string(
-      description: 'Sub-label shown below the bar (e.g. "Groceries").',
+      description:
+          'Short label for the reference row '
+          '(e.g. "vs last month", "vs category avg").',
     ),
     'comparisonValue': S.string(
       description:
-          'Formatted comparison value with sign and % (e.g. "+10%", "-5%"). '
-          'Negative values are shown in red, positive in green.',
+          'Signed % change vs the reference. '
+          'Positive = spent more than reference → shown in red. '
+          'Negative = spent less → shown in green. '
+          'Always include the sign (e.g. "+5%", "-12%").',
     ),
   },
   required: [
@@ -34,6 +40,11 @@ final _itemSchema = S.object(
 );
 
 final _schema = S.object(
+  description:
+      'Spending categories compared against a reference (e.g. last month, '
+      'category average). Use when the reference is a prior period or an '
+      'external benchmark, not a fixed budget limit. '
+      'All items must use the same type of reference.',
   properties: {
     'items': S.list(
       description:
