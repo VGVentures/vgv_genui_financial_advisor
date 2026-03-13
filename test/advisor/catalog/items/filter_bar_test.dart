@@ -65,33 +65,35 @@ void main() {
       expect(required, contains('categories'));
     });
 
-    testWidgets('renders category chips', (tester) async {
-      await _pump(tester, _data());
+    group('renders', () {
+      testWidgets('category chips', (tester) async {
+        await _pump(tester, _data());
 
-      expect(find.text('Food'), findsOneWidget);
-      expect(find.text('Shopping'), findsOneWidget);
-      // "All" chip is always rendered
-      expect(find.text('All'), findsOneWidget);
-    });
+        expect(find.text('Food'), findsOneWidget);
+        expect(find.text('Shopping'), findsOneWidget);
+        // "All" chip is always rendered
+        expect(find.text('All'), findsOneWidget);
+      });
 
-    testWidgets('renders selection summary', (tester) async {
-      await _pump(tester, _data());
+      testWidgets('selection summary', (tester) async {
+        await _pump(tester, _data());
 
-      // 1 of 2 selected (Food is selected, Shopping is not)
-      expect(find.text('1 of 2 categories selected'), findsOneWidget);
-    });
+        // 1 of 2 selected (Food is selected, Shopping is not)
+        expect(find.text('1 of 2 categories selected'), findsOneWidget);
+      });
 
-    testWidgets('renders with empty categories', (tester) async {
-      await _pump(tester, _data(categories: []));
+      testWidgets('with empty categories', (tester) async {
+        await _pump(tester, _data(categories: []));
 
-      expect(find.text('All'), findsOneWidget);
-      expect(find.text('0 of 0 categories selected'), findsOneWidget);
-    });
+        expect(find.text('All'), findsOneWidget);
+        expect(find.text('0 of 0 categories selected'), findsOneWidget);
+      });
 
-    testWidgets('renders FilterBar widget', (tester) async {
-      await _pump(tester, _data());
+      testWidgets('FilterBar widget', (tester) async {
+        await _pump(tester, _data());
 
-      expect(find.byType(FilterBar), findsOneWidget);
+        expect(find.byType(FilterBar), findsOneWidget);
+      });
     });
   });
 }

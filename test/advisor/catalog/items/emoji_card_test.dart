@@ -64,33 +64,35 @@ void main() {
       expect(required, contains('cards'));
     });
 
-    testWidgets('renders emoji cards', (tester) async {
-      await _pump(tester, _data());
+    group('renders', () {
+      testWidgets('emoji cards', (tester) async {
+        await _pump(tester, _data());
 
-      expect(find.text('💰'), findsOneWidget);
-      expect(find.text('Savings'), findsOneWidget);
-      expect(find.text('🏠'), findsOneWidget);
-      expect(find.text('Housing'), findsOneWidget);
-    });
+        expect(find.text('💰'), findsOneWidget);
+        expect(find.text('Savings'), findsOneWidget);
+        expect(find.text('🏠'), findsOneWidget);
+        expect(find.text('Housing'), findsOneWidget);
+      });
 
-    testWidgets('renders EmojiCardLayout', (tester) async {
-      await _pump(tester, _data());
+      testWidgets('EmojiCardLayout', (tester) async {
+        await _pump(tester, _data());
 
-      expect(find.byType(EmojiCardLayout), findsOneWidget);
-    });
+        expect(find.byType(EmojiCardLayout), findsOneWidget);
+      });
 
-    testWidgets('defaults isSelected to false when omitted', (tester) async {
-      await _pump(
-        tester,
-        _data(
-          cards: [
-            {'emoji': '📊', 'label': 'Budget'},
-          ],
-        ),
-      );
+      testWidgets('defaults isSelected to false when omitted', (tester) async {
+        await _pump(
+          tester,
+          _data(
+            cards: [
+              {'emoji': '📊', 'label': 'Budget'},
+            ],
+          ),
+        );
 
-      expect(find.text('📊'), findsOneWidget);
-      expect(find.text('Budget'), findsOneWidget);
+        expect(find.text('📊'), findsOneWidget);
+        expect(find.text('Budget'), findsOneWidget);
+      });
     });
   });
 }

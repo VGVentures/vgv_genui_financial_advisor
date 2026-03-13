@@ -65,31 +65,33 @@ void main() {
       expect(required, contains('options'));
     });
 
-    testWidgets('renders radio card labels', (tester) async {
-      await _pump(tester, _data());
+    group('renders', () {
+      testWidgets('radio card labels', (tester) async {
+        await _pump(tester, _data());
 
-      expect(find.text('Beginner'), findsOneWidget);
-      expect(find.text('Optimizer'), findsOneWidget);
-    });
+        expect(find.text('Beginner'), findsOneWidget);
+        expect(find.text('Optimizer'), findsOneWidget);
+      });
 
-    testWidgets('renders RadioCard widgets', (tester) async {
-      await _pump(tester, _data());
+      testWidgets('RadioCard widgets', (tester) async {
+        await _pump(tester, _data());
 
-      expect(find.byType(RadioCard), findsNWidgets(2));
-    });
+        expect(find.byType(RadioCard), findsNWidgets(2));
+      });
 
-    testWidgets('renders single option', (tester) async {
-      await _pump(
-        tester,
-        _data(
-          options: [
-            {'label': 'Solo', 'isSelected': true},
-          ],
-        ),
-      );
+      testWidgets('single option', (tester) async {
+        await _pump(
+          tester,
+          _data(
+            options: [
+              {'label': 'Solo', 'isSelected': true},
+            ],
+          ),
+        );
 
-      expect(find.text('Solo'), findsOneWidget);
-      expect(find.byType(RadioCard), findsOneWidget);
+        expect(find.text('Solo'), findsOneWidget);
+        expect(find.byType(RadioCard), findsOneWidget);
+      });
     });
   });
 }

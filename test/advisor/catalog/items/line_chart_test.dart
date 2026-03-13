@@ -82,30 +82,32 @@ void main() {
       expect(required, containsAll(['points', 'yAxisLabels']));
     });
 
-    testWidgets('renders LineChart widget', (tester) async {
-      await _pump(tester, _data());
+    group('renders', () {
+      testWidgets('LineChart widget', (tester) async {
+        await _pump(tester, _data());
 
-      expect(find.byType(LineChart), findsOneWidget);
-    });
+        expect(find.byType(LineChart), findsOneWidget);
+      });
 
-    testWidgets('renders x-axis labels', (tester) async {
-      await _pump(tester, _data());
+      testWidgets('x-axis labels', (tester) async {
+        await _pump(tester, _data());
 
-      expect(find.text('Jan'), findsOneWidget);
-      expect(find.text('Feb'), findsOneWidget);
-      expect(find.text('Mar'), findsOneWidget);
-    });
+        expect(find.text('Jan'), findsOneWidget);
+        expect(find.text('Feb'), findsOneWidget);
+        expect(find.text('Mar'), findsOneWidget);
+      });
 
-    testWidgets('wraps chart in a SizedBox for height', (tester) async {
-      await _pump(tester, _data());
+      testWidgets('chart in a SizedBox for height', (tester) async {
+        await _pump(tester, _data());
 
-      final sizedBox = tester.widget<SizedBox>(
-        find.ancestor(
-          of: find.byType(LineChart),
-          matching: find.byType(SizedBox),
-        ),
-      );
-      expect(sizedBox.height, 300);
+        final sizedBox = tester.widget<SizedBox>(
+          find.ancestor(
+            of: find.byType(LineChart),
+            matching: find.byType(SizedBox),
+          ),
+        );
+        expect(sizedBox.height, 300);
+      });
     });
   });
 }

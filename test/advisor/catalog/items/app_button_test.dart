@@ -70,31 +70,33 @@ void main() {
       expect(required, containsAll(['label', 'variant', 'size']));
     });
 
-    testWidgets('renders filled button with label', (tester) async {
-      await _pump(tester, _data());
+    group('renders', () {
+      testWidgets('filled button with label', (tester) async {
+        await _pump(tester, _data());
 
-      expect(find.text('Get Started'), findsOneWidget);
-      expect(find.byType(FilledButton), findsOneWidget);
-    });
+        expect(find.text('Get Started'), findsOneWidget);
+        expect(find.byType(FilledButton), findsOneWidget);
+      });
 
-    testWidgets('renders outlined variant', (tester) async {
-      await _pump(tester, _data(variant: 'outlined'));
+      testWidgets('outlined variant', (tester) async {
+        await _pump(tester, _data(variant: 'outlined'));
 
-      expect(find.text('Get Started'), findsOneWidget);
-      expect(find.byType(OutlinedButton), findsOneWidget);
-    });
+        expect(find.text('Get Started'), findsOneWidget);
+        expect(find.byType(OutlinedButton), findsOneWidget);
+      });
 
-    testWidgets('renders loading state', (tester) async {
-      await _pump(tester, _data(isLoading: true));
+      testWidgets('loading state', (tester) async {
+        await _pump(tester, _data(isLoading: true));
 
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
-    });
+        expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      });
 
-    testWidgets('defaults isLoading to false when omitted', (tester) async {
-      await _pump(tester, _data());
+      testWidgets('defaults isLoading to false when omitted', (tester) async {
+        await _pump(tester, _data());
 
-      expect(find.byType(CircularProgressIndicator), findsNothing);
-      expect(find.text('Get Started'), findsOneWidget);
+        expect(find.byType(CircularProgressIndicator), findsNothing);
+        expect(find.text('Get Started'), findsOneWidget);
+      });
     });
   });
 }

@@ -75,40 +75,42 @@ void main() {
       expect(required, contains('cards'));
     });
 
-    testWidgets('renders metric card labels and values', (tester) async {
-      await _pump(tester, _data());
+    group('renders', () {
+      testWidgets('metric card labels and values', (tester) async {
+        await _pump(tester, _data());
 
-      expect(find.text('Total Spending'), findsOneWidget);
-      expect(find.text(r'$4,319'), findsOneWidget);
-      expect(find.text('Savings'), findsOneWidget);
-      expect(find.text(r'$1,200'), findsOneWidget);
-    });
+        expect(find.text('Total Spending'), findsOneWidget);
+        expect(find.text(r'$4,319'), findsOneWidget);
+        expect(find.text('Savings'), findsOneWidget);
+        expect(find.text(r'$1,200'), findsOneWidget);
+      });
 
-    testWidgets('renders delta and subtitle', (tester) async {
-      await _pump(tester, _data());
+      testWidgets('delta and subtitle', (tester) async {
+        await _pump(tester, _data());
 
-      expect(find.text('+1.2%'), findsOneWidget);
-      expect(find.text('vs last month'), findsOneWidget);
-    });
+        expect(find.text('+1.2%'), findsOneWidget);
+        expect(find.text('vs last month'), findsOneWidget);
+      });
 
-    testWidgets('renders MetricCardsLayout', (tester) async {
-      await _pump(tester, _data());
+      testWidgets('MetricCardsLayout', (tester) async {
+        await _pump(tester, _data());
 
-      expect(find.byType(MetricCardsLayout), findsOneWidget);
-    });
+        expect(find.byType(MetricCardsLayout), findsOneWidget);
+      });
 
-    testWidgets('renders plain card without delta', (tester) async {
-      await _pump(
-        tester,
-        _data(
-          cards: [
-            {'label': 'Net Worth', 'value': r'$50,000'},
-          ],
-        ),
-      );
+      testWidgets('plain card without delta', (tester) async {
+        await _pump(
+          tester,
+          _data(
+            cards: [
+              {'label': 'Net Worth', 'value': r'$50,000'},
+            ],
+          ),
+        );
 
-      expect(find.text('Net Worth'), findsOneWidget);
-      expect(find.text(r'$50,000'), findsOneWidget);
+        expect(find.text('Net Worth'), findsOneWidget);
+        expect(find.text(r'$50,000'), findsOneWidget);
+      });
     });
   });
 }
