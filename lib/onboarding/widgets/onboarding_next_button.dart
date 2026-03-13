@@ -46,22 +46,23 @@ class OnboardingNextButton extends StatelessWidget {
       height: size,
       child: OutlinedButton(
         onPressed: onPressed,
-        style: OutlinedButton.styleFrom(
-          shape: const CircleBorder(),
-          side: BorderSide(color: effectiveBorderColor),
-          backgroundColor: Colors.transparent,
-          padding: EdgeInsets.zero,
-        ).copyWith(
-          overlayColor: WidgetStateProperty.resolveWith((states) {
-            if (states.contains(WidgetState.pressed)) {
-              return effectiveBorderColor.withValues(alpha: 0.15);
-            }
-            if (states.contains(WidgetState.hovered)) {
-              return effectiveBorderColor.withValues(alpha: 0.08);
-            }
-            return Colors.transparent;
-          }),
-        ),
+        style:
+            OutlinedButton.styleFrom(
+              shape: const CircleBorder(),
+              side: BorderSide(color: effectiveBorderColor),
+              backgroundColor: Colors.transparent,
+              padding: EdgeInsets.zero,
+            ).copyWith(
+              overlayColor: WidgetStateProperty.resolveWith((states) {
+                if (states.contains(WidgetState.pressed)) {
+                  return effectiveBorderColor.withValues(alpha: 0.15);
+                }
+                if (states.contains(WidgetState.hovered)) {
+                  return effectiveBorderColor.withValues(alpha: 0.08);
+                }
+                return Colors.transparent;
+              }),
+            ),
         child: Assets.images.onboarding.rightArrow.image(
           color: effectiveIconColor,
           width: iconSize,

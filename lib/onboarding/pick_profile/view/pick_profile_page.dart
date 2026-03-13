@@ -40,8 +40,10 @@ class PickProfilePage extends StatelessWidget {
         floatingActionButton: Builder(
           builder: (context) => OnboardingNextButton(
             onPressed: () {
-              final profileType =
-                  context.read<PickProfileCubit>().state.selectedProfile;
+              final profileType = context
+                  .read<PickProfileCubit>()
+                  .state
+                  .selectedProfile;
               if (profileType == null) return;
               unawaited(
                 Navigator.of(context).pushReplacement(
