@@ -9,10 +9,12 @@ import 'package:wiredash/wiredash.dart';
 class App extends StatelessWidget {
   const App({
     required this.navigatorObservers,
+    this.showDevMenu = false,
     super.key,
   });
 
   final List<NavigatorObserver> navigatorObservers;
+  final bool showDevMenu;
 
   @override
   Widget build(BuildContext context) {
@@ -30,42 +32,60 @@ class App extends StatelessWidget {
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         navigatorObservers: navigatorObservers,
-        home: const _IntroPage(),
+        home: _IntroPage(
+          showDevMenu: showDevMenu,
+        ),
       ),
     );
   }
 }
 
 class _IntroPage extends StatelessWidget {
-  const _IntroPage();
+  const _IntroPage({this.showDevMenu = false});
+
+  final bool showDevMenu;
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
-
     return IntroPage(
       onGetStarted: () => Navigator.of(context).pushReplacement(
         MaterialPageRoute<void>(
-          // TODO(juanRodriguez17): Just to see our custom components
-          builder: (_) => Scaffold(
-            appBar: AppBar(
-              title: Text(l10n.homeAppBarTitle),
-              actions: [
-                Builder(
-                  builder: (context) {
-                    return IconButton(
-                      icon: const Icon(Icons.bug_report),
-                      onPressed: () => Scaffold.of(context).openEndDrawer(),
-                    );
-                  },
-                ),
-              ],
-            ),
-            endDrawer: const DevMenuDrawer(),
-            body: const KickOffPage(),
-          ),
+          builder: (_) => _StartPage(showDevMenu: showDevMenu),
         ),
       ),
+    );
+  }
+}
+
+class _StartPage extends StatelessWidget {
+  const _StartPage({this.showDevMenu = false});
+
+  final bool showDevMenu;
+
+  @override
+  Widget build(BuildContext context) {
+    if (!showDevMenu) {
+      return const Scaffold(body: KickOffPage());
+    }
+
+    final l10n = context.l10n;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(l10n.homeAppBarTitle),
+        actions: [
+          Builder(
+            builder: (context) {
+              return IconButton(
+                icon: const Icon(Icons.bug_report),
+                onPressed: () => Scaffold.of(context).openEndDrawer(),
+              );
+            },
+          ),
+        ],
+      ),
+      endDrawer: const DevMenuDrawer(),
+      body: const KickOffPage(),
     );
   }
 }

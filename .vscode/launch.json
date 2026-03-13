@@ -29,5 +29,18 @@
         "lib/main_production.dart"
       ]
     },
+    {
+      "name": "Launch dev menu",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main_dev_menu.dart",
+      "args": [
+        "--flavor",
+        "development",
+        "--target",
+        "lib/main_dev_menu.dart",
+        "--dart-define=APP_CHECK_DEBUG_TOKEN=${env:APP_CHECK_DEBUG_TOKEN}"
+      ]
+    },
   ]
 }
