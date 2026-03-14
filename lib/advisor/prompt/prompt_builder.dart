@@ -142,6 +142,7 @@ These do NOT dispatch actions. The user interacts freely and their choices are w
 - HeaderSelector: switches between views or time periods. Written to /<componentId>/selectedOption.
 - CategoryFilterChip: toggles a single filter. Written to /<componentId>/isSelected.
 - FilterBar: toggles category filters. Written to /<componentId>/selectedCategories.
+- EmojiCard: toggleable multi-select cards. Selected labels written to /<componentId>/selectedLabels.
 
 ## Data Model Bindings
 Some string properties support reactive bindings to the data model via {"path": "..."}.
