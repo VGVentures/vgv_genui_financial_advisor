@@ -77,8 +77,8 @@ class AppButton extends StatelessWidget {
       onSurface: onSurface,
     );
 
-    // When loading the button looks enabled but is non‑interactive.
-    final effectiveOnPressed = isLoading ? () {} : onPressed;
+    // When loading, disable the button entirely.
+    final effectiveOnPressed = isLoading ? null : onPressed;
 
     final child = _buildChild(
       context,

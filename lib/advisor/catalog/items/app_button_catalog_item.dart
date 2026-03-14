@@ -1,5 +1,7 @@
 import 'package:finance_app/app/presentation.dart';
+import 'package:finance_app/chat/bloc/bloc.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:genui/genui.dart';
 import 'package:json_schema_builder/json_schema_builder.dart';
 
@@ -115,6 +117,9 @@ class _OneTapAppButtonState extends State<_OneTapAppButton> {
 
   @override
   Widget build(BuildContext context) {
+    final blocLoading =
+        context.select<ChatBloc, bool>((bloc) => bloc.state.isLoading);
+
     return BoundString(
       dataContext: widget.dataContext,
       value: widget.labelValue,
@@ -123,7 +128,7 @@ class _OneTapAppButtonState extends State<_OneTapAppButton> {
           label: label ?? '',
           variant: widget.variant,
           size: widget.size,
-          isLoading: widget.isLoading,
+          isLoading: widget.isLoading || (_tapped && blocLoading),
           onPressed: _tapped ? null : _onPressed,
         );
       },
