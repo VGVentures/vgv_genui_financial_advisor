@@ -103,74 +103,102 @@ class _ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
         const LinearGradient(
           colors: [Color(0xFF2461EB), Color(0xFFD4C6FB)],
         );
+    final isMobile = Breakpoints.isMobile(
+      MediaQuery.sizeOf(context).width,
+    );
 
     return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFFF9FAFB),
-        border: Border(
-          bottom: BorderSide(
-            color: Colors.black.withValues(alpha: 0.2),
+      decoration: responsiveValue<BoxDecoration?>(
+        context,
+        mobile: null,
+        desktop: BoxDecoration(
+          color: const Color(0xFFF9FAFB),
+          border: Border(
+            bottom: BorderSide(
+              color: Colors.black.withValues(alpha: 0.2),
+            ),
           ),
         ),
       ),
-      padding: const EdgeInsets.only(
-        left: Spacing.lg,
-        right: Spacing.lg,
-        top: Spacing.sm,
-        bottom: Spacing.md,
+      padding: EdgeInsets.only(
+        left: isMobile ? Spacing.md : Spacing.lg,
+        right: isMobile ? Spacing.md : Spacing.lg,
+        top: isMobile ? Spacing.lg : Spacing.sm,
+        bottom: Spacing.xs,
       ),
       child: SafeArea(
         bottom: false,
         child: Row(
           children: [
-            // Logo
-            _LogoIcon(gradient: gradient),
-            const SizedBox(width: Spacing.sm),
+            // Logo — smaller on mobile
+            _LogoIcon(gradient: gradient, size: isMobile ? 24 : 40),
+            const SizedBox(width: Spacing.xs),
             Text.rich(
               TextSpan(
                 children: [
                   TextSpan(
                     text: context.l10n.chatAppBarTitleFirstPart,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: FontFamily.poppins,
                       fontWeight: FontWeight.w700,
-                      fontSize: 24,
-                      letterSpacing: -0.48,
-                      color: Color(0xFF232326),
+                      fontSize: isMobile ? 18 : 24,
+                      letterSpacing: isMobile ? -0.36 : -0.48,
+                      color: const Color(0xFF232326),
                     ),
                   ),
                   TextSpan(
                     text: context.l10n.chatAppBarTitleSecondPart,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: FontFamily.poppins,
                       fontWeight: FontWeight.w400,
-                      fontSize: 24,
-                      letterSpacing: -0.48,
-                      color: Color(0xFF232326),
+                      fontSize: isMobile ? 18 : 24,
+                      letterSpacing: isMobile ? -0.36 : -0.48,
+                      color: const Color(0xFF232326),
                     ),
                   ),
                 ],
               ),
             ),
             const Spacer(),
-            // Restart Demo chip
-            _GradientChip(
-              gradient: gradient,
-              icon: Icons.refresh,
-              label: 'Restart Demo',
-              onTap: () => Navigator.of(context).pushReplacement(
-                MaterialPageRoute<void>(
-                  builder: (_) => const IntroPage(),
+            if (isMobile) ...[
+              // Mobile: icon-only chips
+              _IconChip(
+                icon: Icons.person,
+                borderColor:
+                    colors?.pinkColor ?? const Color(0xFFE98AD4),
+                onTap: () {},
+              ),
+              const SizedBox(width: Spacing.xs),
+              _IconChip(
+                icon: Icons.refresh,
+                gradient: gradient,
+                onTap: () => Navigator.of(context).pushReplacement(
+                  MaterialPageRoute<void>(
+                    builder: (_) => const IntroPage(),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(width: Spacing.sm),
-            // Profile chip
-            _ProfileChip(
-              label: _profileLabel,
-              backgroundColor: colors?.pinkContainer ?? const Color(0x26E98AD4),
-              textColor: colors?.onSurfaceVariant ?? const Color(0xFF5D5F5F),
-            ),
+            ] else ...[
+              // Desktop: labelled chips
+              _GradientChip(
+                gradient: gradient,
+                icon: Icons.refresh,
+                label: 'Restart Demo',
+                onTap: () => Navigator.of(context).pushReplacement(
+                  MaterialPageRoute<void>(
+                    builder: (_) => const IntroPage(),
+                  ),
+                ),
+              ),
+              const SizedBox(width: Spacing.sm),
+              _ProfileChip(
+                label: _profileLabel,
+                backgroundColor:
+                    colors?.pinkContainer ?? const Color(0x26E98AD4),
+                textColor:
+                    colors?.onSurfaceVariant ?? const Color(0xFF5D5F5F),
+              ),
+            ],
           ],
         ),
       ),
@@ -179,46 +207,48 @@ class _ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
 }
 
 class _LogoIcon extends StatelessWidget {
-  const _LogoIcon({required this.gradient});
+  const _LogoIcon({required this.gradient, this.size = 40});
 
   final LinearGradient gradient;
+  final double size;
 
   @override
   Widget build(BuildContext context) {
+    final scale = size / 40;
     return Container(
-      width: 40,
-      height: 40,
+      width: size,
+      height: size,
       decoration: BoxDecoration(
         gradient: gradient,
-        borderRadius: BorderRadius.circular(8.571),
+        borderRadius: BorderRadius.circular(8.571 * scale),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.end,
-        spacing: 2.143,
+        spacing: 2.143 * scale,
         children: [
           Container(
-            width: 5.833,
-            height: 12.5,
+            width: 5.833 * scale,
+            height: 12.5 * scale,
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(1.429),
+              borderRadius: BorderRadius.circular(1.429 * scale),
             ),
           ),
           Container(
-            width: 5,
-            height: 16.667,
+            width: 5 * scale,
+            height: 16.667 * scale,
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(1.429),
+              borderRadius: BorderRadius.circular(1.429 * scale),
             ),
           ),
           Container(
-            width: 5,
-            height: 20.833,
+            width: 5 * scale,
+            height: 20.833 * scale,
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(1.429),
+              borderRadius: BorderRadius.circular(1.429 * scale),
             ),
           ),
         ],
@@ -327,6 +357,52 @@ class _ProfileChip extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _IconChip extends StatelessWidget {
+  const _IconChip({
+    required this.icon,
+    required this.onTap,
+    this.gradient,
+    this.borderColor,
+  });
+
+  final IconData icon;
+  final VoidCallback onTap;
+  final LinearGradient? gradient;
+  final Color? borderColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          gradient: gradient,
+          shape: BoxShape.circle,
+          border: borderColor != null
+              ? Border.all(color: borderColor!)
+              : null,
+        ),
+        child: Center(
+          child: SizedBox(
+            height: 16,
+            width: 16,
+            child: FittedBox(
+              child: Icon(
+                icon,
+                color: gradient != null
+                    ? Colors.white
+                    : borderColor ?? Colors.black,
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

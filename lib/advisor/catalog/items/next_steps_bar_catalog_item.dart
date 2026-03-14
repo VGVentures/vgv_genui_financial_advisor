@@ -30,8 +30,8 @@ final _schema = S.object(
 
 /// A bottom bar with 2–3 AiButton suggestions for next steps.
 ///
-/// Uses an [Overlay] to render itself fixed at the bottom of the screen,
-/// independent of any scroll view.
+/// On desktop, uses an [Overlay] to render fixed at the bottom.
+/// On mobile, renders inline in the scrollable content.
 final nextStepsBarItem = CatalogItem(
   name: 'NextStepsBar',
   dataSchema: _schema,
@@ -39,7 +39,7 @@ final nextStepsBarItem = CatalogItem(
     final json = ctx.data as Map<String, Object?>;
     final rawSuggestions = json['suggestions']! as List<Object?>;
 
-    return _NextStepsBarOverlay(
+    return _NextStepsBar(
       suggestions: rawSuggestions.cast<Map<String, Object?>>(),
       dispatchEvent: ctx.dispatchEvent,
       componentId: ctx.id,
@@ -47,8 +47,8 @@ final nextStepsBarItem = CatalogItem(
   },
 );
 
-class _NextStepsBarOverlay extends StatefulWidget {
-  const _NextStepsBarOverlay({
+class _NextStepsBar extends StatefulWidget {
+  const _NextStepsBar({
     required this.suggestions,
     required this.dispatchEvent,
     required this.componentId,
@@ -59,30 +59,72 @@ class _NextStepsBarOverlay extends StatefulWidget {
   final String componentId;
 
   @override
-  State<_NextStepsBarOverlay> createState() => _NextStepsBarOverlayState();
+  State<_NextStepsBar> createState() => _NextStepsBarState();
 }
 
-class _NextStepsBarOverlayState extends State<_NextStepsBarOverlay> {
+class _NextStepsBarState extends State<_NextStepsBar> {
   OverlayEntry? _overlayEntry;
   bool _tapped = false;
+  bool _isDesktop = false;
 
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final isDesktop = Breakpoints.isDesktop(
+      MediaQuery.sizeOf(context).width,
+    );
+
+    if (isDesktop && !_isDesktop) {
       _showOverlay();
-    });
+    } else if (!isDesktop && _isDesktop) {
+      _removeOverlay();
+    }
+    _isDesktop = isDesktop;
   }
 
   @override
   void dispose() {
-    _overlayEntry?.remove();
-    _overlayEntry?.dispose();
-    _overlayEntry = null;
+    _removeOverlay();
     super.dispose();
   }
 
+  void _removeOverlay() {
+    _overlayEntry?.remove();
+    _overlayEntry?.dispose();
+    _overlayEntry = null;
+  }
+
+  void _onTap(String label) {
+    if (_tapped) return;
+    setState(() => _tapped = true);
+    _overlayEntry?.markNeedsBuild();
+    widget.dispatchEvent(
+      UserActionEvent(
+        name: 'next_step_selected',
+        sourceComponentId: widget.componentId,
+        context: {'label': label},
+      ),
+    );
+  }
+
+  List<Widget> _buildButtons() {
+    return widget.suggestions.map((s) {
+      final label = s['label']! as String;
+      return IgnorePointer(
+        ignoring: _tapped,
+        child: Opacity(
+          opacity: _tapped ? 0.5 : 1.0,
+          child: AiButton(
+            text: label,
+            onTap: () => _onTap(label),
+          ),
+        ),
+      );
+    }).toList();
+  }
+
   void _showOverlay() {
+    _removeOverlay();
     _overlayEntry = OverlayEntry(
       builder: (context) {
         final colors = Theme.of(context).extension<AppColors>();
@@ -101,8 +143,7 @@ class _NextStepsBarOverlayState extends State<_NextStepsBarOverlay> {
                     horizontal: Spacing.md,
                   ),
                   decoration: BoxDecoration(
-                    color: colors?.surfaceVariant ??
-                        Colors.white,
+                    color: colors?.surfaceVariant ?? Colors.white,
                     borderRadius: BorderRadius.circular(40),
                     boxShadow: const [
                       BoxShadow(
@@ -115,30 +156,7 @@ class _NextStepsBarOverlayState extends State<_NextStepsBarOverlay> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     spacing: Spacing.md,
-                children: widget.suggestions.map((s) {
-                  final label = s['label']! as String;
-                  return IgnorePointer(
-                    ignoring: _tapped,
-                    child: Opacity(
-                      opacity: _tapped ? 0.5 : 1.0,
-                      child: AiButton(
-                        text: label,
-                        onTap: () {
-                          if (_tapped) return;
-                          _tapped = true;
-                          _overlayEntry?.markNeedsBuild();
-                          widget.dispatchEvent(
-                            UserActionEvent(
-                              name: 'next_step_selected',
-                              sourceComponentId: widget.componentId,
-                              context: {'label': label},
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  );
-                }).toList(),
+                    children: _buildButtons(),
                   ),
                 ),
               ),
@@ -152,7 +170,18 @@ class _NextStepsBarOverlayState extends State<_NextStepsBarOverlay> {
 
   @override
   Widget build(BuildContext context) {
-    // Invisible placeholder — the real UI is in the overlay.
-    return const SizedBox.shrink();
+    // Desktop: invisible placeholder, real UI is in the overlay.
+    if (_isDesktop) return const SizedBox.shrink();
+
+    // Mobile: render inline as a wrapped column of buttons.
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: Spacing.lg),
+      child: Wrap(
+        alignment: WrapAlignment.center,
+        spacing: Spacing.sm,
+        runSpacing: Spacing.sm,
+        children: _buildButtons(),
+      ),
+    );
   }
 }

@@ -106,9 +106,9 @@ class AppButton extends StatelessWidget {
     required Color onPrimary,
   }) {
     if (isLoading) {
-      final indicatorColor = variant == AppButtonVariant.filled
-          ? onPrimary
-          : primary;
+      final colors = Theme.of(context).extension<AppColors>();
+      final indicatorColor =
+          colors?.onSurfaceMuted ?? const Color(0xFF909191);
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: [
