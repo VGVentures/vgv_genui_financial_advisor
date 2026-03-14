@@ -39,19 +39,15 @@ class _ChatViewState extends State<ChatView> {
             previous.currentPageIndex != current.currentPageIndex,
         listener: (context, state) {
           if (_pageController.hasClients && state.pages.isNotEmpty) {
-            unawaited(
-              Future<void>.delayed(const Duration(seconds: 4)).then((_) {
-                if (mounted && _pageController.hasClients) {
-                  unawaited(
-                    _pageController.animateToPage(
-                      state.currentPageIndex,
-                      duration: const Duration(milliseconds: 1200),
-                      curve: Curves.easeInOutCubic,
-                    ),
-                  );
-                }
-              }),
-            );
+            if (mounted && _pageController.hasClients) {
+              unawaited(
+                _pageController.animateToPage(
+                  state.currentPageIndex,
+                  duration: const Duration(milliseconds: 1200),
+                  curve: Curves.easeInOutCubic,
+                ),
+              );
+            }
           }
         },
         buildWhen: (previous, current) =>
@@ -411,8 +407,7 @@ class _ChatPage extends StatelessWidget {
                 ChatMessageBubble(message: message, host: host),
             // Only show the spinner if the page has no surface — when a
             // surface is present, the tapped button shows its own loading.
-            if (isLoading &&
-                !messages.any((m) => m is AiSurfaceDisplayMessage))
+            if (isLoading && !messages.any((m) => m is AiSurfaceDisplayMessage))
               const Padding(
                 padding: EdgeInsets.all(Spacing.md),
                 child: Center(child: CircularProgressIndicator()),
