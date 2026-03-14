@@ -123,7 +123,7 @@ class _OneTapAppButtonState extends State<_OneTapAppButton> {
           label: label ?? '',
           variant: widget.variant,
           size: widget.size,
-          isLoading: widget.isLoading || _tapped,
+          isLoading: widget.isLoading,
           onPressed: _tapped ? null : _onPressed,
         );
       },
