@@ -409,7 +409,10 @@ class _ChatPage extends StatelessWidget {
             for (final message in messages)
               if (message is! UserDisplayMessage)
                 ChatMessageBubble(message: message, host: host),
-            if (isLoading)
+            // Only show the spinner if the page has no surface — when a
+            // surface is present, the tapped button shows its own loading.
+            if (isLoading &&
+                !messages.any((m) => m is AiSurfaceDisplayMessage))
               const Padding(
                 padding: EdgeInsets.all(Spacing.md),
                 child: Center(child: CircularProgressIndicator()),
