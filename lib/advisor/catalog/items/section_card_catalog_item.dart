@@ -29,7 +29,7 @@ final sectionCardItem = CatalogItem(
         final colors = Theme.of(context).extension<AppColors>();
 
         return Padding(
-          padding: const EdgeInsets.only(bottom: Spacing.xl),
+          padding: const EdgeInsets.only(bottom: Spacing.md),
           child: DecoratedBox(
             decoration: BoxDecoration(
               color: colors?.onPrimary ?? const Color(0xFFFFFFFF),
