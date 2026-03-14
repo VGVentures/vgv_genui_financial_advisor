@@ -1,4 +1,5 @@
 import 'package:finance_app/app/presentation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:genui/genui.dart';
 import 'package:json_schema_builder/json_schema_builder.dart';
 
@@ -29,6 +30,8 @@ final _schema = S.object(
 );
 
 /// CatalogItem that renders an [AppButton] widget.
+///
+/// Disables itself after the first tap to prevent duplicate requests.
 final appButtonItem = CatalogItem(
   name: 'AppButton',
   dataSchema: _schema,
@@ -47,36 +50,83 @@ final appButtonItem = CatalogItem(
     final isLoading = json['isLoading'] as bool? ?? false;
     final action = json['action'] as Map<String, Object?>?;
 
-    return BoundString(
+    return _OneTapAppButton(
+      labelValue: labelValue,
+      variant: variant,
+      size: size,
+      isLoading: isLoading,
+      action: action,
       dataContext: ctx.dataContext,
-      value: labelValue,
-      builder: (context, label) {
-        return AppButton(
-          label: label ?? '',
-          variant: variant,
-          size: size,
-          isLoading: isLoading,
-          onPressed: () {
-            if (action case {'event': final Map<String, Object?> event}) {
-              // Snapshot the current data model so the LLM sees
-              // all input widget values (slider, radio card, etc.).
-              final dataModel = ctx.dataContext.dataModel
-                  .getValue<Map<String, Object?>>(DataPath.root);
-
-              ctx.dispatchEvent(
-                UserActionEvent(
-                  name: event['name']! as String,
-                  sourceComponentId: ctx.id,
-                  context: {
-                    ...event['context'] as Map<String, Object?>? ?? {},
-                    if (dataModel != null) ...dataModel,
-                  },
-                ),
-              );
-            }
-          },
-        );
-      },
+      dispatchEvent: ctx.dispatchEvent,
+      componentId: ctx.id,
     );
   },
 );
+
+class _OneTapAppButton extends StatefulWidget {
+  const _OneTapAppButton({
+    required this.labelValue,
+    required this.variant,
+    required this.size,
+    required this.isLoading,
+    required this.action,
+    required this.dataContext,
+    required this.dispatchEvent,
+    required this.componentId,
+  });
+
+  final Object labelValue;
+  final AppButtonVariant variant;
+  final AppButtonSize size;
+  final bool isLoading;
+  final Map<String, Object?>? action;
+  final DataContext dataContext;
+  final DispatchEventCallback dispatchEvent;
+  final String componentId;
+
+  @override
+  State<_OneTapAppButton> createState() => _OneTapAppButtonState();
+}
+
+class _OneTapAppButtonState extends State<_OneTapAppButton> {
+  bool _tapped = false;
+
+  void _onPressed() {
+    if (_tapped) return;
+    setState(() => _tapped = true);
+
+    final action = widget.action;
+    if (action case {'event': final Map<String, Object?> event}) {
+      final dataModel = widget.dataContext.dataModel
+          .getValue<Map<String, Object?>>(DataPath.root);
+
+      widget.dispatchEvent(
+        UserActionEvent(
+          name: event['name']! as String,
+          sourceComponentId: widget.componentId,
+          context: {
+            ...event['context'] as Map<String, Object?>? ?? {},
+            if (dataModel != null) ...dataModel,
+          },
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BoundString(
+      dataContext: widget.dataContext,
+      value: widget.labelValue,
+      builder: (context, label) {
+        return AppButton(
+          label: label ?? '',
+          variant: widget.variant,
+          size: widget.size,
+          isLoading: widget.isLoading || _tapped,
+          onPressed: _tapped ? null : _onPressed,
+        );
+      },
+    );
+  }
+}

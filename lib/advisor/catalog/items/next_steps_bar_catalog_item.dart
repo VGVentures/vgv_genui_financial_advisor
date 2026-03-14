@@ -64,6 +64,7 @@ class _NextStepsBarOverlay extends StatefulWidget {
 
 class _NextStepsBarOverlayState extends State<_NextStepsBarOverlay> {
   OverlayEntry? _overlayEntry;
+  bool _tapped = false;
 
   @override
   void initState() {
@@ -116,17 +117,26 @@ class _NextStepsBarOverlayState extends State<_NextStepsBarOverlay> {
                     spacing: Spacing.md,
                 children: widget.suggestions.map((s) {
                   final label = s['label']! as String;
-                  return AiButton(
-                    text: label,
-                    onTap: () {
-                      widget.dispatchEvent(
-                        UserActionEvent(
-                          name: 'next_step_selected',
-                          sourceComponentId: widget.componentId,
-                          context: {'label': label},
-                        ),
-                      );
-                    },
+                  return IgnorePointer(
+                    ignoring: _tapped,
+                    child: Opacity(
+                      opacity: _tapped ? 0.5 : 1.0,
+                      child: AiButton(
+                        text: label,
+                        onTap: () {
+                          if (_tapped) return;
+                          _tapped = true;
+                          _overlayEntry?.markNeedsBuild();
+                          widget.dispatchEvent(
+                            UserActionEvent(
+                              name: 'next_step_selected',
+                              sourceComponentId: widget.componentId,
+                              context: {'label': label},
+                            ),
+                          );
+                        },
+                      ),
+                    ),
                   );
                 }).toList(),
                   ),
