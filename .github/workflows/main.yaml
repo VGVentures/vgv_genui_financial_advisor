@@ -112,6 +112,26 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
           projectId: finance-app-4a537
 
+  deploy_dev_menu:
+    name: Deploy Dev Menu
+    needs: [setup, verify_and_test]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ needs.setup.outputs.flutter_version }}
+      - run: flutter pub get
+      - run: flutter build web --wasm --target lib/main_dev_menu.dart
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          channelId: live
+          target: dev-menu
+          projectId: finance-app-4a537
+
   distribute_android:
     name: Distribute Android APK
     needs: [setup, verify_and_test]
