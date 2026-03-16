@@ -41,31 +41,33 @@ class ProfileCard extends StatelessWidget {
         constraints: isMobile
             ? const BoxConstraints(minHeight: 250)
             : const BoxConstraints(minHeight: 400),
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(16),
-          child: Ink(
-            decoration: BoxDecoration(
-              color: isSelected
-                  ? Color.alphaBlend(
-                      beginnerColor.withValues(alpha: 0.1),
-                      colorExtensions?.surfaceVariant ?? Colors.white,
-                    )
-                  : colorExtensions?.surfaceVariant ?? Colors.white,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: isSelected ? beginnerColor : Colors.transparent,
-                width: 2,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.06),
-                  blurRadius: 12,
-                  offset: const Offset(0, 4),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(16),
+            child: Ink(
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? Color.alphaBlend(
+                        beginnerColor.withValues(alpha: 0.1),
+                        colorExtensions?.surfaceVariant ?? Colors.white,
+                      )
+                    : colorExtensions?.surfaceVariant ?? Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: isSelected ? beginnerColor : Colors.transparent,
+                  width: 2,
                 ),
-              ],
-            ),
-            child: Padding(
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.06),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Padding(
               padding: EdgeInsets.all(isMobile ? Spacing.md : Spacing.xl),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -108,6 +110,7 @@ class ProfileCard extends StatelessWidget {
               ),
             ),
           ),
+        ),
         ),
       ),
     );
