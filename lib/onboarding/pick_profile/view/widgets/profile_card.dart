@@ -19,9 +19,10 @@ class ProfileCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorExtensions = Theme.of(context).extension<AppColors>();
     final beginnerColor = colorExtensions?.primary ?? const Color(0xFF6D92F5);
+    final optimizerColor = colorExtensions?.pinkColor;
     final l10n = context.l10n;
     final isOptimizer = profileType == ProfileType.optimizer;
-    final titleColor = isOptimizer ? _kOptimizerColor : beginnerColor;
+    final titleColor = isOptimizer ? optimizerColor : beginnerColor;
 
     final title = isOptimizer
         ? l10n.profileOptimizerTitle
@@ -36,77 +37,79 @@ class ProfileCard extends StatelessWidget {
 
     return Transform.rotate(
       angle: rotation,
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          constraints: isMobile
-              ? const BoxConstraints(minHeight: 250)
-              : const BoxConstraints(minHeight: 400),
-          decoration: BoxDecoration(
-            color: isSelected
-                ? Color.alphaBlend(
-                    beginnerColor.withValues(alpha: 0.1),
-                    Colors.white,
-                  )
-                : Colors.white,
+      child: ConstrainedBox(
+        constraints: isMobile
+            ? const BoxConstraints(minHeight: 250)
+            : const BoxConstraints(minHeight: 400),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: onTap,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: isSelected ? beginnerColor : Colors.transparent,
-              width: 2,
+            child: Ink(
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? Color.alphaBlend(
+                        beginnerColor.withValues(alpha: 0.1),
+                        colorExtensions?.surfaceVariant ?? Colors.white,
+                      )
+                    : colorExtensions?.surfaceVariant ?? Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: isSelected ? beginnerColor : Colors.transparent,
+                  width: 2,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.06),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Padding(
+                padding: EdgeInsets.all(isMobile ? Spacing.md : Spacing.xl),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Image.asset(
+                      profileType.iconAsset,
+                      width: isMobile
+                          ? _Dimensions.mobileIconSize
+                          : _Dimensions.iconSize,
+                      height: isMobile
+                          ? _Dimensions.mobileIconSize
+                          : _Dimensions.iconSize,
+                    ),
+                    SizedBox(
+                      height: isMobile ? Spacing.xl : (Spacing.xxxl * 3),
+                    ),
+                    Text(
+                      title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style:
+                          (isMobile
+                                  ? AppTextStyles.displaySmallMobile
+                                  : AppTextStyles.displayLargeDesktop)
+                              .copyWith(color: titleColor),
+                    ),
+                    const SizedBox(height: Spacing.xs),
+                    Text(
+                      description,
+                      style: isMobile
+                          ? AppTextStyles.titleMediumMobile.copyWith(
+                              color: colorExtensions?.onSurfaceVariant,
+                            )
+                          : AppTextStyles.headlineLargeDesktop.copyWith(
+                              color: colorExtensions?.onSurfaceVariant,
+                              fontWeight: FontWeight.w400,
+                            ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.06),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          padding: EdgeInsets.all(
-            isMobile ? _Dimensions.mobilePadding : _Dimensions.padding,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Image.asset(
-                profileType.iconAsset,
-                width: isMobile
-                    ? _Dimensions.mobileIconSize
-                    : _Dimensions.iconSize,
-                height: isMobile
-                    ? _Dimensions.mobileIconSize
-                    : _Dimensions.iconSize,
-              ),
-              SizedBox(
-                height: isMobile
-                    ? _Dimensions.mobileIconTitleSpacing
-                    : _Dimensions.iconTitleSpacing,
-              ),
-              Text(
-                title,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: isMobile
-                      ? _Dimensions.mobileTitleFontSize
-                      : _Dimensions.titleFontSize,
-                  fontWeight: FontWeight.bold,
-                  color: titleColor,
-                  height: 1.2,
-                ),
-              ),
-              const SizedBox(height: Spacing.xs),
-              Text(
-                description,
-                style: TextStyle(
-                  color: _kTextColor,
-                  fontSize: isMobile
-                      ? _Dimensions.mobileDescFontSize
-                      : _Dimensions.descFontSize,
-                  height: 1.4,
-                ),
-              ),
-            ],
           ),
         ),
       ),
@@ -121,18 +124,7 @@ extension on ProfileType {
   };
 }
 
-const _kOptimizerColor = Color(0xFFFFB1EE);
-const _kTextColor = Color(0xFF1A1A2E);
-
 abstract final class _Dimensions {
-  static const double padding = 24;
-  static const double mobilePadding = 16;
   static const double iconSize = 120;
   static const double mobileIconSize = 60;
-  static const double iconTitleSpacing = 40;
-  static const double mobileIconTitleSpacing = 24;
-  static const double titleFontSize = 30;
-  static const double mobileTitleFontSize = 25.34;
-  static const double descFontSize = 24;
-  static const double mobileDescFontSize = 18;
 }

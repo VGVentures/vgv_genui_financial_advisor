@@ -39,7 +39,7 @@ void main() {
         expect(find.byType(Image), findsOneWidget);
         final text = tester.widget<Text>(find.text('Option 1'));
         expect(text.style?.fontWeight, FontWeight.w600);
-        expect(text.style?.fontSize, 24);
+        expect(text.style?.fontSize, 32);
       },
     );
 
@@ -59,7 +59,7 @@ void main() {
         expect(find.byType(Image), findsNothing);
         final text = tester.widget<Text>(find.text('Option 1'));
         expect(text.style?.fontWeight, FontWeight.w400);
-        expect(text.style?.fontSize, 24);
+        expect(text.style?.fontSize, 32);
       },
     );
 
@@ -79,7 +79,7 @@ void main() {
 
         expect(find.byType(Image), findsOneWidget);
         final text = tester.widget<Text>(find.text('Option 1'));
-        expect(text.style?.fontSize, 18);
+        expect(text.style?.fontSize, 16);
       },
     );
 

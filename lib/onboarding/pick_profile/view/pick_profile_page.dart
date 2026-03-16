@@ -13,27 +13,29 @@ class PickProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorExtensions = Theme.of(context).extension<AppColors>();
-    final isMobile = Breakpoints.isMobile(MediaQuery.of(context).size.width);
-
-    final horizontalPadding = isMobile
-        ? _Dimensions.mobileHorizontalPadding
-        : _Dimensions.horizontalPadding;
-    final verticalPadding = isMobile
-        ? _Dimensions.mobileVerticalPadding
-        : _Dimensions.verticalPadding;
 
     return BlocProvider(
       create: (_) => PickProfileCubit(),
       child: Scaffold(
         backgroundColor:
             colorExtensions?.primarySurface ?? Colors.grey.shade200,
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: horizontalPadding,
-              vertical: verticalPadding,
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: responsiveValue(
+                  context,
+                  mobile: Spacing.xxl,
+                  desktop: _Dimensions.horizontalPadding,
+                ),
+                vertical: responsiveValue(
+                  context,
+                  mobile: Spacing.md,
+                  desktop: _Dimensions.verticalPadding,
+                ),
+              ),
+              child: const PickProfileView(),
             ),
-            child: const PickProfileView(),
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -60,8 +62,6 @@ class PickProfilePage extends StatelessWidget {
 }
 
 abstract final class _Dimensions {
-  static const double mobileHorizontalPadding = Spacing.xxl;
-  static const double mobileVerticalPadding = 0;
   static const double horizontalPadding = 200;
-  static const double verticalPadding = 0;
+  static const double verticalPadding = 80;
 }
