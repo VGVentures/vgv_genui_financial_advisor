@@ -75,21 +75,18 @@ final accordionItem = CatalogItem(
           isExpanded: isExpanded,
           content: Column(
             mainAxisSize: MainAxisSize.min,
-            children: rawItems
-                .cast<Map<String, Object?>>()
-                .indexed
-                .map((entry) {
-                  final (index, item) = entry;
-                  final childId = item['child'] as String?;
-                  return _BoundActionItem(
-                    key: ValueKey('accordion_item_$index'),
-                    dataContext: ctx.dataContext,
-                    itemData: item,
-                    trailing:
-                        childId != null ? ctx.buildChild(childId) : null,
-                  );
-                })
-                .toList(),
+            children: rawItems.cast<Map<String, Object?>>().indexed.map((
+              entry,
+            ) {
+              final (index, item) = entry;
+              final childId = item['child'] as String?;
+              return _BoundActionItem(
+                key: ValueKey('accordion_item_$index'),
+                dataContext: ctx.dataContext,
+                itemData: item,
+                trailing: childId != null ? ctx.buildChild(childId) : null,
+              );
+            }).toList(),
           ),
         );
       },

@@ -15,8 +15,7 @@ final _schema = S.object(
             description: r'Formatted spend amount (e.g. "$350").',
           ),
           'delta': A2uiSchemas.stringReference(
-            description:
-                'Percentage change with sign (e.g. "+15%", "-5%").',
+            description: 'Percentage change with sign (e.g. "+15%", "-5%").',
           ),
         },
         required: ['title', 'amount', 'delta'],

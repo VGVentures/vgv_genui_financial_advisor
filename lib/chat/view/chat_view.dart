@@ -164,8 +164,7 @@ class _ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
               // Mobile: icon-only chips
               _IconChip(
                 icon: Icons.person,
-                borderColor:
-                    colors?.pinkColor ?? const Color(0xFFE98AD4),
+                borderColor: colors?.pinkColor ?? const Color(0xFFE98AD4),
                 onTap: () {},
               ),
               const SizedBox(width: Spacing.xs),
@@ -195,8 +194,7 @@ class _ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
                 label: _profileLabel,
                 backgroundColor:
                     colors?.pinkContainer ?? const Color(0x26E98AD4),
-                textColor:
-                    colors?.onSurfaceVariant ?? const Color(0xFF5D5F5F),
+                textColor: colors?.onSurfaceVariant ?? const Color(0xFF5D5F5F),
               ),
             ],
           ],
@@ -385,9 +383,7 @@ class _IconChip extends StatelessWidget {
         decoration: BoxDecoration(
           gradient: gradient,
           shape: BoxShape.circle,
-          border: borderColor != null
-              ? Border.all(color: borderColor!)
-              : null,
+          border: borderColor != null ? Border.all(color: borderColor!) : null,
         ),
         child: Center(
           child: SizedBox(

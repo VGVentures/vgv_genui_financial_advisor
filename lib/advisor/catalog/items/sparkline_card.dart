@@ -9,8 +9,7 @@ final _schema = S.object(
       '{"path": "..."}.',
   properties: {
     'label': A2uiSchemas.stringReference(
-      description:
-          'Category name displayed at the top-left (e.g. "Savings").',
+      description: 'Category name displayed at the top-left (e.g. "Savings").',
     ),
     'amount': A2uiSchemas.stringReference(
       description: r'Formatted amount string (e.g. "$12,500").',

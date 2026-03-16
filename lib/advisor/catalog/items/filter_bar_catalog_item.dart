@@ -96,7 +96,7 @@ class _StatefulFilterBar extends StatefulWidget {
   });
 
   final List<({String label, FilterChipColor color, bool isSelected})>
-      categories;
+  categories;
   final DataContext dataContext;
   final String componentId;
 

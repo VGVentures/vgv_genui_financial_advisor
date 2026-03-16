@@ -1,6 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:finance_app/chat/bloc/bloc.dart';
 import 'package:finance_app/chat/chat.dart';
+import 'package:finance_app/l10n/l10n.dart';
 import 'package:finance_app/onboarding/pick_profile/models/profile_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,9 +18,14 @@ const _testSurfaceSize = Size(1200, 800);
 
 extension on WidgetTester {
   Future<void> pumpChatView(ChatBloc bloc) async {
-    await binding.setSurfaceSize(_testSurfaceSize);
+    view.physicalSize = _testSurfaceSize;
+    view.devicePixelRatio = 1.0;
+    addTearDown(view.resetPhysicalSize);
+    addTearDown(view.resetDevicePixelRatio);
     return pumpWidget(
       MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
         home: BlocProvider<ChatBloc>.value(
           value: bloc,
           child: const ChatView(profileType: ProfileType.optimizer),

@@ -36,8 +36,7 @@ Future<void> _pump(
     MaterialApp(
       home: Scaffold(
         body: Builder(
-          builder: (context) =>
-              aiButtonItem.widgetBuilder(
+          builder: (context) => aiButtonItem.widgetBuilder(
             _context(
               context,
               data,
@@ -71,8 +70,7 @@ void main() {
       expect(find.text("What's eating my money?"), findsOneWidget);
     });
 
-    testWidgets('onTap dispatches UserActionEvent',
-        (tester) async {
+    testWidgets('onTap dispatches UserActionEvent', (tester) async {
       UiEvent? dispatched;
       await _pump(
         tester,

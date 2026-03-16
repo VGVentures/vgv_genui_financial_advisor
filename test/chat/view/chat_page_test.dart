@@ -1,6 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:finance_app/chat/bloc/bloc.dart';
 import 'package:finance_app/chat/chat.dart';
+import 'package:finance_app/l10n/l10n.dart';
 import 'package:finance_app/onboarding/pick_profile/models/profile_type.dart';
 import 'package:finance_app/onboarding/want_to_focus/models/focus_option.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,8 @@ void main() {
       await tester.binding.setSurfaceSize(const Size(1200, 800));
       await tester.pumpWidget(
         MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
           home: ChatPage(
             profileType: ProfileType.beginner,
             chatBloc: bloc,

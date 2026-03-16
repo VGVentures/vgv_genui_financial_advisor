@@ -46,30 +46,26 @@ final progressBarItem = CatalogItem(
 
     return Column(
       mainAxisSize: MainAxisSize.min,
-      children: rawItems
-          .cast<Map<String, Object?>>()
-          .indexed
-          .map((entry) {
-            final (index, item) = entry;
-            return Padding(
-              key: ValueKey('pbar_$index'),
-              padding: EdgeInsets.only(
-                top: index > 0 ? Spacing.md : 0,
-              ),
-              child: BoundString(
-                dataContext: ctx.dataContext,
-                value: item['title'],
-                builder: (context, title) {
-                  return ProgressBar(
-                    title: title ?? '',
-                    value: (item['value']! as num).toDouble(),
-                    total: (item['total']! as num).toDouble(),
-                  );
-                },
-              ),
-            );
-          })
-          .toList(),
+      children: rawItems.cast<Map<String, Object?>>().indexed.map((entry) {
+        final (index, item) = entry;
+        return Padding(
+          key: ValueKey('pbar_$index'),
+          padding: EdgeInsets.only(
+            top: index > 0 ? Spacing.md : 0,
+          ),
+          child: BoundString(
+            dataContext: ctx.dataContext,
+            value: item['title'],
+            builder: (context, title) {
+              return ProgressBar(
+                title: title ?? '',
+                value: (item['value']! as num).toDouble(),
+                total: (item['total']! as num).toDouble(),
+              );
+            },
+          ),
+        );
+      }).toList(),
     );
   },
 );

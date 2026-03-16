@@ -144,10 +144,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
     final converted = [
       for (final part in message.parts)
-        if (part is DataPart)
-          TextPart(utf8.decode(part.bytes))
-        else
-          part,
+        if (part is DataPart) TextPart(utf8.decode(part.bytes)) else part,
     ];
 
     return ChatMessage(role: message.role, parts: converted);
@@ -171,7 +168,10 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     } else {
       // New surface — create a new page with it.
       final message = AiSurfaceDisplayMessage(event.surfaceId);
-      final pages = [...state.pages, <DisplayMessage>[message]];
+      final pages = [
+        ...state.pages,
+        <DisplayMessage>[message],
+      ];
       emit(state.copyWith(pages: pages, currentPageIndex: pages.length - 1));
     }
   }
@@ -196,15 +196,17 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       final last = currentPage.last;
       if (last is AiTextDisplayMessage) {
         // Add a space if the two chunks would run together.
-        final needsSpace = last.text.isNotEmpty &&
+        final needsSpace =
+            last.text.isNotEmpty &&
             message.text.isNotEmpty &&
             last.text[last.text.length - 1] != ' ' &&
             last.text[last.text.length - 1] != '\n' &&
             message.text[0] != ' ' &&
             message.text[0] != '\n';
         final separator = needsSpace ? ' ' : '';
-        final merged =
-            AiTextDisplayMessage(last.text + separator + message.text);
+        final merged = AiTextDisplayMessage(
+          last.text + separator + message.text,
+        );
         pages = [
           for (var i = 0; i < pages.length; i++)
             if (i == currentPageIndex)
@@ -219,10 +221,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
     pages = [
       for (var i = 0; i < pages.length; i++)
-        if (i == currentPageIndex)
-          [...currentPage, message]
-        else
-          pages[i],
+        if (i == currentPageIndex) [...currentPage, message] else pages[i],
     ];
     emit(state.copyWith(pages: pages, currentPageIndex: currentPageIndex));
   }

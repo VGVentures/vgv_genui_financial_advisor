@@ -68,23 +68,19 @@ final horizontalBarItem = CatalogItem(
 
     return Column(
       mainAxisSize: MainAxisSize.min,
-      children: rawItems
-          .cast<Map<String, Object?>>()
-          .indexed
-          .map((entry) {
-            final (index, item) = entry;
-            return Padding(
-              key: ValueKey('hbar_$index'),
-              padding: EdgeInsets.only(
-                top: index > 0 ? Spacing.md : 0,
-              ),
-              child: _BoundHorizontalBar(
-                dataContext: ctx.dataContext,
-                itemData: item,
-              ),
-            );
-          })
-          .toList(),
+      children: rawItems.cast<Map<String, Object?>>().indexed.map((entry) {
+        final (index, item) = entry;
+        return Padding(
+          key: ValueKey('hbar_$index'),
+          padding: EdgeInsets.only(
+            top: index > 0 ? Spacing.md : 0,
+          ),
+          child: _BoundHorizontalBar(
+            dataContext: ctx.dataContext,
+            itemData: item,
+          ),
+        );
+      }).toList(),
     );
   },
 );
@@ -119,8 +115,7 @@ class _BoundHorizontalBar extends StatelessWidget {
                     return HorizontalBar(
                       category: category ?? '',
                       amount: amount ?? '',
-                      progress:
-                          (itemData['progress']! as num).toDouble(),
+                      progress: (itemData['progress']! as num).toDouble(),
                       comparisonLabel: comparisonLabel ?? '',
                       comparisonValue: comparisonValue ?? '',
                     );
