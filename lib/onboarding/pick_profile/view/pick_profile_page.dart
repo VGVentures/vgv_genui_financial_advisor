@@ -13,16 +13,6 @@ class PickProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorExtensions = Theme.of(context).extension<AppColors>();
-    final fabSize = responsiveValue(
-      context,
-      mobile: _Dimensions.mobileFabSize,
-      desktop: _Dimensions.fabSize,
-    );
-    final fabIconSize = responsiveValue(
-      context,
-      mobile: _Dimensions.mobileFabIconSize,
-      desktop: _Dimensions.fabIconSize,
-    );
 
     return BlocProvider(
       create: (_) => PickProfileCubit(),
@@ -72,13 +62,6 @@ class PickProfilePage extends StatelessWidget {
 }
 
 abstract final class _Dimensions {
-  // Mobile
-  static const double mobileFabSize = 80;
-  static const double mobileFabIconSize = 13;
-
-  // Desktop
   static const double horizontalPadding = 200;
   static const double verticalPadding = 80;
-  static const double fabSize = 140;
-  static const double fabIconSize = 22;
 }
