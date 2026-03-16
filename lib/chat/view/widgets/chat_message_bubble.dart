@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:finance_app/app/presentation.dart';
 import 'package:finance_app/chat/bloc/bloc.dart';
+import 'package:finance_app/design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:genui/genui.dart';

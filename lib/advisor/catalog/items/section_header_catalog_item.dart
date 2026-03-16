@@ -1,4 +1,4 @@
-import 'package:finance_app/app/presentation.dart';
+import 'package:finance_app/design_system/design_system.dart';
 import 'package:genui/genui.dart';
 import 'package:json_schema_builder/json_schema_builder.dart';
 

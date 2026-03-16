@@ -1,5 +1,5 @@
-import 'package:finance_app/app/presentation.dart';
 import 'package:finance_app/chat/bloc/bloc.dart';
+import 'package:finance_app/design_system/design_system.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:genui/genui.dart';

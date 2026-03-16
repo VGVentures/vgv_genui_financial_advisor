@@ -1,4 +1,4 @@
-import 'package:finance_app/app/presentation.dart';
+import 'package:finance_app/design_system/design_system.dart';
 import 'package:flutter/material.dart';
 
 const _splitLabels = ['1', '2', '3', '4', '5', '6'];

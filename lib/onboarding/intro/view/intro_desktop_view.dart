@@ -1,4 +1,4 @@
-import 'package:finance_app/feature_flag/widgets/dev_menu_drawer.dart';
+import 'package:finance_app/feature_flags/view/widgets/dev_menu_drawer.dart';
 import 'package:finance_app/gen/assets.gen.dart';
 import 'package:finance_app/l10n/l10n.dart';
 import 'package:finance_app/onboarding/intro/view/widgets/widgets.dart';

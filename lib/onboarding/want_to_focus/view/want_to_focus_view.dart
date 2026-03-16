@@ -1,4 +1,4 @@
-import 'package:finance_app/app/presentation.dart';
+import 'package:finance_app/design_system/design_system.dart';
 import 'package:finance_app/l10n/l10n.dart';
 import 'package:finance_app/onboarding/want_to_focus/view/widgets/focus_options_desktop.dart';
 import 'package:finance_app/onboarding/want_to_focus/view/widgets/focus_options_mobile.dart';

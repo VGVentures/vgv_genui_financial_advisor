@@ -1,4 +1,4 @@
-import 'package:finance_app/app/presentation.dart';
+import 'package:finance_app/design_system/design_system.dart';
 import 'package:finance_app/dev_menu/view/filter_bar_catalog_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';

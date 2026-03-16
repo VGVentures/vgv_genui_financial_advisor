@@ -1,10 +1,6 @@
 import 'package:finance_app/bootstrap.dart';
-import 'package:finance_app/core/analytics_repository/analytics_repository.dart';
-import 'package:finance_app/core/error_reporting_repository/error_reporting_repository.dart';
+import 'package:finance_app/error_reporting/error_reporting.dart';
 
 Future<void> main() async {
-  await bootstrap(
-    errorReportingRepository: DevErrorReportingRepository(),
-    analyticsRepositoryFactory: DevAnalyticsRepository.new,
-  );
+  await bootstrap(errorReportingRepository: DevErrorReportingRepository());
 }

@@ -1,4 +1,4 @@
-import 'package:finance_app/app/presentation.dart';
+import 'package:finance_app/design_system/design_system.dart';
 import 'package:flutter/material.dart';
 
 /// {@template action_item_catalog_page}

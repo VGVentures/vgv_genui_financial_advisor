@@ -1,6 +1,5 @@
 import 'package:finance_app/app/app.dart';
-import 'package:finance_app/core/analytics_repository/analytics_repository.dart';
-import 'package:finance_app/core/error_reporting_repository/error_reporting_repository.dart';
+import 'package:finance_app/error_reporting/error_reporting.dart';
 import 'package:finance_app/onboarding/intro/intro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -14,20 +13,14 @@ void main() {
       addTearDown(tester.view.resetPhysicalSize);
       addTearDown(tester.view.resetDevicePixelRatio);
 
-      final analyticsRepository = DevAnalyticsRepository();
       await tester.pumpWidget(
         MultiProvider(
           providers: [
             Provider<ErrorReportingRepository>.value(
               value: DevErrorReportingRepository(),
             ),
-            Provider<AnalyticsRepository>.value(
-              value: analyticsRepository,
-            ),
           ],
-          child: App(
-            navigatorObservers: [analyticsRepository.navigatorObserver],
-          ),
+          child: const App(),
         ),
       );
       await tester.pumpAndSettle();

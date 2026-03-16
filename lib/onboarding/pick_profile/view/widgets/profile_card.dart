@@ -1,4 +1,4 @@
-import 'package:finance_app/app/presentation.dart';
+import 'package:finance_app/design_system/design_system.dart';
 import 'package:finance_app/l10n/l10n.dart';
 import 'package:finance_app/onboarding/pick_profile/pick_profile.dart';
 import 'package:flutter/material.dart';

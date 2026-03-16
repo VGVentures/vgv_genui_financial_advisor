@@ -1,4 +1,4 @@
-import 'package:finance_app/app/presentation.dart';
+import 'package:finance_app/design_system/design_system.dart';
 import 'package:finance_app/onboarding/intro/view/intro_desktop_view.dart';
 import 'package:finance_app/onboarding/intro/view/intro_mobile_view.dart';
 import 'package:finance_app/onboarding/kick_off/view/kick_off_page.dart';

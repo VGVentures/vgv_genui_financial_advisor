@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:finance_app/app/presentation.dart';
+import 'package:finance_app/design_system/design_system.dart';
 import 'package:finance_app/l10n/l10n.dart';
 import 'package:finance_app/onboarding/kick_off/view/desktop_kick_off_view.dart';
 import 'package:finance_app/onboarding/kick_off/view/kick_off_values.dart';
