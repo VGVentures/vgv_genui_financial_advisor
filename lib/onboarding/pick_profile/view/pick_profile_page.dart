@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:finance_app/app/presentation.dart';
-import 'package:finance_app/gen/assets.gen.dart';
 import 'package:finance_app/onboarding/pick_profile/pick_profile.dart';
 import 'package:finance_app/onboarding/want_to_focus/view/want_to_focus_page.dart';
+import 'package:finance_app/onboarding/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -49,41 +49,21 @@ class PickProfilePage extends StatelessWidget {
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        floatingActionButton: Builder(
-          builder: (context) => SizedBox(
-            width: fabSize,
-            height: fabSize,
-            child: FloatingActionButton(
-              onPressed: () {
-                final profileType = context
-                    .read<PickProfileCubit>()
-                    .state
-                    .selectedProfile;
-                if (profileType == null) return;
-                unawaited(
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute<void>(
-                      builder: (_) => WantToFocusPage(
-                        profileType: profileType,
+        floatingActionButton: BlocBuilder<PickProfileCubit, PickProfileState>(
+          builder: (context, state) => OnboardingNextButton(
+            onPressed: state.hasSelection
+                ? () {
+                    unawaited(
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute<void>(
+                          builder: (_) => WantToFocusPage(
+                            profileType: state.selectedProfile!,
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                );
-              },
-              backgroundColor: Colors.transparent,
-              hoverColor: colorExtensions?.primarySurface,
-              elevation: 0,
-              shape: CircleBorder(
-                side: BorderSide(
-                  color: colorExtensions?.primary ?? Colors.transparent,
-                ),
-              ),
-              child: Assets.images.onboarding.rightArrow.image(
-                color: colorExtensions?.primary,
-                width: fabIconSize,
-                height: fabIconSize,
-              ),
-            ),
+                    );
+                  }
+                : null,
           ),
         ),
       ),
