@@ -64,8 +64,7 @@ class WantToFocusPage extends StatelessWidget {
                 child: const WantToFocusView(),
               ),
             ),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.endFloat,
+            floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
             floatingActionButton: SizedBox(
               width: fabSize,
               height: fabSize,
