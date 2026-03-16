@@ -118,6 +118,7 @@ class _WantToFocusPageState extends State<WantToFocusPage> {
                     animationPath: Assets.animations.loading,
                     onAnimationComplete: _onAnimationComplete,
                     animationDuration: const Duration(seconds: 7),
+                    backgroundOpacity: 0.75,
                   ),
                 ),
             ],
