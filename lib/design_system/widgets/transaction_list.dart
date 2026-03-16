@@ -116,8 +116,6 @@ class _TransactionListRow extends StatelessWidget {
             ),
           ),
           if (item.onViewDetails != null) ...[
-            // TODO(dev): Replace with custom button widget
-            //when gets merged
             FilledButton(
               onPressed: item.onViewDetails,
               style: FilledButton.styleFrom(
