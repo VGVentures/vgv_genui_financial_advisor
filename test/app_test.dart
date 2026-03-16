@@ -1,4 +1,4 @@
-import 'package:finance_app/app/app.dart';
+import 'package:finance_app/app.dart';
 import 'package:finance_app/error_reporting/error_reporting.dart';
 import 'package:finance_app/onboarding/intro/intro.dart';
 import 'package:flutter/material.dart';
