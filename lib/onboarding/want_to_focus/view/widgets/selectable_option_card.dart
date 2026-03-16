@@ -19,16 +19,10 @@ class SelectableOptionCard extends StatelessWidget {
     final themeOf = Theme.of(context);
     final colorScheme = themeOf.colorScheme;
     final colorExtension = themeOf.extension<AppColors>();
-    final textTheme = themeOf.textTheme;
     final iconSize = responsiveValue(
       context,
       mobile: Spacing.lg,
       desktop: _Dimensions.iconSize,
-    );
-    final textSize = responsiveValue(
-      context,
-      mobile: _Dimensions.mobileTextSize,
-      desktop: _Dimensions.fontSize,
     );
 
     return Material(
@@ -78,13 +72,17 @@ class SelectableOptionCard extends StatelessWidget {
                 Flexible(
                   child: Text(
                     label,
-                    style: textTheme.bodyLarge?.copyWith(
-                      fontSize: textSize,
-                      fontWeight: isSelected
-                          ? FontWeight.w600
-                          : FontWeight.w400,
-                      color: colorScheme.onPrimaryContainer,
-                    ),
+                    style:
+                        responsiveValue<TextStyle>(
+                          context,
+                          mobile: AppTextStyles.titleSmallDesktop,
+                          desktop: AppTextStyles.headlineLargeDesktop,
+                        ).copyWith(
+                          fontWeight: isSelected
+                              ? FontWeight.w600
+                              : FontWeight.w400,
+                          color: colorScheme.onSurface,
+                        ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -104,6 +102,4 @@ abstract final class _Dimensions {
   static const double horizontalPadding = 40;
   static const double verticalPadding = 44;
   static const double mobileVerticalPadding = 17;
-  static const double fontSize = 24;
-  static const double mobileTextSize = 18;
 }

@@ -64,7 +64,7 @@ void main() {
         ),
       );
 
-      await tester.tap(find.byType(GestureDetector).first);
+      await tester.tap(find.byType(InkWell).first);
       await tester.pumpAndSettle();
 
       expect(tapped, isTrue);
