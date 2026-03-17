@@ -1,30 +1,51 @@
+import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
-import 'package:dartantic_firebase_ai/dartantic_firebase_ai.dart';
 import 'package:finance_app/advisor/bloc/bloc.dart';
+import 'package:finance_app/advisor/repository/advisor_repository.dart';
 import 'package:finance_app/onboarding/pick_profile/models/profile_type.dart';
 import 'package:finance_app/onboarding/want_to_focus/models/focus_option.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genui/genui.dart';
 import 'package:mocktail/mocktail.dart';
 
-class _MockFirebaseAIChatModel extends Mock implements FirebaseAIChatModel {}
+class _MockAdvisorRepository extends Mock implements AdvisorRepository {}
 
-const _chatStarted = AdvisorStarted(
+class _MockSurfaceHost extends Mock implements SurfaceHost {}
+
+const _advisorStarted = AdvisorStarted(
   profileType: ProfileType.beginner,
   focusOptions: {FocusOption.everydaySpending},
 );
 
-AdvisorBloc _buildBloc() {
-  final mockModel = _MockFirebaseAIChatModel();
-  when(() => mockModel.sendStream(any())).thenAnswer(
-    (_) => const Stream.empty(),
-  );
-  return AdvisorBloc(chatModelFactory: () => mockModel);
-}
-
 void main() {
   setUpAll(() {
-    registerFallbackValue(<ChatMessage>[]);
+    registerFallbackValue(ProfileType.beginner);
+    registerFallbackValue(<FocusOption>{});
+  });
+
+  late AdvisorRepository repository;
+  late StreamController<AdvisorConversationEvent> eventsController;
+
+  setUp(() {
+    repository = _MockAdvisorRepository();
+    eventsController = StreamController<AdvisorConversationEvent>.broadcast();
+
+    when(() => repository.events).thenAnswer((_) => eventsController.stream);
+    when(
+      () => repository.startConversation(
+        profileType: any(named: 'profileType'),
+        focusOptions: any(named: 'focusOptions'),
+        customOption: any(named: 'customOption'),
+      ),
+    ).thenAnswer((_) async {});
+    when(() => repository.sendMessage(any())).thenAnswer((_) async {});
+    when(() => repository.surfaceHost).thenReturn(_MockSurfaceHost());
+    when(() => repository.dispose()).thenAnswer((_) async {});
+  });
+
+  tearDown(() async {
+    await eventsController.close();
   });
 
   group(AdvisorState, () {
@@ -127,7 +148,7 @@ void main() {
 
   group(AdvisorBloc, () {
     test('initial state is {$AdvisorState()}', () {
-      final bloc = _buildBloc();
+      final bloc = AdvisorBloc(advisorRepository: repository);
       expect(bloc.state.status, AdvisorStatus.initial);
       expect(bloc.state.pages, isEmpty);
       expect(bloc.state.isLoading, isFalse);
@@ -136,17 +157,89 @@ void main() {
 
     blocTest<AdvisorBloc, AdvisorState>(
       '$AdvisorStarted emits loading, then active with host',
-      build: _buildBloc,
-      act: (bloc) => bloc.add(_chatStarted),
+      build: () => AdvisorBloc(advisorRepository: repository),
+      act: (bloc) => bloc.add(_advisorStarted),
       verify: (bloc) {
         expect(bloc.state.status, AdvisorStatus.active);
         expect(bloc.state.host, isNotNull);
+        verify(
+          () => repository.startConversation(
+            profileType: ProfileType.beginner,
+            focusOptions: {FocusOption.everydaySpending},
+          ),
+        ).called(1);
+      },
+    );
+
+    blocTest<AdvisorBloc, AdvisorState>(
+      'repository text event emits content received',
+      build: () => AdvisorBloc(advisorRepository: repository),
+      seed: () => const AdvisorState(
+        status: AdvisorStatus.active,
+        pages: [[]],
+      ),
+      act: (bloc) async {
+        bloc.add(_advisorStarted);
+        await Future<void>.delayed(Duration.zero);
+        eventsController.add(
+          const AdvisorConversationTextReceived('hello'),
+        );
+      },
+      verify: (bloc) {
+        final page = bloc.state.pages.first;
+        expect(page, isNotEmpty);
+        expect(page.last, isA<AiTextDisplayMessage>());
+      },
+    );
+
+    blocTest<AdvisorBloc, AdvisorState>(
+      'repository surface event creates a new page',
+      build: () => AdvisorBloc(advisorRepository: repository),
+      act: (bloc) async {
+        bloc.add(_advisorStarted);
+        await Future<void>.delayed(Duration.zero);
+        eventsController.add(
+          const AdvisorConversationSurfaceAdded('surface_1'),
+        );
+      },
+      verify: (bloc) {
+        expect(bloc.state.pages, hasLength(1));
+        expect(bloc.state.pages.first.first, isA<AiSurfaceDisplayMessage>());
+      },
+    );
+
+    blocTest<AdvisorBloc, AdvisorState>(
+      'repository error event emits error status',
+      build: () => AdvisorBloc(advisorRepository: repository),
+      act: (bloc) async {
+        bloc.add(_advisorStarted);
+        await Future<void>.delayed(Duration.zero);
+        eventsController.add(const AdvisorConversationError('oops'));
+      },
+      verify: (bloc) {
+        expect(bloc.state.status, AdvisorStatus.error);
+        expect(bloc.state.error, 'oops');
+      },
+    );
+
+    blocTest<AdvisorBloc, AdvisorState>(
+      'repository waiting event emits loading state',
+      build: () => AdvisorBloc(advisorRepository: repository),
+      act: (bloc) async {
+        bloc.add(_advisorStarted);
+        await Future<void>.delayed(Duration.zero);
+        eventsController.add(
+          const AdvisorConversationWaiting(isWaiting: true),
+        );
+      },
+      verify: (bloc) {
+        expect(bloc.state.isLoading, isTrue);
       },
     );
 
     blocTest<AdvisorBloc, AdvisorState>(
       '$AdvisorSurfaceReceived creates a new page for a new surface',
-      build: _buildBloc,
+      build: () => AdvisorBloc(advisorRepository: repository),
       act: (bloc) => bloc.add(const AdvisorSurfaceReceived('surface_1')),
       expect: () => [
         isA<AdvisorState>()
@@ -158,7 +251,7 @@ void main() {
 
     blocTest<AdvisorBloc, AdvisorState>(
       '$AdvisorSurfaceReceived stays on existing page for known surface',
-      build: _buildBloc,
+      build: () => AdvisorBloc(advisorRepository: repository),
       seed: () => const AdvisorState(
         pages: [
           [AiSurfaceDisplayMessage('surface_1')],
@@ -176,7 +269,7 @@ void main() {
 
     blocTest<AdvisorBloc, AdvisorState>(
       '$AdvisorContentReceived appends message to current page',
-      build: _buildBloc,
+      build: () => AdvisorBloc(advisorRepository: repository),
       seed: () => const AdvisorState(
         pages: [[]],
       ),
@@ -193,7 +286,7 @@ void main() {
 
     blocTest<AdvisorBloc, AdvisorState>(
       '$AdvisorContentReceived creates a page if none exist',
-      build: _buildBloc,
+      build: () => AdvisorBloc(advisorRepository: repository),
       act: (bloc) =>
           bloc.add(const AdvisorContentReceived(AiTextDisplayMessage('hi'))),
       expect: () => [
@@ -205,7 +298,7 @@ void main() {
 
     blocTest<AdvisorBloc, AdvisorState>(
       '$AdvisorLoading emits state with isLoading',
-      build: _buildBloc,
+      build: () => AdvisorBloc(advisorRepository: repository),
       act: (bloc) => bloc.add(const AdvisorLoading(isLoading: true)),
       expect: () => [
         isA<AdvisorState>().having((s) => s.isLoading, 'isLoading', isTrue),
@@ -214,7 +307,7 @@ void main() {
 
     blocTest<AdvisorBloc, AdvisorState>(
       '$AdvisorErrorOccurred emits error status with message',
-      build: _buildBloc,
+      build: () => AdvisorBloc(advisorRepository: repository),
       act: (bloc) => bloc.add(const AdvisorErrorOccurred('something failed')),
       expect: () => [
         isA<AdvisorState>()
@@ -223,16 +316,19 @@ void main() {
       ],
     );
 
-    test('close disposes conversation resources', () async {
-      final bloc = _buildBloc()..add(_chatStarted);
-      await Future<void>.delayed(Duration.zero);
-      // Should not throw when closing after starting.
-      await bloc.close();
-    });
+    blocTest<AdvisorBloc, AdvisorState>(
+      '$AdvisorMessageSent calls repository.sendMessage',
+      build: () => AdvisorBloc(advisorRepository: repository),
+      act: (bloc) => bloc.add(const AdvisorMessageSent('hello')),
+      verify: (_) {
+        verify(() => repository.sendMessage('hello')).called(1);
+      },
+    );
 
-    test('close without starting does not throw', () async {
-      final bloc = _buildBloc();
+    test('close disposes repository', () async {
+      final bloc = AdvisorBloc(advisorRepository: repository);
       await bloc.close();
+      verify(() => repository.dispose()).called(1);
     });
   });
 }

@@ -38,7 +38,7 @@ void main() {
           supportedLocales: AppLocalizations.supportedLocales,
           home: AdvisorPage(
             profileType: ProfileType.beginner,
-            chatBloc: bloc,
+            advisorBloc: bloc,
           ),
         ),
       );

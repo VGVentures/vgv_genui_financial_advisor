@@ -11,26 +11,28 @@ class AdvisorPage extends StatelessWidget {
     required this.profileType,
     this.focusOptions = const {},
     this.customOption = '',
-    this.chatBloc,
+    this.advisorBloc,
     super.key,
   });
 
   final ProfileType profileType;
   final Set<FocusOption> focusOptions;
   final String customOption;
-  final AdvisorBloc? chatBloc;
+  final AdvisorBloc? advisorBloc;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) =>
-          (chatBloc ??
+          (advisorBloc ??
                 AdvisorBloc(
-                  chatModelFactory: () => FirebaseAIChatModel(
-                    name: 'gemini-3-flash-preview',
-                    backend: FirebaseAIBackend.googleAI,
-                    appCheck: FirebaseAppCheck.instance,
-                    useLimitedUseAppCheckTokens: true,
+                  advisorRepository: AdvisorRepository(
+                    modelFactory: () => FirebaseAIChatModel(
+                      name: 'gemini-3-flash-preview',
+                      backend: FirebaseAIBackend.googleAI,
+                      appCheck: FirebaseAppCheck.instance,
+                      useLimitedUseAppCheckTokens: true,
+                    ),
                   ),
                 ))
             ..add(
