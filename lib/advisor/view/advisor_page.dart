@@ -27,7 +27,7 @@ class AdvisorPage extends StatelessWidget {
           (advisorBloc ??
                 AdvisorBloc(
                   advisorRepository: AdvisorRepository(
-                    modelFactory: () => FirebaseAIChatModel(
+                    chatModel: FirebaseAIChatModel(
                       name: 'gemini-3-flash-preview',
                       backend: FirebaseAIBackend.googleAI,
                       appCheck: FirebaseAppCheck.instance,

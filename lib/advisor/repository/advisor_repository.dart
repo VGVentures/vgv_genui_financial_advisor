@@ -41,9 +41,6 @@ final class AdvisorConversationError extends AdvisorConversationEvent {
   final String message;
 }
 
-/// Factory for creating a [FirebaseAIChatModel].
-typedef AdvisorModelFactory = FirebaseAIChatModel Function();
-
 /// {@template advisor_repository}
 /// Repository that manages the AI financial advisor conversation.
 ///
@@ -53,12 +50,10 @@ typedef AdvisorModelFactory = FirebaseAIChatModel Function();
 /// {@endtemplate}
 class AdvisorRepository {
   /// {@macro advisor_repository}
-  AdvisorRepository({required AdvisorModelFactory modelFactory})
-    : _modelFactory = modelFactory;
+  AdvisorRepository({required FirebaseAIChatModel chatModel})
+    : _chatModel = chatModel;
 
-  final AdvisorModelFactory _modelFactory;
-
-  FirebaseAIChatModel? _chatModel;
+  final FirebaseAIChatModel _chatModel;
   Conversation? _conversation;
   StreamSubscription<ConversationEvent>? _eventSubscription;
   final List<ChatMessage> _history = [];
@@ -91,8 +86,6 @@ class AdvisorRepository {
     _systemPrompt = genUiPromptBuilder.systemPromptJoined();
 
     final controller = SurfaceController(catalogs: [catalog]);
-
-    _chatModel = _modelFactory();
 
     final adapter = A2uiTransportAdapter(onSend: _handleSend);
 
@@ -150,7 +143,7 @@ class AdvisorRepository {
     final adapter = _conversation!.transport as A2uiTransportAdapter;
     final buffer = StringBuffer();
 
-    await for (final result in _chatModel!.sendStream(messages)) {
+    await for (final result in _chatModel.sendStream(messages)) {
       final text = result.output.text;
       if (text.isNotEmpty) {
         buffer.write(text);
@@ -178,7 +171,7 @@ class AdvisorRepository {
     await _eventSubscription?.cancel();
     _conversation?.state.removeListener(_onStateChanged);
     _conversation?.dispose();
-    _chatModel?.dispose();
+    _chatModel.dispose();
     await _controller.close();
   }
 }
