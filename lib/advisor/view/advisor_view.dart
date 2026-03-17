@@ -51,12 +51,13 @@ class _AdvisorViewState extends State<AdvisorView> {
         },
         buildWhen: (previous, current) =>
             previous.pages != current.pages ||
+            previous.host != current.host ||
             previous.isLoading != current.isLoading,
         builder: (context, state) {
           return Column(
             children: [
               Expanded(
-                child: state.pages.isEmpty
+                child: state.pages.isEmpty || state.host == null
                     ? const Center(child: CircularProgressIndicator())
                     : _FadingPageView(
                         controller: _pageController,
