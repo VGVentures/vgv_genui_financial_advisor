@@ -14,20 +14,12 @@ class DesktopCards extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         for (final type in ProfileType.values)
-          Flexible(
-            child: Padding(
-              padding: const EdgeInsets.only(right: Spacing.xxxl * 2),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: _Dimensions.cardWidth,
-                ),
-                child: ProfileCard(
-                  profileType: type,
-                  isSelected: selectedProfile == type,
-                  onTap: () =>
-                      context.read<PickProfileCubit>().selectProfile(type),
-                ),
-              ),
+          Padding(
+            padding: const EdgeInsets.only(right: Spacing.xxxl * 2),
+            child: _HoverableCard(
+              profileType: type,
+              isSelected: selectedProfile == type,
+              onTap: () => context.read<PickProfileCubit>().selectProfile(type),
             ),
           ),
       ],
@@ -35,6 +27,53 @@ class DesktopCards extends StatelessWidget {
   }
 }
 
+class _HoverableCard extends StatefulWidget {
+  const _HoverableCard({
+    required this.profileType,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  final ProfileType profileType;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  @override
+  State<_HoverableCard> createState() => _HoverableCardState();
+}
+
+class _HoverableCardState extends State<_HoverableCard> {
+  bool _hovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final width = _hovered ? _Dimensions.cardWidthHover : _Dimensions.cardWidth;
+    final height = _hovered
+        ? _Dimensions.cardHeightHover
+        : _Dimensions.cardHeight;
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeInOut,
+        width: width,
+        height: height,
+        child: ProfileCard(
+          profileType: widget.profileType,
+          isSelected: widget.isSelected,
+          onTap: widget.onTap,
+          isHovered: _hovered,
+        ),
+      ),
+    );
+  }
+}
+
 abstract final class _Dimensions {
   static const double cardWidth = 450;
+  static const double cardWidthHover = 478;
+  static const double cardHeight = 572;
+  static const double cardHeightHover = 610;
 }

@@ -8,12 +8,14 @@ class ProfileCard extends StatelessWidget {
     required this.profileType,
     required this.isSelected,
     required this.onTap,
+    this.isHovered = false,
     super.key,
   });
 
   final ProfileType profileType;
   final bool isSelected;
   final VoidCallback onTap;
+  final bool isHovered;
 
   @override
   Widget build(BuildContext context) {
@@ -72,39 +74,68 @@ class ProfileCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Image.asset(
-                      profileType.iconAsset,
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      curve: Curves.easeInOut,
                       width: isMobile
                           ? _Dimensions.mobileIconSize
-                          : _Dimensions.iconSize,
+                          : (isHovered
+                                ? _Dimensions.iconSizeHover
+                                : _Dimensions.iconSize),
                       height: isMobile
                           ? _Dimensions.mobileIconSize
-                          : _Dimensions.iconSize,
+                          : (isHovered
+                                ? _Dimensions.iconSizeHover
+                                : _Dimensions.iconSize),
+                      child: Image.asset(profileType.iconAsset),
                     ),
+                    if (isMobile)
+                      const SizedBox(height: Spacing.xl)
+                    else
+                      const Spacer(),
                     SizedBox(
-                      height: isMobile ? Spacing.xl : (Spacing.xxxl * 3),
-                    ),
-                    Text(
-                      title,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style:
-                          (isMobile
-                                  ? AppTextStyles.displaySmallMobile
-                                  : AppTextStyles.displayLargeDesktop)
-                              .copyWith(color: titleColor),
+                      width: isMobile ? null : _Dimensions.textWidth,
+                      child: AnimatedDefaultTextStyle(
+                        duration: const Duration(milliseconds: 200),
+                        curve: Curves.easeInOut,
+                        style:
+                            (isMobile
+                                    ? AppTextStyles.displaySmallMobile
+                                    : AppTextStyles.displayLargeDesktop)
+                                .copyWith(
+                                  color: titleColor,
+                                  fontSize: isMobile
+                                      ? null
+                                      : (isHovered
+                                            ? _FontSizes.titleHover
+                                            : _FontSizes.title),
+                                ),
+                        child: Text(
+                          title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
                     ),
                     const SizedBox(height: Spacing.xs),
-                    Text(
-                      description,
-                      style: isMobile
-                          ? AppTextStyles.titleMediumMobile.copyWith(
-                              color: colorExtensions?.onSurfaceVariant,
-                            )
-                          : AppTextStyles.headlineLargeDesktop.copyWith(
-                              color: colorExtensions?.onSurfaceVariant,
-                              fontWeight: FontWeight.w400,
-                            ),
+                    SizedBox(
+                      width: isMobile ? null : _Dimensions.textWidth,
+                      child: AnimatedDefaultTextStyle(
+                        duration: const Duration(milliseconds: 200),
+                        curve: Curves.easeInOut,
+                        style: isMobile
+                            ? AppTextStyles.titleMediumMobile.copyWith(
+                                color: colorExtensions?.onSurfaceVariant,
+                              )
+                            : AppTextStyles.headlineLargeDesktop.copyWith(
+                                color: colorExtensions?.onSurfaceVariant,
+                                fontWeight: FontWeight.w400,
+                                fontSize: isHovered
+                                    ? _FontSizes.descriptionHover
+                                    : _FontSizes.description,
+                              ),
+                        child: Text(description),
+                      ),
                     ),
                   ],
                 ),
@@ -126,5 +157,14 @@ extension on ProfileType {
 
 abstract final class _Dimensions {
   static const double iconSize = 120;
+  static const double iconSizeHover = 129;
   static const double mobileIconSize = 60;
+  static const double textWidth = 402;
+}
+
+abstract final class _FontSizes {
+  static const double title = 48;
+  static const double titleHover = 50.4;
+  static const double description = 32;
+  static const double descriptionHover = 33.6;
 }
