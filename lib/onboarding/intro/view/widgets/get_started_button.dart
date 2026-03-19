@@ -40,6 +40,15 @@ class GetStartedButton extends StatelessWidget {
         child: InkWell(
           borderRadius: const BorderRadius.all(Radius.circular(100)),
           onTap: onPressed,
+          overlayColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.hovered)) {
+              return Colors.black.withValues(alpha: 0.2);
+            }
+            if (states.contains(WidgetState.pressed)) {
+              return Colors.black.withValues(alpha: 0.3);
+            }
+            return null;
+          }),
           child: SizedBox(
             height: height,
             child: Padding(
