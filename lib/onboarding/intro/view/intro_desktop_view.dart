@@ -233,12 +233,12 @@ class IntroDesktopView extends StatelessWidget {
                 ),
                 const SizedBox(height: 24),
                 SizedBox(
-                  width: 650,
+                  width: 1050,
                   child: Text(
                     l10n.introDescription,
                     textAlign: TextAlign.center,
-                    style: AppTextStyles.headlineMediumDesktop.copyWith(
-                      fontWeight: FontWeight.w500,
+                    style: AppTextStyles.headlineLargeDesktop.copyWith(
+                      fontWeight: FontWeight.w400,
                       color: Theme.of(context).colorScheme.onInverseSurface,
                     ),
                   ),
