@@ -20,7 +20,9 @@ class IntroBadges extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return Transform.scale(
+      scale: 1.15,
+      child: Stack(
       clipBehavior: Clip.none,
       alignment: Alignment.center,
       children: [
@@ -39,12 +41,13 @@ class IntroBadges extends StatelessWidget {
           ),
         ),
       ],
+    ),
     );
   }
 
   Widget _buildYearPill(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 11),
+      padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 7),
       decoration: BoxDecoration(
         color: Theme.of(context).extension<AppColors>()?.primary,
         borderRadius: BorderRadius.all(Radius.circular(150)),
@@ -61,7 +64,7 @@ class IntroBadges extends StatelessWidget {
 
   Widget _buildGenUiPill(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 11),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.all(Radius.circular(150)),

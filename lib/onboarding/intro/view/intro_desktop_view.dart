@@ -192,12 +192,17 @@ class IntroDesktopView extends StatelessWidget {
               height: 10,
             ),
           ),
-          Center(
+          const Positioned(
+            top: 220,
+            left: 0,
+            right: 0,
+            child: Center(child: IntroBadges()),
+          ),
+          Align(
+            alignment: const Alignment(0, 0.2),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                const IntroBadges(),
-                const SizedBox(height: 40),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40),
                   child: SizedBox(
@@ -233,11 +238,12 @@ class IntroDesktopView extends StatelessWidget {
                 ),
                 const SizedBox(height: 24),
                 SizedBox(
-                  width: 1050,
+                  width: 970,
                   child: Text(
                     l10n.introDescription,
                     textAlign: TextAlign.center,
                     style: AppTextStyles.headlineLargeDesktop.copyWith(
+                      fontSize: 30,
                       fontWeight: FontWeight.w400,
                       color: Theme.of(context).colorScheme.onInverseSurface,
                     ),
