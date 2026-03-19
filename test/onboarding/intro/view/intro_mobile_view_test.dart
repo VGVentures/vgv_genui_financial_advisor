@@ -24,7 +24,7 @@ void main() {
         await _pump(tester);
         await tester.pumpAndSettle();
 
-        expect(find.text('Gen UI '), findsOneWidget);
+        expect(find.text('GenUI '), findsOneWidget);
       });
 
       testWidgets('VGV gradient text', (tester) async {
