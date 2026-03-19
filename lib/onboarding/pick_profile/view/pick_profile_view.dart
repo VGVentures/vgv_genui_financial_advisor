@@ -38,17 +38,24 @@ class PickProfileView extends StatelessWidget {
               ).copyWith(color: colorScheme.onSurface),
             ),
             if (isMobile)
-              MobileCards(selectedProfile: state.selectedProfile)
+              Expanded(
+                child: SingleChildScrollView(
+                  child: MobileCards(selectedProfile: state.selectedProfile),
+                ),
+              )
             else
-              SizedBox(
-                width: double.infinity,
-                height: _DesktopCardsSize.height,
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: SizedBox(
-                    width: _DesktopCardsSize.width,
-                    height: _DesktopCardsSize.height,
-                    child: DesktopCards(selectedProfile: state.selectedProfile),
+              Expanded(
+                child: SizedBox(
+                  width: double.infinity,
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: SizedBox(
+                      width: _DesktopCardsSize.width,
+                      height: _DesktopCardsSize.height,
+                      child: DesktopCards(
+                        selectedProfile: state.selectedProfile,
+                      ),
+                    ),
                   ),
                 ),
               ),

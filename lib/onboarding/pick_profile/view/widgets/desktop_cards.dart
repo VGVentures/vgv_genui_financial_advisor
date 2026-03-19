@@ -47,24 +47,22 @@ class _HoverableCardState extends State<_HoverableCard> {
 
   @override
   Widget build(BuildContext context) {
-    final width = _hovered ? _Dimensions.cardWidthHover : _Dimensions.cardWidth;
-    final height = _hovered
-        ? _Dimensions.cardHeightHover
-        : _Dimensions.cardHeight;
-
     return MouseRegion(
+      opaque: false,
       onEnter: (_) => setState(() => _hovered = true),
       onExit: (_) => setState(() => _hovered = false),
-      child: AnimatedContainer(
+      child: AnimatedScale(
+        scale: _hovered ? _Dimensions.cardScaleHover : 1.0,
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeInOut,
-        width: width,
-        height: height,
-        child: ProfileCard(
-          profileType: widget.profileType,
-          isSelected: widget.isSelected,
-          onTap: widget.onTap,
-          isHovered: _hovered,
+        child: SizedBox(
+          width: _Dimensions.cardWidth,
+          height: _Dimensions.cardHeight,
+          child: ProfileCard(
+            profileType: widget.profileType,
+            isSelected: widget.isSelected,
+            onTap: widget.onTap,
+          ),
         ),
       ),
     );
@@ -73,7 +71,6 @@ class _HoverableCardState extends State<_HoverableCard> {
 
 abstract final class _Dimensions {
   static const double cardWidth = 450;
-  static const double cardWidthHover = 478;
   static const double cardHeight = 572;
-  static const double cardHeightHover = 610;
+  static const double cardScaleHover = 1.06;
 }

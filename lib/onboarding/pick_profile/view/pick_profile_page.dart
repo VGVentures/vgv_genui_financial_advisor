@@ -20,27 +20,20 @@ class PickProfilePage extends StatelessWidget {
         backgroundColor:
             colorExtensions?.primarySurface ?? Colors.grey.shade200,
         body: SafeArea(
-          child: LayoutBuilder(
-            builder: (context, constraints) => SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: responsiveValue(
-                      context,
-                      mobile: Spacing.xxl,
-                      desktop: _Dimensions.horizontalPadding,
-                    ),
-                    vertical: responsiveValue(
-                      context,
-                      mobile: Spacing.md,
-                      desktop: _Dimensions.verticalPadding,
-                    ),
-                  ),
-                  child: const PickProfileView(),
-                ),
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: responsiveValue(
+                context,
+                mobile: Spacing.xxl,
+                desktop: _Dimensions.horizontalPadding,
+              ),
+              vertical: responsiveValue(
+                context,
+                mobile: Spacing.md,
+                desktop: _Dimensions.verticalPadding,
               ),
             ),
+            child: const PickProfileView(),
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,

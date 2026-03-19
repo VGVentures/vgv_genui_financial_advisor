@@ -8,14 +8,12 @@ class ProfileCard extends StatelessWidget {
     required this.profileType,
     required this.isSelected,
     required this.onTap,
-    this.isHovered = false,
     super.key,
   });
 
   final ProfileType profileType;
   final bool isSelected;
   final VoidCallback onTap;
-  final bool isHovered;
 
   @override
   Widget build(BuildContext context) {
@@ -74,19 +72,13 @@ class ProfileCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
-                      curve: Curves.easeInOut,
+                    SizedBox(
                       width: isMobile
                           ? _Dimensions.mobileIconSize
-                          : (isHovered
-                                ? _Dimensions.iconSizeHover
-                                : _Dimensions.iconSize),
+                          : _Dimensions.iconSize,
                       height: isMobile
                           ? _Dimensions.mobileIconSize
-                          : (isHovered
-                                ? _Dimensions.iconSizeHover
-                                : _Dimensions.iconSize),
+                          : _Dimensions.iconSize,
                       child: Image.asset(profileType.iconAsset),
                     ),
                     if (isMobile)
@@ -95,34 +87,25 @@ class ProfileCard extends StatelessWidget {
                       const Spacer(),
                     SizedBox(
                       width: isMobile ? null : _Dimensions.textWidth,
-                      child: AnimatedDefaultTextStyle(
-                        duration: const Duration(milliseconds: 200),
-                        curve: Curves.easeInOut,
+                      child: Text(
+                        title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style:
                             (isMobile
                                     ? AppTextStyles.displaySmallMobile
                                     : AppTextStyles.displayLargeDesktop)
                                 .copyWith(
                                   color: titleColor,
-                                  fontSize: isMobile
-                                      ? null
-                                      : (isHovered
-                                            ? _FontSizes.titleHover
-                                            : _FontSizes.title),
+                                  fontSize: isMobile ? null : _FontSizes.title,
                                 ),
-                        child: Text(
-                          title,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
                       ),
                     ),
                     const SizedBox(height: Spacing.xs),
                     SizedBox(
                       width: isMobile ? null : _Dimensions.textWidth,
-                      child: AnimatedDefaultTextStyle(
-                        duration: const Duration(milliseconds: 200),
-                        curve: Curves.easeInOut,
+                      child: Text(
+                        description,
                         style: isMobile
                             ? AppTextStyles.titleMediumMobile.copyWith(
                                 color: colorExtensions?.onSurfaceVariant,
@@ -130,11 +113,8 @@ class ProfileCard extends StatelessWidget {
                             : AppTextStyles.headlineLargeDesktop.copyWith(
                                 color: colorExtensions?.onSurfaceVariant,
                                 fontWeight: FontWeight.w400,
-                                fontSize: isHovered
-                                    ? _FontSizes.descriptionHover
-                                    : _FontSizes.description,
+                                fontSize: _FontSizes.description,
                               ),
-                        child: Text(description),
                       ),
                     ),
                   ],
@@ -157,14 +137,11 @@ extension on ProfileType {
 
 abstract final class _Dimensions {
   static const double iconSize = 120;
-  static const double iconSizeHover = 129;
   static const double mobileIconSize = 60;
   static const double textWidth = 402;
 }
 
 abstract final class _FontSizes {
   static const double title = 48;
-  static const double titleHover = 50.4;
   static const double description = 32;
-  static const double descriptionHover = 33.6;
 }
