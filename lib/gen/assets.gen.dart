@@ -157,13 +157,13 @@ class $AssetsImagesIntroGen {
 class $AssetsImagesOnboardingGen {
   const $AssetsImagesOnboardingGen();
 
-  /// File path: assets/images/onboarding/StarBegginer.png
-  AssetGenImage get starBegginer =>
-      const AssetGenImage('assets/images/onboarding/StarBegginer.png');
+  /// File path: assets/images/onboarding/StarBegginer.svg
+  SvgGenImage get starBegginer =>
+      const SvgGenImage('assets/images/onboarding/StarBegginer.svg');
 
-  /// File path: assets/images/onboarding/StarOptimizer.png
-  AssetGenImage get starOptimizer =>
-      const AssetGenImage('assets/images/onboarding/StarOptimizer.png');
+  /// File path: assets/images/onboarding/StarOptimizer.svg
+  SvgGenImage get starOptimizer =>
+      const SvgGenImage('assets/images/onboarding/StarOptimizer.svg');
 
   /// File path: assets/images/onboarding/checked_option.svg
   SvgGenImage get checkedOption =>
@@ -182,7 +182,7 @@ class $AssetsImagesOnboardingGen {
       const SvgGenImage('assets/images/onboarding/soft_star.svg');
 
   /// List of all assets
-  List<dynamic> get values => [
+  List<SvgGenImage> get values => [
     starBegginer,
     starOptimizer,
     checkedOption,
