@@ -10,6 +10,9 @@ enum AppButtonVariant {
 
   /// Outlined button with primary blue 1.5px border and dark text.
   outlined,
+
+  /// Gradient button with a linear gradient background and white text.
+  gradient,
 }
 
 /// Size variant for [AppButton].
@@ -70,11 +73,13 @@ class AppButton extends StatelessWidget {
     final primary = colors?.primary ?? _Colors.primary;
     final onPrimary = colors?.onPrimary ?? _Colors.onPrimary;
     final onSurface = colors?.onSurface ?? _Colors.onSurface;
+    final gradient = colors?.geniusGradient;
 
     final style = _buttonStyle(
       primary: primary,
       onPrimary: onPrimary,
       onSurface: onSurface,
+      gradient: gradient,
     );
 
     // When loading, disable the button entirely.
@@ -93,6 +98,11 @@ class AppButton extends StatelessWidget {
         child: child,
       ),
       AppButtonVariant.outlined => OutlinedButton(
+        onPressed: effectiveOnPressed,
+        style: style,
+        child: child,
+      ),
+      AppButtonVariant.gradient => FilledButton(
         onPressed: effectiveOnPressed,
         style: style,
         child: child,
@@ -144,6 +154,7 @@ class AppButton extends StatelessWidget {
     required Color primary,
     required Color onPrimary,
     required Color onSurface,
+    required LinearGradient? gradient,
   }) {
     final height = size == AppButtonSize.large
         ? _Dimensions.largeHeight
@@ -163,6 +174,7 @@ class AppButton extends StatelessWidget {
             states,
             primary,
           ),
+          AppButtonVariant.gradient => Colors.transparent,
         };
       }),
       foregroundColor: WidgetStateProperty.resolveWith((states) {
@@ -172,6 +184,7 @@ class AppButton extends StatelessWidget {
         return switch (variant) {
           AppButtonVariant.filled => onPrimary,
           AppButtonVariant.outlined => onSurface,
+          AppButtonVariant.gradient => onPrimary,
         };
       }),
       overlayColor: WidgetStateProperty.all(Colors.transparent),
@@ -210,6 +223,17 @@ class AppButton extends StatelessWidget {
       tapTargetSize: MaterialTapTargetSize.padded,
       textStyle: WidgetStateProperty.all(_Dimensions.labelTextStyle),
       elevation: WidgetStateProperty.all(0),
+      backgroundBuilder: variant == AppButtonVariant.gradient
+          ? (context, states, child) => DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: states.contains(WidgetState.disabled)
+                    ? null
+                    : gradient,
+                borderRadius: BorderRadius.circular(_Dimensions.pillRadius),
+              ),
+              child: child,
+            )
+          : null,
     );
   }
 
