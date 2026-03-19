@@ -1,5 +1,6 @@
 import 'dart:math' show pi;
 
+import 'package:finance_app/app/presentation.dart';
 import 'package:finance_app/gen/assets.gen.dart';
 import 'package:finance_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
@@ -48,13 +49,11 @@ class IntroBadges extends StatelessWidget {
         color: Color(0xFF9DB6F8),
         borderRadius: BorderRadius.all(Radius.circular(150)),
       ),
-      child: const Text(
+      child: Text(
         '2026',
-        style: TextStyle(
-          fontFamily: 'Poppins',
-          color: Color(0xCC000000),
+        style: AppTextStyles.bodyLargeMobile.copyWith(
           fontSize: 18,
-          fontWeight: FontWeight.w600,
+          color: const Color(0xCC000000),
         ),
       ),
     );
@@ -77,11 +76,9 @@ class IntroBadges extends StatelessWidget {
           const SizedBox(width: 6),
           Text(
             context.l10n.genUILabel,
-            style: const TextStyle(
-              fontFamily: 'Poppins',
-              color: Color(0xCC000000),
+            style: AppTextStyles.bodyLargeMobile.copyWith(
               fontSize: 18,
-              fontWeight: FontWeight.w600,
+              color: const Color(0xCC000000),
             ),
           ),
         ],

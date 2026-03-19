@@ -24,7 +24,7 @@ class GetStartedButton extends StatelessWidget {
   final double height;
 
   static const _gradient = LinearGradient(
-    colors: [Color(0xFF2461EB), Color(0xFFD4C6FB)],
+    colors: [Color.fromRGBO(36, 97, 235, 1), Color(0xFFD4C6FB)],
   );
 
   @override
@@ -45,10 +45,18 @@ class GetStartedButton extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 70),
               child: Center(
-                child: Text(
-                  label,
-                  style: AppTextStyles.labelLargeDesktop.copyWith(
-                    color: Colors.white,
+                child: ResponsiveScaffold(
+                  mobile: Text(
+                    label,
+                    style: AppTextStyles.labelLargeMobile.copyWith(
+                      color: Colors.white,
+                    ),
+                  ),
+                  desktop: Text(
+                    label,
+                    style: AppTextStyles.labelLargeDesktop.copyWith(
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),

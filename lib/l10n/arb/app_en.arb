@@ -52,11 +52,11 @@
     "@whatWouldYouLikeToFocusLabel": {
         "description": "Label for the dropdown to select the focus of the financial advice"
     },
-    "genUILabel": "Gen UI",
+    "genUILabel": "GenUI",
     "@genUILabel": {
         "description": "Label for the Gen UI text"
     },
-    "introTitlePrefix": "Gen UI ",
+    "introTitlePrefix": "GenUI ",
     "@introTitlePrefix": {
         "description": "Prefix of the intro screen title (before the gradient x VGV text)"
     },

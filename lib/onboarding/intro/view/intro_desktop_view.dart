@@ -233,7 +233,7 @@ class IntroDesktopView extends StatelessWidget {
                 ),
                 const SizedBox(height: 24),
                 SizedBox(
-                  width: 1000,
+                  width: 800,
                   child: Text(
                     l10n.introDescription,
                     textAlign: TextAlign.center,
@@ -244,10 +244,12 @@ class IntroDesktopView extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 48),
-                IntrinsicWidth(
+                SizedBox(
+                  width: 230,
                   child: GetStartedButton(
                     onPressed: onGetStarted,
                     label: l10n.introGetStartedLabel,
+                    height: 50,
                   ),
                 ),
               ],

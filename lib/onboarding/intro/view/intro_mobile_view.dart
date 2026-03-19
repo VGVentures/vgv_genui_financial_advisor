@@ -41,7 +41,7 @@ class IntroMobileView extends StatelessWidget {
             left: 0,
             right: 0,
             child: Assets.images.intro.waveline3.svg(
-              fit: BoxFit.fitWidth,
+              fit: BoxFit.fill,
             ),
           ),
           Positioned(
