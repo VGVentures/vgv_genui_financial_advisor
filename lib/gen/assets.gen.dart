@@ -88,6 +88,9 @@ class $AssetsIconsKickOffGen {
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
+  /// Directory path: assets/images/advisor
+  $AssetsImagesAdvisorGen get advisor => const $AssetsImagesAdvisorGen();
+
   /// Directory path: assets/images/intro
   $AssetsImagesIntroGen get intro => const $AssetsImagesIntroGen();
 
@@ -98,6 +101,21 @@ class $AssetsImagesGen {
   /// Directory path: assets/images/sparkline_cards
   $AssetsImagesSparklineCardsGen get sparklineCards =>
       const $AssetsImagesSparklineCardsGen();
+}
+
+class $AssetsImagesAdvisorGen {
+  const $AssetsImagesAdvisorGen();
+
+  /// File path: assets/images/advisor/advisor_logo.svg
+  SvgGenImage get advisorLogo =>
+      const SvgGenImage('assets/images/advisor/advisor_logo.svg');
+
+  /// File path: assets/images/advisor/restart_icon.svg
+  SvgGenImage get restartIcon =>
+      const SvgGenImage('assets/images/advisor/restart_icon.svg');
+
+  /// List of all assets
+  List<SvgGenImage> get values => [advisorLogo, restartIcon];
 }
 
 class $AssetsImagesIntroGen {
@@ -181,6 +199,14 @@ class $AssetsImagesOnboardingGen {
   SvgGenImage get softStar =>
       const SvgGenImage('assets/images/onboarding/soft_star.svg');
 
+  /// File path: assets/images/onboarding/star_beginner.svg
+  SvgGenImage get starBeginner =>
+      const SvgGenImage('assets/images/onboarding/star_beginner.svg');
+
+  /// File path: assets/images/onboarding/star_optimizer.svg
+  SvgGenImage get starOptimizer =>
+      const SvgGenImage('assets/images/onboarding/star_optimizer.svg');
+
   /// List of all assets
   List<SvgGenImage> get values => [
     starBegginer,
@@ -189,6 +215,8 @@ class $AssetsImagesOnboardingGen {
     editPencil,
     rightArrow,
     softStar,
+    starBeginner,
+    starOptimizer,
   ];
 }
 
