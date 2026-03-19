@@ -90,7 +90,7 @@ abstract class AppTextStyles {
   /// Label Large - Desktop: 16px, Medium, lineHeight: 20, letterSpacing: -0.15
   static const TextStyle labelLargeDesktop = TextStyle(
     fontFamily: FontFamily.poppins,
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: FontWeight.w500,
     height: 20 / 16,
     letterSpacing: -0.15,
