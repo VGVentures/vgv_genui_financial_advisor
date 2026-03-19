@@ -199,7 +199,7 @@ class IntroDesktopView extends StatelessWidget {
             child: Center(child: IntroBadges()),
           ),
           Align(
-            alignment: const Alignment(0, 0.2),
+            alignment: const Alignment(0, 0.3),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [

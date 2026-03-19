@@ -72,9 +72,12 @@ class IntroBadges extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Assets.images.intro.softstargradient.svg(
-            width: 22,
-            height: 22,
+          Transform.rotate(
+            angle: -0.3,
+            child: Assets.images.intro.softstargradient.svg(
+              width: 28,
+              height: 28,
+            ),
           ),
           const SizedBox(width: 6),
           Text(
