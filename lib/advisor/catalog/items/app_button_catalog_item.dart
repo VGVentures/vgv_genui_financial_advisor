@@ -1,9 +1,9 @@
-import 'package:finance_app/app/presentation.dart';
-import 'package:finance_app/chat/bloc/bloc.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:genui/genui.dart';
 import 'package:json_schema_builder/json_schema_builder.dart';
+import 'package:vgv_genui_financial_advisor/advisor/bloc/bloc.dart';
+import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
 
 final _schema = S.object(
   description:
@@ -117,7 +117,7 @@ class _OneTapAppButtonState extends State<_OneTapAppButton> {
 
   @override
   Widget build(BuildContext context) {
-    final blocLoading = context.select<ChatBloc, bool>(
+    final blocLoading = context.select<AdvisorBloc, bool>(
       (bloc) => bloc.state.isLoading,
     );
 
@@ -125,12 +125,15 @@ class _OneTapAppButtonState extends State<_OneTapAppButton> {
       dataContext: widget.dataContext,
       value: widget.labelValue,
       builder: (context, label) {
-        return AppButton(
-          label: label ?? '',
-          variant: widget.variant,
-          size: widget.size,
-          isLoading: widget.isLoading || (_tapped && blocLoading),
-          onPressed: _tapped ? null : _onPressed,
+        return Padding(
+          padding: const EdgeInsets.only(top: Spacing.md),
+          child: AppButton(
+            label: label ?? '',
+            variant: widget.variant,
+            size: widget.size,
+            isLoading: widget.isLoading || (_tapped && blocLoading),
+            onPressed: _tapped ? null : _onPressed,
+          ),
         );
       },
     );
