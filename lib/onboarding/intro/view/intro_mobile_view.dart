@@ -111,9 +111,9 @@ class IntroMobileView extends StatelessWidget {
           SafeArea(
             child: Column(
               children: [
-                const Spacer(flex: 3),
+                const Spacer(),
                 const IntroBadges(),
-                const SizedBox(height: 24),
+                const SizedBox(height: 55),
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -138,14 +138,14 @@ class IntroMobileView extends StatelessWidget {
                   child: Text(
                     l10n.introDescription,
                     textAlign: TextAlign.center,
-                    style: AppTextStyles.headlineMediumMobile.copyWith(
-                      fontWeight: FontWeight.w500,
+                    style: AppTextStyles.titleMediumMobile.copyWith(
                       color: Theme.of(context).colorScheme.onInverseSurface,
                     ),
                   ),
                 ),
-                const Spacer(),
-                IntrinsicWidth(
+                const SizedBox(height: Spacing.xxl),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: Spacing.md),
                   child: GetStartedButton(
                     onPressed: onGetStarted,
                     label: l10n.introGetStartedLabel,

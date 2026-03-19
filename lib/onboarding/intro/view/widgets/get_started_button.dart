@@ -10,7 +10,7 @@ class GetStartedButton extends StatelessWidget {
   const GetStartedButton({
     required this.onPressed,
     this.label = 'Get Started',
-    this.height = 48,
+    this.height = 65,
     super.key,
   });
 
