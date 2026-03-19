@@ -1,11 +1,11 @@
 name: vgv_genui_financial_advisor
-description: A Very Good Project created by Very Good CLI.
+description: Very Good Ventures Financial Advisor, powered by GenUI.
 version: 1.0.0+1
 publish_to: none
 
 environment:
   sdk: ^3.11.0
-  flutter: ^3.38.1
+  flutter: ^3.41.4
 
 dependencies:
   bloc: ^9.2.0
