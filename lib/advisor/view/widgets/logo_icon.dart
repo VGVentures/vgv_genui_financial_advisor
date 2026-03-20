@@ -1,5 +1,5 @@
-import 'package:finance_app/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
+import 'package:vgv_genui_financial_advisor/gen/assets.gen.dart';
 
 class LogoIcon extends StatelessWidget {
   const LogoIcon({

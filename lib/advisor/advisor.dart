@@ -5,3 +5,6 @@ export 'repository/advisor_repository.dart';
 export 'view/advisor_page.dart';
 export 'view/advisor_view.dart';
 export 'view/widgets/advisor_message_bubble.dart';
+export 'view/widgets/gradient_chip.dart';
+export 'view/widgets/logo_icon.dart';
+export 'view/widgets/profile_chip.dart';

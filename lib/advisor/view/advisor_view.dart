@@ -5,10 +5,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:genui/genui.dart';
 import 'package:vgv_genui_financial_advisor/advisor/advisor.dart';
 import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
+import 'package:vgv_genui_financial_advisor/gen/assets.gen.dart';
 import 'package:vgv_genui_financial_advisor/gen/fonts.gen.dart';
 import 'package:vgv_genui_financial_advisor/l10n/l10n.dart';
-import 'package:vgv_genui_financial_advisor/onboarding/intro/view/intro_page.dart';
-import 'package:vgv_genui_financial_advisor/onboarding/pick_profile/models/profile_type.dart';
+import 'package:vgv_genui_financial_advisor/onboarding/intro/intro.dart';
+import 'package:vgv_genui_financial_advisor/onboarding/pick_profile/pick_profile.dart';
 
 class AdvisorView extends StatefulWidget {
   const AdvisorView({required this.profileType, super.key});
