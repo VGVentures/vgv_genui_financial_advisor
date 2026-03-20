@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
+import 'package:vgv_genui_financial_advisor/gen/assets.gen.dart';
 import 'package:vgv_genui_financial_advisor/l10n/l10n.dart';
 import 'package:vgv_genui_financial_advisor/onboarding/pick_profile/pick_profile.dart';
 
@@ -72,14 +73,10 @@ class ProfileCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
-                      width: isMobile
+                    profileType.iconWidget(
+                      size: isMobile
                           ? _Dimensions.mobileIconSize
                           : _Dimensions.iconSize,
-                      height: isMobile
-                          ? _Dimensions.mobileIconSize
-                          : _Dimensions.iconSize,
-                      child: Image.asset(profileType.iconAsset),
                     ),
                     if (isMobile)
                       const SizedBox(height: Spacing.xl)
@@ -129,9 +126,15 @@ class ProfileCard extends StatelessWidget {
 }
 
 extension on ProfileType {
-  String get iconAsset => switch (this) {
-    ProfileType.beginner => 'assets/images/onboarding/StarBegginer.png',
-    ProfileType.optimizer => 'assets/images/onboarding/StarOptimizer.png',
+  Widget iconWidget({required double size}) => switch (this) {
+    ProfileType.beginner => Assets.images.onboarding.starBegginer.svg(
+      width: size,
+      height: size,
+    ),
+    ProfileType.optimizer => Assets.images.onboarding.starOptimizer.svg(
+      width: size,
+      height: size,
+    ),
   };
 }
 
