@@ -6,5 +6,6 @@ Future<void> main() async {
   await bootstrap(
     errorReportingRepository: DevErrorReportingRepository(),
     analyticsRepositoryFactory: DevAnalyticsRepository.new,
+    showDevMenu: true,
   );
 }

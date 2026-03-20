@@ -112,8 +112,8 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
           projectId: finance-app-4a537
 
-  deploy_dev_menu:
-    name: Deploy Dev Menu
+  deploy_development:
+    name: Deploy Development
     needs: [setup, verify_and_test]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
@@ -129,7 +129,7 @@ jobs:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
           channelId: live
-          target: dev-menu
+          target: develop
           projectId: finance-app-4a537
 
   distribute_android:
