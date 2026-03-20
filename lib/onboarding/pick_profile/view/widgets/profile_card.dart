@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
+import 'package:vgv_genui_financial_advisor/gen/assets.gen.dart';
 import 'package:vgv_genui_financial_advisor/l10n/l10n.dart';
 import 'package:vgv_genui_financial_advisor/onboarding/pick_profile/pick_profile.dart';
 
@@ -72,39 +73,46 @@ class ProfileCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Image.asset(
-                      profileType.iconAsset,
-                      width: isMobile
-                          ? _Dimensions.mobileIconSize
-                          : _Dimensions.iconSize,
-                      height: isMobile
+                    profileType.iconWidget(
+                      size: isMobile
                           ? _Dimensions.mobileIconSize
                           : _Dimensions.iconSize,
                     ),
+                    if (isMobile)
+                      const SizedBox(height: Spacing.xl)
+                    else
+                      const Spacer(),
                     SizedBox(
-                      height: isMobile ? Spacing.xl : (Spacing.xxxl * 3),
-                    ),
-                    Text(
-                      title,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style:
-                          (isMobile
-                                  ? AppTextStyles.displaySmallMobile
-                                  : AppTextStyles.displayLargeDesktop)
-                              .copyWith(color: titleColor),
+                      width: isMobile ? null : _Dimensions.textWidth,
+                      child: Text(
+                        title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style:
+                            (isMobile
+                                    ? AppTextStyles.displaySmallMobile
+                                    : AppTextStyles.displayLargeDesktop)
+                                .copyWith(
+                                  color: titleColor,
+                                  fontSize: isMobile ? null : _FontSizes.title,
+                                ),
+                      ),
                     ),
                     const SizedBox(height: Spacing.xs),
-                    Text(
-                      description,
-                      style: isMobile
-                          ? AppTextStyles.titleMediumMobile.copyWith(
-                              color: colorExtensions?.onSurfaceVariant,
-                            )
-                          : AppTextStyles.headlineLargeDesktop.copyWith(
-                              color: colorExtensions?.onSurfaceVariant,
-                              fontWeight: FontWeight.w400,
-                            ),
+                    SizedBox(
+                      width: isMobile ? null : _Dimensions.textWidth,
+                      child: Text(
+                        description,
+                        style: isMobile
+                            ? AppTextStyles.titleMediumMobile.copyWith(
+                                color: colorExtensions?.onSurfaceVariant,
+                              )
+                            : AppTextStyles.headlineLargeDesktop.copyWith(
+                                color: colorExtensions?.onSurfaceVariant,
+                                fontWeight: FontWeight.w400,
+                                fontSize: _FontSizes.description,
+                              ),
+                      ),
                     ),
                   ],
                 ),
@@ -118,13 +126,25 @@ class ProfileCard extends StatelessWidget {
 }
 
 extension on ProfileType {
-  String get iconAsset => switch (this) {
-    ProfileType.beginner => 'assets/images/onboarding/StarBegginer.png',
-    ProfileType.optimizer => 'assets/images/onboarding/StarOptimizer.png',
+  Widget iconWidget({required double size}) => switch (this) {
+    ProfileType.beginner => Assets.images.onboarding.starBegginer.svg(
+      width: size,
+      height: size,
+    ),
+    ProfileType.optimizer => Assets.images.onboarding.starOptimizer.svg(
+      width: size,
+      height: size,
+    ),
   };
 }
 
 abstract final class _Dimensions {
   static const double iconSize = 120;
   static const double mobileIconSize = 60;
+  static const double textWidth = 402;
+}
+
+abstract final class _FontSizes {
+  static const double title = 48;
+  static const double description = 32;
 }
