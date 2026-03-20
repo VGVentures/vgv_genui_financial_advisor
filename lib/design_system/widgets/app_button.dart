@@ -139,11 +139,11 @@ class AppButton extends StatelessWidget {
       children: [
         if (leadingIcon != null) ...[
           leadingIcon!,
-          const SizedBox(width: Spacing.xs),
+          SizedBox(width: label.isNotEmpty ? Spacing.xs : 0),
         ],
         Text(label),
         if (trailingIcon != null) ...[
-          const SizedBox(width: Spacing.xs),
+          SizedBox(width: label.isNotEmpty ? Spacing.xs : 0),
           trailingIcon!,
         ],
       ],
