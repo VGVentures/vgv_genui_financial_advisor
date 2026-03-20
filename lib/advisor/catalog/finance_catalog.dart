@@ -61,7 +61,7 @@ Use HorizontalBar to compare spending categories against a prior period or exter
 
 Use ProgressBar to show spending categories vs. a fixed budget limit. Set value to actual spend and total to the budget. Do not use when the reference is a prior period — use HorizontalBar instead.
 
-Use the SparklineCard widget to display a financial category with its amount and a trend sparkline. Set trend to "positive" (green) for growing values, "negative" (red) for declining values, or "stable" (blue) for flat trends.
+Use the SparklineCard widget to display a horizontal row of financial categories, each with an amount and a trend sparkline. Always provide at least 2 cards in the "cards" array so the row fills the available width. Set trend to "positive" (green) for growing values, "negative" (red) for declining values, or "stable" (blue) for flat trends.
 
 Use the TransactionList widget to display a list of recent transactions. Each item shows a title (merchant name), description (category), and formatted amount. Optionally include an "action" on each item to show a View button — when tapped, it dispatches the specified event with the item's data as context.
 ''';
