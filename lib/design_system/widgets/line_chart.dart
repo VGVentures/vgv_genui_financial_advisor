@@ -276,7 +276,7 @@ class _LineChartState extends State<LineChart> {
                 : Offset.zero;
             return fl.SideTitleWidget(
               meta: meta,
-              space: 12,
+              space: Spacing.sm,
               child: FractionalTranslation(
                 translation: offset,
                 child: Text(widget.points[i].xLabel, style: xStyle),
@@ -304,7 +304,7 @@ class _LineChartState extends State<LineChart> {
             }
             return fl.SideTitleWidget(
               meta: meta,
-              space: 12,
+              space: Spacing.sm,
               child: Text(widget.yAxisLabels[i], style: yStyle),
             );
           },
@@ -389,8 +389,8 @@ abstract final class _LineChartDimensions {
   static const double tooltipWidth = 130;
   static const double tooltipHeight = 44;
   static const double tooltipRadius = 8;
-  static const double tooltipOffsetX = 8;
-  static const double tooltipOffsetY = 8;
+  static const double tooltipOffsetX = Spacing.xs;
+  static const double tooltipOffsetY = Spacing.xs;
 }
 
 abstract final class _LineChartColors {
