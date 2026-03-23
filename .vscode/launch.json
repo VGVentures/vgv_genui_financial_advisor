@@ -14,7 +14,8 @@
         "development",
         "--target",
         "lib/main_development.dart",
-        "--dart-define-from-file=.env"
+        "--dart-define-from-file=.env",
+        "--dart-define=APP_CHECK_DEBUG_TOKEN=${env:APP_CHECK_DEBUG_TOKEN}",
       ]
     },
     {

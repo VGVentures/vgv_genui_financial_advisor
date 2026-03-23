@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "finance-app-4a537"
+  },
+  "targets": {
+    "finance-app-4a537": {
+      "hosting": {
+        "dev-menu": [
+          "finance-app-develop"
+        ]
+      }
+    }
+  }
+}
