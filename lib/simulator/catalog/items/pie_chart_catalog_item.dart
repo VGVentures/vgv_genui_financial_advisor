@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:genui/genui.dart';
-import 'package:json_schema_builder/json_schema_builder.dart';
 import 'package:genui_life_goal_simulator/design_system/design_system.dart';
+import 'package:json_schema_builder/json_schema_builder.dart';
 
 const _colorValues = [
   'pink',
