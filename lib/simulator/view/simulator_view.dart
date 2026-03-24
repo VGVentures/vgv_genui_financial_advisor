@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:genui/genui.dart';
 import 'package:genui_life_goal_simulator/design_system/design_system.dart';
+import 'package:genui_life_goal_simulator/gen/assets.gen.dart';
 import 'package:genui_life_goal_simulator/gen/fonts.gen.dart';
 import 'package:genui_life_goal_simulator/l10n/l10n.dart';
 import 'package:genui_life_goal_simulator/onboarding/intro/view/intro_page.dart';
 import 'package:genui_life_goal_simulator/onboarding/pick_profile/models/profile_type.dart';
+import 'package:genui_life_goal_simulator/onboarding/want_to_focus/view/widgets/loading_overlay.dart';
 import 'package:genui_life_goal_simulator/simulator/simulator.dart';
 
 class SimulatorView extends StatefulWidget {
@@ -52,28 +54,56 @@ class _SimulatorViewState extends State<SimulatorView> {
         buildWhen: (previous, current) =>
             previous.pages != current.pages ||
             previous.host != current.host ||
-            previous.isLoading != current.isLoading,
+            previous.isLoading != current.isLoading ||
+            previous.hasPendingNavigation != current.hasPendingNavigation ||
+            previous.showLoadingOverlay != current.showLoadingOverlay,
         builder: (context, state) {
-          return Column(
+          // The user has visible content if they've already navigated
+          // to a page (i.e., there are older pages beyond the pending one).
+          final hasVisibleContent =
+              state.hasPendingNavigation && state.pages.length > 1;
+          final showThinking =
+              state.pages.isEmpty ||
+              state.host == null ||
+              (state.hasPendingNavigation && !hasVisibleContent);
+
+          return Stack(
             children: [
-              Expanded(
-                child: state.pages.isEmpty || state.host == null
-                    ? const Center(child: CircularProgressIndicator())
-                    : _FadingPageView(
-                        controller: _pageController,
-                        itemCount: state.pages.length,
-                        itemBuilder: (context, pageIndex) {
-                          final messages = state.pages[pageIndex];
-                          return _SimulatorPage(
-                            messages: messages,
-                            host: state.host!,
-                            isLoading:
-                                state.isLoading &&
-                                pageIndex == state.currentPageIndex,
-                          );
-                        },
-                      ),
+              Column(
+                children: [
+                  Expanded(
+                    child: state.pages.isEmpty || state.host == null
+                        ? const SizedBox.shrink()
+                        : _FadingPageView(
+                            controller: _pageController,
+                            itemCount: state.pages.length,
+                            itemBuilder: (context, pageIndex) {
+                              final messages = state.pages[pageIndex];
+                              return _SimulatorPage(
+                                messages: messages,
+                                host: state.host!,
+                                isLoading:
+                                    state.isLoading &&
+                                    pageIndex == state.currentPageIndex,
+                              );
+                            },
+                          ),
+                  ),
+                ],
               ),
+              if (showThinking)
+                const Center(
+                  child: ThinkingAnimation(
+                    key: Key('simulator_thinking'),
+                  ),
+                ),
+              if (state.showLoadingOverlay)
+                Positioned.fill(
+                  child: LoadingOverlay(
+                    animationPath: Assets.animations.loading,
+                    onAnimationComplete: () {},
+                  ),
+                ),
             ],
           );
         },
@@ -544,7 +574,7 @@ class _SimulatorPageState extends State<_SimulatorPage>
           AnimatedOpacity(
             opacity: _hasFinishedLoading ? 0.0 : 1.0,
             duration: const Duration(milliseconds: 200),
-            child: const Center(child: CircularProgressIndicator()),
+            child: const SizedBox.shrink(),
           ),
       ],
     );

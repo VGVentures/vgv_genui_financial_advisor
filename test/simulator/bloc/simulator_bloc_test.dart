@@ -50,8 +50,28 @@ void main() {
       expect(state.pages, isEmpty);
       expect(state.currentPageIndex, 0);
       expect(state.isLoading, isFalse);
+      expect(state.showLoadingOverlay, isFalse);
       expect(state.host, isNull);
       expect(state.error, isNull);
+    });
+
+    test('isContentReady is true when active with pages and host', () {
+      final state = SimulatorState(
+        status: SimulatorStatus.active,
+        pages: const [
+          [AiTextDisplayMessage('hi')],
+        ],
+        host: _MockSurfaceHost(),
+      );
+      expect(state.isContentReady, isTrue);
+    });
+
+    test('isContentReady is false when pages are empty', () {
+      final state = SimulatorState(
+        status: SimulatorStatus.active,
+        host: _MockSurfaceHost(),
+      );
+      expect(state.isContentReady, isFalse);
     });
 
     test('copyWith returns new instance with overridden values', () {
@@ -295,6 +315,33 @@ void main() {
       act: (bloc) => bloc.add(const SimulatorLoading(isLoading: true)),
       expect: () => [
         isA<SimulatorState>().having((s) => s.isLoading, 'isLoading', isTrue),
+      ],
+    );
+
+    blocTest<SimulatorBloc, SimulatorState>(
+      '$SimulatorLoadingOverlayRequested sets showLoadingOverlay to true',
+      build: () => SimulatorBloc(simulatorRepository: repository),
+      act: (bloc) => bloc.add(const SimulatorLoadingOverlayRequested()),
+      expect: () => [
+        isA<SimulatorState>().having(
+          (s) => s.showLoadingOverlay,
+          'showLoadingOverlay',
+          isTrue,
+        ),
+      ],
+    );
+
+    blocTest<SimulatorBloc, SimulatorState>(
+      '$SimulatorSurfaceReceived clears showLoadingOverlay',
+      build: () => SimulatorBloc(simulatorRepository: repository),
+      seed: () => const SimulatorState(showLoadingOverlay: true),
+      act: (bloc) => bloc.add(const SimulatorSurfaceReceived('surface_1')),
+      expect: () => [
+        isA<SimulatorState>().having(
+          (s) => s.showLoadingOverlay,
+          'showLoadingOverlay',
+          isFalse,
+        ),
       ],
     );
 

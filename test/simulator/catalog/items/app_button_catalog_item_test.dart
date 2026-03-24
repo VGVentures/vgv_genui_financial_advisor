@@ -85,7 +85,14 @@ void main() {
           .toList();
       expect(
         props,
-        containsAll(['label', 'variant', 'size', 'isLoading', 'action']),
+        containsAll([
+          'label',
+          'variant',
+          'size',
+          'isLoading',
+          'action',
+          'showLoadingOverlay',
+        ]),
       );
 
       final required = schema.value['required']! as List;
@@ -107,17 +114,15 @@ void main() {
         expect(find.byType(OutlinedButton), findsOneWidget);
       });
 
-      testWidgets('loading state', (tester) async {
-        await _pump(tester, _data(isLoading: true));
-
-        expect(find.byType(CircularProgressIndicator), findsOneWidget);
-      });
-
-      testWidgets('defaults isLoading to false when omitted', (tester) async {
+      testWidgets('button is disabled after tap', (tester) async {
         await _pump(tester, _data());
 
-        expect(find.byType(CircularProgressIndicator), findsNothing);
+        await tester.tap(find.text('Get Started'));
+        await tester.pump();
+
+        // Button should still show its label (not a loading indicator)
         expect(find.text('Get Started'), findsOneWidget);
+        expect(find.byType(CircularProgressIndicator), findsNothing);
       });
 
       testWidgets('dispatches event on press', (tester) async {

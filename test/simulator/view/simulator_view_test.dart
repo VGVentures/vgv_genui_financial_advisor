@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genui/genui.dart';
+import 'package:genui_life_goal_simulator/design_system/design_system.dart';
 import 'package:genui_life_goal_simulator/l10n/l10n.dart';
 import 'package:genui_life_goal_simulator/onboarding/pick_profile/models/profile_type.dart';
 import 'package:genui_life_goal_simulator/simulator/simulator.dart';
@@ -52,7 +53,7 @@ void main() {
     ) async {
       await tester.pumpSimulatorView(bloc);
 
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      expect(find.byType(ThinkingAnimation), findsOneWidget);
     });
 
     testWidgets('renders message bubbles in PageView when pages exist', (
@@ -73,7 +74,7 @@ void main() {
       expect(find.byType(PageView), findsOneWidget);
       expect(find.byType(SimulatorMessageBubble), findsOneWidget);
       // Loading spinner should not be shown when pages exist
-      expect(find.byType(CircularProgressIndicator), findsNothing);
+      expect(find.byType(ThinkingAnimation), findsNothing);
     });
 
     testWidgets('shows app bar with logo and profile chip', (tester) async {
@@ -92,12 +93,13 @@ void main() {
           status: SimulatorStatus.active,
           pages: const [[]],
           isLoading: true,
+          hasPendingNavigation: true,
           host: host,
         ),
       );
       await tester.pumpSimulatorView(bloc);
 
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      expect(find.byType(ThinkingAnimation), findsOneWidget);
     });
 
     testWidgets('rebuilds when pages change', (tester) async {

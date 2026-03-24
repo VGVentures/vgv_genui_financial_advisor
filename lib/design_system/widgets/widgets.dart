@@ -18,4 +18,5 @@ export 'ranked_table.dart';
 export 'responsive_scaffold.dart';
 export 'section_header.dart';
 export 'sparkline_card.dart';
+export 'thinking_animation.dart';
 export 'transaction_list.dart';

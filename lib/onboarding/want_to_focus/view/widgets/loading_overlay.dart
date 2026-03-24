@@ -27,58 +27,74 @@ class LoadingOverlay extends StatefulWidget {
 }
 
 class _LoadingOverlayState extends State<LoadingOverlay> {
-  late final FileLoader _fileLoader;
+  FileLoader? _fileLoader;
   Timer? _completionTimer;
+  bool _completed = false;
 
   @override
   void initState() {
     super.initState();
-    _fileLoader = FileLoader.fromAsset(
-      widget.animationPath,
-      riveFactory: Factory.flutter,
-    );
+
+    // Always start a fallback timer so the overlay eventually completes
+    // even if the Rive animation fails to load.
+    _completionTimer = Timer(widget.animationDuration, _complete);
+
+    try {
+      _fileLoader = FileLoader.fromAsset(
+        widget.animationPath,
+        riveFactory: Factory.flutter,
+      );
+    } on Object {
+      // Rive native library not available — fallback timer will handle it.
+    }
+  }
+
+  void _complete() {
+    if (_completed || !mounted) return;
+    _completed = true;
+    widget.onAnimationComplete();
   }
 
   void _onLoaded(RiveLoaded state) {
-    _completionTimer = Timer(widget.animationDuration, () {
-      if (mounted) widget.onAnimationComplete();
-    });
-
     state.controller.stateMachine.addEventListener(_onRiveEvent);
   }
 
   void _onRiveEvent(Event event) {
     if (event case GeneralEvent(name: 'complete' || 'exit' || 'done')) {
       _completionTimer?.cancel();
-      if (mounted) widget.onAnimationComplete();
+      _complete();
     }
   }
 
   @override
   void dispose() {
     _completionTimer?.cancel();
-    _fileLoader.dispose();
+    _fileLoader?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final fileLoader = _fileLoader;
+
     return ColoredBox(
       color: widget.backgroundColor.withValues(
         alpha: widget.backgroundOpacity,
       ),
       child: Center(
-        child: RiveWidgetBuilder(
-          fileLoader: _fileLoader,
-          onLoaded: _onLoaded,
-          builder: (context, state) => switch (state) {
-            RiveLoaded(:final controller) => RiveWidget(
-              controller: controller,
-            ),
-            RiveLoading() => const SizedBox.shrink(),
-            RiveFailed() => const SizedBox.shrink(),
-          },
-        ),
+        child: fileLoader == null
+            ? const SizedBox.shrink()
+            : RiveWidgetBuilder(
+                fileLoader: fileLoader,
+                onLoaded: _onLoaded,
+                builder: (context, state) => switch (state) {
+                  RiveLoaded(:final controller) => RiveWidget(
+                    controller: controller,
+                  ),
+                  RiveLoading() => const SizedBox.shrink(),
+                  RiveFailed() => const SizedBox.shrink(),
+                },
+              ),
       ),
     );
   }

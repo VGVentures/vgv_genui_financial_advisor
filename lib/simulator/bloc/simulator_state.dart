@@ -36,6 +36,8 @@ final class SimulatorState {
     this.pages = const [],
     this.currentPageIndex = 0,
     this.isLoading = false,
+    this.hasPendingNavigation = false,
+    this.showLoadingOverlay = false,
     this.host,
     this.error,
   });
@@ -49,14 +51,21 @@ final class SimulatorState {
   final int currentPageIndex;
 
   final bool isLoading;
+  final bool hasPendingNavigation;
+  final bool showLoadingOverlay;
   final SurfaceHost? host;
   final String? error;
+
+  bool get isContentReady =>
+      status == SimulatorStatus.active && pages.isNotEmpty && host != null;
 
   SimulatorState copyWith({
     SimulatorStatus? status,
     List<List<DisplayMessage>>? pages,
     int? currentPageIndex,
     bool? isLoading,
+    bool? hasPendingNavigation,
+    bool? showLoadingOverlay,
     SurfaceHost? host,
     String? error,
   }) {
@@ -65,6 +74,8 @@ final class SimulatorState {
       pages: pages ?? this.pages,
       currentPageIndex: currentPageIndex ?? this.currentPageIndex,
       isLoading: isLoading ?? this.isLoading,
+      hasPendingNavigation: hasPendingNavigation ?? this.hasPendingNavigation,
+      showLoadingOverlay: showLoadingOverlay ?? this.showLoadingOverlay,
       host: host ?? this.host,
       error: error ?? this.error,
     );

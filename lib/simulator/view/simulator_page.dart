@@ -23,25 +23,25 @@ class SimulatorPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) =>
-          (simulatorBloc ??
-                SimulatorBloc(
-                  simulatorRepository: SimulatorRepository(
-                    chatModel: FirebaseAIChatModel(
-                      name: 'gemini-3-flash-preview',
-                      backend: FirebaseAIBackend.googleAI,
-                      appCheck: FirebaseAppCheck.instance,
-                      useLimitedUseAppCheckTokens: true,
-                    ),
-                  ),
-                ))
-            ..add(
-              SimulatorStarted(
-                profileType: profileType,
-                focusOptions: focusOptions,
-                customOption: customOption,
-              ),
+      create: (_) {
+        if (simulatorBloc != null) return simulatorBloc!;
+        return SimulatorBloc(
+          simulatorRepository: SimulatorRepository(
+            chatModel: FirebaseAIChatModel(
+              name: 'gemini-3-flash-preview',
+              backend: FirebaseAIBackend.googleAI,
+              appCheck: FirebaseAppCheck.instance,
+              useLimitedUseAppCheckTokens: true,
             ),
+          ),
+        )..add(
+          SimulatorStarted(
+            profileType: profileType,
+            focusOptions: focusOptions,
+            customOption: customOption,
+          ),
+        );
+      },
       child: SimulatorView(profileType: profileType),
     );
   }
