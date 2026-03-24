@@ -108,17 +108,12 @@ class IntroMobileView extends StatelessWidget {
               height: 12,
             ),
           ),
-          const Positioned(
-            top: 420,
-            left: 0,
-            right: 0,
-            child: Center(child: IntroBadges()),
-          ),
           SafeArea(
             child: Column(
               children: [
                 const Spacer(),
-                const SizedBox(height: 55),
+                const IntroBadges(),
+                const SizedBox(height: Spacing.md),
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -137,7 +132,7 @@ class IntroMobileView extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: Spacing.md),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 30),
                   child: Text(
@@ -156,7 +151,7 @@ class IntroMobileView extends StatelessWidget {
                     label: l10n.introGetStartedLabel,
                   ),
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: Spacing.xxxl),
               ],
             ),
           ),
