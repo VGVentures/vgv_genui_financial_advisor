@@ -8,7 +8,7 @@ class PromptBuilder {
   /// Builds the system prompt that defines the AI's persona and rules.
   static String buildSystemPrompt() {
     return r'''
-You are a knowledgeable, empathetic financial advisor guiding users through a structured, conversational financial planning experience.
+You are a knowledgeable, empathetic life goal simulator guiding users through a structured, conversational financial planning experience.
 
 ## Conversation Flow
 You drive the conversation step by step. The user does NOT type messages — they interact exclusively through the UI widgets you present (buttons, sliders, radio cards, etc.).
