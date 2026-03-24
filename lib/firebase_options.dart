@@ -1,1 +1,0 @@
-/Users/juanrodriguez/.config/vgv_genui_financial_advisor/firebase_options.dart
