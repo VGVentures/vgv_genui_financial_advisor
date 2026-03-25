@@ -153,6 +153,10 @@ class $AssetsImagesIntroGen {
   SvgGenImage get waveline2 =>
       const SvgGenImage('assets/images/intro/waveline2.svg');
 
+  /// File path: assets/images/intro/vgvunicorn.svg
+  SvgGenImage get vgvunicorn =>
+      const SvgGenImage('assets/images/intro/vgvunicorn.svg');
+
   /// File path: assets/images/intro/waveline3.svg
   SvgGenImage get waveline3 =>
       const SvgGenImage('assets/images/intro/waveline3.svg');
@@ -166,6 +170,7 @@ class $AssetsImagesIntroGen {
     star7,
     star8,
     star9,
+    vgvunicorn,
     waveline1,
     waveline2,
     waveline3,
