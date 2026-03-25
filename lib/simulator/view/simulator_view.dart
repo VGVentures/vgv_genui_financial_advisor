@@ -9,7 +9,6 @@ import 'package:genui_life_goal_simulator/gen/fonts.gen.dart';
 import 'package:genui_life_goal_simulator/l10n/l10n.dart';
 import 'package:genui_life_goal_simulator/onboarding/intro/view/intro_page.dart';
 import 'package:genui_life_goal_simulator/onboarding/pick_profile/models/profile_type.dart';
-import 'package:genui_life_goal_simulator/onboarding/want_to_focus/view/widgets/loading_overlay.dart';
 import 'package:genui_life_goal_simulator/simulator/simulator.dart';
 
 class SimulatorView extends StatefulWidget {
@@ -95,11 +94,8 @@ class _SimulatorViewState extends State<SimulatorView> {
                   ),
                 ),
               if (state.showLoadingOverlay)
-                Positioned.fill(
-                  child: LoadingOverlay(
-                    animationPath: Assets.animations.loading,
-                    onAnimationComplete: () {},
-                  ),
+                const Positioned.fill(
+                  child: LoadingOverlay(),
                 ),
             ],
           );

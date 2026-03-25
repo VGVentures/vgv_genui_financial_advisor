@@ -1,25 +1,33 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:genui_life_goal_simulator/gen/assets.gen.dart';
 import 'package:rive/rive.dart';
 
+/// {@template loading_overlay}
+/// A full-screen overlay that plays the large Rive loading animation.
+///
+/// Used for major transitions like navigating to the summary dashboard.
+/// Falls back to a plain background if the Rive native library is unavailable.
+/// {@endtemplate}
 class LoadingOverlay extends StatefulWidget {
+  /// {@macro loading_overlay}
   const LoadingOverlay({
-    required this.animationPath,
-    required this.onAnimationComplete,
+    this.onAnimationComplete,
     this.backgroundColor = Colors.black,
     this.backgroundOpacity = 0.5,
     this.animationDuration = const Duration(seconds: 3),
     super.key,
   });
 
-  final String animationPath;
-  final VoidCallback onAnimationComplete;
+  /// Called when the animation completes or the fallback timer fires.
+  final VoidCallback? onAnimationComplete;
+
   final Color backgroundColor;
   final double backgroundOpacity;
 
-  /// How long the overlay stays visible before navigating.
-  /// Adjust this to match the duration of your Rive animation.
+  /// How long the overlay stays visible before calling [onAnimationComplete].
+  /// Acts as a fallback if the Rive animation doesn't fire a completion event.
   final Duration animationDuration;
 
   @override
@@ -41,7 +49,7 @@ class _LoadingOverlayState extends State<LoadingOverlay> {
 
     try {
       _fileLoader = FileLoader.fromAsset(
-        widget.animationPath,
+        Assets.animations.loading,
         riveFactory: Factory.flutter,
       );
     } on Object {
@@ -52,7 +60,7 @@ class _LoadingOverlayState extends State<LoadingOverlay> {
   void _complete() {
     if (_completed || !mounted) return;
     _completed = true;
-    widget.onAnimationComplete();
+    widget.onAnimationComplete?.call();
   }
 
   void _onLoaded(RiveLoaded state) {
