@@ -5,13 +5,15 @@ import 'package:vgv_genui_financial_advisor/design_system/design_system.dart';
 
 final _schema = S.object(
   description:
-      'A horizontal row of sparkline cards showing financial categories with '
+      'A horizontal (desktop) or vertical (mobile) set of sparkline cards '
+      'showing financial categories with '
       'amounts and trend sparklines. Always provide at least 2 cards. '
       'String fields support data model bindings via {"path": "..."}.',
   properties: {
     'cards': S.list(
       description:
-          'List of sparkline cards to display side by side. '
+          'List of sparkline cards to display side by side on desktop, '
+          'or stacked vertically on mobile. '
           'Minimum 2 cards required. '
           'Provide at least 2.',
       items: S.object(
