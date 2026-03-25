@@ -24,14 +24,6 @@ class SimulatorBloc extends Bloc<SimulatorEvent, SimulatorState> {
   final SimulatorRepository _repository;
   StreamSubscription<SimulatorConversationEvent>? _eventSubscription;
 
-  /// Index of a page whose navigation has been deferred until loading finishes.
-  ///
-  /// When a new surface arrives while `isLoading` is `true`, the page is added
-  /// to `pages` but `currentPageIndex` is not updated. Instead, this field
-  /// records the target index. When loading completes, `currentPageIndex` is
-  /// updated and this field is cleared, triggering the page transition.
-  int? _pendingPageIndex;
-
   Future<void> _onStarted(
     SimulatorStarted event,
     Emitter<SimulatorState> emit,
@@ -80,10 +72,10 @@ class SimulatorBloc extends Bloc<SimulatorEvent, SimulatorState> {
     );
 
     if (existingPageIndex != -1) {
-      _pendingPageIndex = null;
       emit(
         state.copyWith(
           currentPageIndex: existingPageIndex,
+          pendingPageIndex: clearPendingPageIndex,
           showLoadingOverlay: false,
         ),
       );
@@ -98,15 +90,13 @@ class SimulatorBloc extends Bloc<SimulatorEvent, SimulatorState> {
       // Defer navigation until loading finishes so the current page
       // stays visible with the thinking animation until content is ready.
       if (state.isLoading) {
-        _pendingPageIndex = newIndex;
-        emit(state.copyWith(pages: pages, hasPendingNavigation: true));
+        emit(state.copyWith(pages: pages, pendingPageIndex: newIndex));
       } else {
-        _pendingPageIndex = null;
         emit(
           state.copyWith(
             pages: pages,
             currentPageIndex: newIndex,
-            hasPendingNavigation: false,
+            pendingPageIndex: clearPendingPageIndex,
             showLoadingOverlay: false,
           ),
         );
@@ -168,13 +158,11 @@ class SimulatorBloc extends Bloc<SimulatorEvent, SimulatorState> {
     emit(state.copyWith(isLoading: event.isLoading));
 
     // If loading just finished and there's a deferred page, navigate now.
-    if (!event.isLoading && _pendingPageIndex != null) {
-      final index = _pendingPageIndex!;
-      _pendingPageIndex = null;
+    if (!event.isLoading && state.hasPendingNavigation) {
       emit(
         state.copyWith(
-          currentPageIndex: index,
-          hasPendingNavigation: false,
+          currentPageIndex: state.pendingPageIndex,
+          pendingPageIndex: clearPendingPageIndex,
           showLoadingOverlay: false,
         ),
       );

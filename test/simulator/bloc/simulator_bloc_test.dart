@@ -342,9 +342,9 @@ void main() {
             .having((s) => s.pages, 'pages', hasLength(2))
             .having((s) => s.currentPageIndex, 'currentPageIndex', 0)
             .having(
-              (s) => s.hasPendingNavigation,
-              'hasPendingNavigation',
-              isTrue,
+              (s) => s.pendingPageIndex,
+              'pendingPageIndex',
+              1,
             ),
       ],
     );
@@ -375,9 +375,9 @@ void main() {
         isA<SimulatorState>()
             .having((s) => s.currentPageIndex, 'currentPageIndex', 1)
             .having(
-              (s) => s.hasPendingNavigation,
-              'hasPendingNavigation',
-              isFalse,
+              (s) => s.pendingPageIndex,
+              'pendingPageIndex',
+              isNull,
             )
             .having(
               (s) => s.showLoadingOverlay,

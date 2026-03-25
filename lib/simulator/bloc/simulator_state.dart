@@ -26,6 +26,10 @@ final class AiSurfaceDisplayMessage extends DisplayMessage {
   final String surfaceId;
 }
 
+/// Sentinel used by `SimulatorState.copyWith` to explicitly clear
+/// `pendingPageIndex` to `null`.
+const clearPendingPageIndex = -1;
+
 /// {@template simulator_state}
 /// State for the simulator bloc.
 /// {@endtemplate}
@@ -36,7 +40,7 @@ final class SimulatorState {
     this.pages = const [],
     this.currentPageIndex = 0,
     this.isLoading = false,
-    this.hasPendingNavigation = false,
+    this.pendingPageIndex,
     this.showLoadingOverlay = false,
     this.host,
     this.error,
@@ -53,12 +57,18 @@ final class SimulatorState {
   /// Whether the LLM is currently processing a request.
   final bool isLoading;
 
-  /// Whether a new surface has been received but navigation has been deferred
-  /// until the LLM finishes loading. This keeps the current page visible
-  /// (with its button's thinking animation) while the next page's content is
-  /// being generated. The view uses this to show the outer thinking animation
-  /// during the initial load.
-  final bool hasPendingNavigation;
+  /// The index of a page whose navigation has been deferred until the LLM
+  /// finishes loading. When non-null, the current page stays visible (with its
+  /// button's thinking animation) while the next page's content is being
+  /// generated. The view uses this to show the outer thinking animation during
+  /// the initial load.
+  ///
+  /// When loading completes, [currentPageIndex] is updated to this value and
+  /// [pendingPageIndex] is cleared.
+  final int? pendingPageIndex;
+
+  /// Whether there is a deferred page navigation waiting to complete.
+  bool get hasPendingNavigation => pendingPageIndex != null;
 
   /// Whether the full-screen loading overlay with the large Rive animation
   /// should be shown. Set to `true` when an AppButton with
@@ -69,12 +79,15 @@ final class SimulatorState {
   final SurfaceHost? host;
   final String? error;
 
+  /// Returns a copy of this state with the given fields replaced.
+  ///
+  /// To clear [pendingPageIndex] to `null`, pass [clearPendingPageIndex].
   SimulatorState copyWith({
     SimulatorStatus? status,
     List<List<DisplayMessage>>? pages,
     int? currentPageIndex,
     bool? isLoading,
-    bool? hasPendingNavigation,
+    int? pendingPageIndex,
     bool? showLoadingOverlay,
     SurfaceHost? host,
     String? error,
@@ -84,7 +97,9 @@ final class SimulatorState {
       pages: pages ?? this.pages,
       currentPageIndex: currentPageIndex ?? this.currentPageIndex,
       isLoading: isLoading ?? this.isLoading,
-      hasPendingNavigation: hasPendingNavigation ?? this.hasPendingNavigation,
+      pendingPageIndex: pendingPageIndex == clearPendingPageIndex
+          ? null
+          : pendingPageIndex ?? this.pendingPageIndex,
       showLoadingOverlay: showLoadingOverlay ?? this.showLoadingOverlay,
       host: host ?? this.host,
       error: error ?? this.error,

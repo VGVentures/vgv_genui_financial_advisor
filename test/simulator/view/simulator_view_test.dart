@@ -93,7 +93,7 @@ void main() {
           status: SimulatorStatus.active,
           pages: const [[]],
           isLoading: true,
-          hasPendingNavigation: true,
+          pendingPageIndex: 0,
           host: host,
         ),
       );
@@ -113,7 +113,7 @@ void main() {
               [AiTextDisplayMessage('Hello')],
             ],
             isLoading: true,
-            hasPendingNavigation: true,
+            pendingPageIndex: 0,
             host: host,
           ),
         );
@@ -136,7 +136,7 @@ void main() {
               [AiTextDisplayMessage('World')],
             ],
             isLoading: true,
-            hasPendingNavigation: true,
+            pendingPageIndex: 0,
             host: host,
           ),
         );
