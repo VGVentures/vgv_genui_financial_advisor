@@ -36,14 +36,14 @@ class HeaderSelector extends StatelessWidget {
       child: Wrap(
         spacing: Spacing.xs,
         runSpacing: Spacing.xs,
-      children: [
-        for (final (i, label) in options.indexed)
-          _HeaderSelectorChip(
-            label: label,
-            isSelected: i == selectedIndex,
-            onTap: () => onChanged(i),
-          ),
-      ],
+        children: [
+          for (final (i, label) in options.indexed)
+            _HeaderSelectorChip(
+              label: label,
+              isSelected: i == selectedIndex,
+              onTap: () => onChanged(i),
+            ),
+        ],
       ),
     );
   }
