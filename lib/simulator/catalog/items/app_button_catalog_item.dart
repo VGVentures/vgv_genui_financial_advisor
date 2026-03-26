@@ -134,32 +134,24 @@ class _OneTapAppButtonState extends State<_OneTapAppButton> {
       dataContext: widget.dataContext,
       value: widget.labelValue,
       builder: (context, label) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: Spacing.md),
-              child: AppButton(
-                label: label ?? '',
-                variant: widget.variant,
-                size: widget.size,
-                onPressed: _tapped ? null : _onPressed,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: Spacing.md),
-              child: AnimatedOpacity(
-                opacity: showThinking ? 1 : 0,
-                curve: Curves.easeInOut,
-                duration: const Duration(milliseconds: 400),
-                child: const ThinkingAnimation(
+        return AnimatedSwitcher(
+          switchInCurve: Curves.easeOut,
+          switchOutCurve: Curves.easeIn,
+          duration: const Duration(milliseconds: 500),
+          child: showThinking
+              ? const ThinkingAnimation(
                   alignment: Alignment.topLeft,
                   width: 150,
+                )
+              : Padding(
+                  padding: const EdgeInsets.only(top: Spacing.md),
+                  child: AppButton(
+                    label: label ?? '',
+                    variant: widget.variant,
+                    size: widget.size,
+                    onPressed: _tapped ? null : _onPressed,
+                  ),
                 ),
-              ),
-            ),
-          ],
         );
       },
     );
