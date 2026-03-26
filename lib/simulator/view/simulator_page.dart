@@ -2,6 +2,7 @@ import 'package:dartantic_firebase_ai/dartantic_firebase_ai.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:genui_life_goal_simulator/error_reporting/error_reporting.dart';
 import 'package:genui_life_goal_simulator/onboarding/pick_profile/models/profile_type.dart';
 import 'package:genui_life_goal_simulator/onboarding/want_to_focus/models/focus_option.dart';
 import 'package:genui_life_goal_simulator/simulator/simulator.dart';
@@ -33,6 +34,7 @@ class SimulatorPage extends StatelessWidget {
               appCheck: FirebaseAppCheck.instance,
               useLimitedUseAppCheckTokens: true,
             ),
+            errorReporting: context.read<ErrorReportingRepository>(),
           ),
         )..add(
           SimulatorStarted(
