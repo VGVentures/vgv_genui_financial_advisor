@@ -7,20 +7,23 @@ import 'package:rive/rive.dart';
 ///
 /// Used as a loading indicator within the simulator dashboard while
 /// the AI is generating content.
+///
+/// Set [width] to control the size. The height is derived from the
+/// Rive artboard's aspect ratio.
 /// {@endtemplate}
 class ThinkingAnimation extends StatefulWidget {
   /// {@macro thinking_animation}
   const ThinkingAnimation({
-    this.size = 200,
+    this.width = 200,
     this.alignment = Alignment.center,
     super.key,
   });
 
+  /// The width of the animation.
+  final double width;
+
   /// The alignment of the animation.
   final Alignment alignment;
-
-  /// The width and height of the animation.
-  final double size;
 
   @override
   State<ThinkingAnimation> createState() => _ThinkingAnimationState();
@@ -52,21 +55,21 @@ class _ThinkingAnimationState extends State<ThinkingAnimation> {
   Widget build(BuildContext context) {
     final fileLoader = _fileLoader;
     if (fileLoader == null) {
-      return SizedBox(
-        width: widget.size,
-        height: widget.size,
-      );
+      return SizedBox(width: widget.width);
     }
 
     return SizedBox(
-      width: widget.size,
-      height: widget.size,
+      width: widget.width,
       child: RiveWidgetBuilder(
         fileLoader: fileLoader,
         builder: (context, state) => switch (state) {
-          RiveLoaded(:final controller) => RiveWidget(
-            controller: controller,
-            alignment: widget.alignment,
+          RiveLoaded(:final controller) => AspectRatio(
+            aspectRatio: controller.artboard.bounds.width /
+                controller.artboard.bounds.height,
+            child: RiveWidget(
+              controller: controller,
+              alignment: widget.alignment,
+            ),
           ),
           RiveLoading() => const SizedBox.shrink(),
           RiveFailed() => const SizedBox.shrink(),

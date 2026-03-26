@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:genui/genui.dart';
 import 'package:genui_life_goal_simulator/design_system/design_system.dart';
+import 'package:genui_life_goal_simulator/simulator/bloc/bloc.dart';
 import 'package:json_schema_builder/json_schema_builder.dart';
 
 final _schema = S.object(
@@ -73,22 +75,10 @@ final metricCardsItem = CatalogItem(
         cardData: c,
         deltaDirection: _parseDeltaDirection(c['deltaDirection'] as String?),
         isSelected: c['isSelected'] as bool? ?? false,
-        onTap: action == null
-            ? null
-            : () {
-                if (action case {'event': final Map<String, Object?> event}) {
-                  ctx.dispatchEvent(
-                    UserActionEvent(
-                      name: event['name']! as String,
-                      sourceComponentId: ctx.id,
-                      context: {
-                        ...event['context'] as Map<String, Object?>? ?? {},
-                        'index': index,
-                      },
-                    ),
-                  );
-                }
-              },
+        action: action,
+        dispatchEvent: ctx.dispatchEvent,
+        componentId: ctx.id,
+        index: index,
       );
     }).toList();
 
@@ -102,7 +92,10 @@ class _BoundMetricCard extends StatelessWidget {
     required this.cardData,
     required this.deltaDirection,
     required this.isSelected,
-    required this.onTap,
+    required this.action,
+    required this.dispatchEvent,
+    required this.componentId,
+    required this.index,
     super.key,
   });
 
@@ -110,10 +103,36 @@ class _BoundMetricCard extends StatelessWidget {
   final Map<String, Object?> cardData;
   final MetricDeltaDirection? deltaDirection;
   final bool isSelected;
-  final VoidCallback? onTap;
+  final Map<String, Object?>? action;
+  final DispatchEventCallback dispatchEvent;
+  final String componentId;
+  final int index;
+
+  VoidCallback? _buildOnTap(bool isLoading) {
+    if (action == null || isLoading) return null;
+    return () {
+      if (action case {'event': final Map<String, Object?> event}) {
+        dispatchEvent(
+          UserActionEvent(
+            name: event['name']! as String,
+            sourceComponentId: componentId,
+            context: {
+              ...event['context'] as Map<String, Object?>? ?? {},
+              'index': index,
+            },
+          ),
+        );
+      }
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
+    final isLoading = context.select<SimulatorBloc, bool>(
+      (bloc) => bloc.state.isLoading,
+    );
+    final onTap = _buildOnTap(isLoading);
+
     return BoundString(
       dataContext: dataContext,
       value: cardData['label'],

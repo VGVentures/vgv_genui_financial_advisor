@@ -155,6 +155,7 @@ class _OneTapAppButtonState extends State<_OneTapAppButton> {
                 duration: const Duration(milliseconds: 400),
                 child: const ThinkingAnimation(
                   alignment: Alignment.topLeft,
+                  width: 150,
                 ),
               ),
             ),

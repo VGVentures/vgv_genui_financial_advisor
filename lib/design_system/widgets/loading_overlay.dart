@@ -96,8 +96,11 @@ class _LoadingOverlayState extends State<LoadingOverlay> {
                 fileLoader: fileLoader,
                 onLoaded: _onLoaded,
                 builder: (context, state) => switch (state) {
-                  RiveLoaded(:final controller) => RiveWidget(
-                    controller: controller,
+                  RiveLoaded(:final controller) => SizedBox(
+                    width: 500,
+                    child: RiveWidget(
+                      controller: controller,
+                    ),
                   ),
                   RiveLoading() => const SizedBox.shrink(),
                   RiveFailed() => const SizedBox.shrink(),

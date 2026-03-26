@@ -4,7 +4,7 @@ import 'package:genui_life_goal_simulator/design_system/design_system.dart';
 
 void main() {
   group(ThinkingAnimation, () {
-    testWidgets('renders with default size', (tester) async {
+    testWidgets('renders with default width', (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(body: ThinkingAnimation()),
@@ -15,19 +15,17 @@ void main() {
 
       final sizedBox = tester.widget<SizedBox>(find.byType(SizedBox).first);
       expect(sizedBox.width, 200);
-      expect(sizedBox.height, 200);
     });
 
-    testWidgets('renders with custom size', (tester) async {
+    testWidgets('renders with custom width', (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
-          home: Scaffold(body: ThinkingAnimation(size: 100)),
+          home: Scaffold(body: ThinkingAnimation(width: 100)),
         ),
       );
 
       final sizedBox = tester.widget<SizedBox>(find.byType(SizedBox).first);
       expect(sizedBox.width, 100);
-      expect(sizedBox.height, 100);
     });
 
     testWidgets('degrades gracefully when Rive is unavailable', (
