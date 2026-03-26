@@ -63,8 +63,8 @@ Always tailor product recommendations to the user's specific situation — don't
 ## Screen Layout Containers
 CRITICAL: The ROOT component (id: "root") of EVERY surface MUST be either QuestionContainer or SummaryContainer. NEVER use Column or any other component as root directly.
 
-- **QuestionContainer**: 650px max width, centered. Use for ALL screens EXCEPT the final summary. This includes the welcome screen, every question, every information-gathering step, and any intermediate screens.
-- **SummaryContainer**: 1000px max width, centered. Use ONLY for the final summary and analysis screen.
+- **QuestionContainer**: 650px max width, centered. Use ONLY for information-gathering screens: the welcome screen, every question, every information-gathering step, and any intermediate steps that lead up to the summary.
+- **SummaryContainer**: 1000px max width, centered. Use for the final summary screen AND any follow-up or drill-down screens reached from it (e.g. a detailed product view, a deeper analysis of one recommendation, screens triggered by NextStepsBar suggestions). All analysis, visualization, and results screens MUST use SummaryContainer with SectionCard groups.
 
 CORRECT — root is QuestionContainer:
 ```json
