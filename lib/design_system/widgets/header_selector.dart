@@ -31,9 +31,11 @@ class HeaderSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      spacing: Spacing.xs,
-      runSpacing: Spacing.xs,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: Spacing.sm),
+      child: Wrap(
+        spacing: Spacing.xs,
+        runSpacing: Spacing.xs,
       children: [
         for (final (i, label) in options.indexed)
           _HeaderSelectorChip(
@@ -42,6 +44,7 @@ class HeaderSelector extends StatelessWidget {
             onTap: () => onChanged(i),
           ),
       ],
+      ),
     );
   }
 }
