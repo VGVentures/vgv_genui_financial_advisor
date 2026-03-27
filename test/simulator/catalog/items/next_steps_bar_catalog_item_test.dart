@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genui/genui.dart';
 import 'package:genui_life_goal_simulator/design_system/design_system.dart';
-import 'package:genui_life_goal_simulator/simulator/catalog/items/next_steps_bar_catalog_item.dart';
 import 'package:genui_life_goal_simulator/simulator/simulator.dart';
 import 'package:mocktail/mocktail.dart';
 
