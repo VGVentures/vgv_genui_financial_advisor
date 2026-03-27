@@ -25,18 +25,10 @@ final _schema = S.object(
                 'Optional context line below the value (e.g. "vs last month").',
           ),
           'delta': A2uiSchemas.stringReference(
-            description: 'Optional delta text (e.g. "+1.2%").',
-          ),
-          'deltaDirection': S.string(
             description:
-                'Colour of the delta indicator based on whether the change '
-                'is financially favorable or unfavorable — NOT based on the '
-                'sign of the number. '
-                '"positive" = green (good outcome, e.g. savings up, '
-                'spending down, debt reduced). '
-                '"negative" = red (bad outcome, e.g. overspent, '
-                'savings down, income dropped).',
-            enumValues: ['positive', 'negative'],
+                'Optional delta text. Must start with "+" or "-" '
+                r'(e.g. "+1.2%", "-$80"). '
+                'The colour is derived automatically from the sign.',
           ),
           'isSelected': S.boolean(
             description: 'Whether the card is in the selected state.',
@@ -52,12 +44,11 @@ final _schema = S.object(
   required: ['cards'],
 );
 
-MetricDeltaDirection? _parseDeltaDirection(String? value) {
-  return switch (value) {
-    'positive' => MetricDeltaDirection.positive,
-    'negative' => MetricDeltaDirection.negative,
-    _ => null,
-  };
+MetricDeltaDirection? _deltaDirectionFromSign(String? delta) {
+  if (delta == null) return null;
+  if (delta.startsWith('+')) return MetricDeltaDirection.positive;
+  if (delta.startsWith('-')) return MetricDeltaDirection.negative;
+  return null;
 }
 
 /// CatalogItem that renders a [MetricCardsLayout] of [MetricCard] widgets.
@@ -78,7 +69,6 @@ final metricCardsItem = CatalogItem(
         key: ValueKey('metric_card_$index'),
         dataContext: ctx.dataContext,
         cardData: c,
-        deltaDirection: _parseDeltaDirection(c['deltaDirection'] as String?),
         isSelected: c['isSelected'] as bool? ?? false,
         onTap: action == null
             ? null
@@ -107,7 +97,6 @@ class _BoundMetricCard extends StatelessWidget {
   const _BoundMetricCard({
     required this.dataContext,
     required this.cardData,
-    required this.deltaDirection,
     required this.isSelected,
     required this.onTap,
     super.key,
@@ -115,7 +104,6 @@ class _BoundMetricCard extends StatelessWidget {
 
   final DataContext dataContext;
   final Map<String, Object?> cardData;
-  final MetricDeltaDirection? deltaDirection;
   final bool isSelected;
   final VoidCallback? onTap;
 
@@ -139,7 +127,6 @@ class _BoundMetricCard extends StatelessWidget {
                     label: label ?? '',
                     value: value ?? '',
                     subtitle: subtitle?.isEmpty ?? true ? null : subtitle,
-                    deltaDirection: deltaDirection,
                     isSelected: isSelected,
                     onTap: onTap,
                   );
@@ -153,7 +140,7 @@ class _BoundMetricCard extends StatelessWidget {
                       value: value ?? '',
                       subtitle: subtitle?.isEmpty ?? true ? null : subtitle,
                       delta: delta,
-                      deltaDirection: deltaDirection,
+                      deltaDirection: _deltaDirectionFromSign(delta),
                       isSelected: isSelected,
                       onTap: onTap,
                     );
