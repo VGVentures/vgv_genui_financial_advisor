@@ -52,9 +52,10 @@ Future<void> _pump(
   WidgetTester tester,
   Map<String, Object?> data, {
   void Function(UiEvent)? dispatchEvent,
+  SimulatorState state = const SimulatorState(),
 }) async {
   final bloc = _MockSimulatorBloc();
-  when(() => bloc.state).thenReturn(const SimulatorState());
+  when(() => bloc.state).thenReturn(state);
   await tester.pumpWidget(
     BlocProvider<SimulatorBloc>.value(
       value: bloc,
@@ -120,6 +121,25 @@ void main() {
         // Button should still show its label (not a loading indicator)
         expect(find.text('Get Started'), findsOneWidget);
         expect(find.byType(CircularProgressIndicator), findsNothing);
+      });
+
+      testWidgets('button is disabled when bloc is loading', (tester) async {
+        final events = <UiEvent>[];
+        await _pump(
+          tester,
+          _data(),
+          state: const SimulatorState(isLoading: true),
+          dispatchEvent: events.add,
+        );
+
+        // Button should render but be disabled (not tappable)
+        expect(find.text('Get Started'), findsOneWidget);
+        expect(find.byType(CircularProgressIndicator), findsNothing);
+
+        // Tapping should not dispatch an event
+        await tester.tap(find.text('Get Started'));
+        await tester.pump();
+        expect(events, isEmpty);
       });
 
       testWidgets('dispatches event on press', (tester) async {

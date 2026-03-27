@@ -126,32 +126,32 @@ class _OneTapAppButtonState extends State<_OneTapAppButton> {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = context.watch<SimulatorBloc>().state;
+    final state = context.watch<SimulatorBloc>().state;
     final showThinking =
-        _tapped && bloc.isLoading && !widget.showLoadingOverlay;
+        _tapped && state.isLoading && !widget.showLoadingOverlay;
 
     return BoundString(
       dataContext: widget.dataContext,
       value: widget.labelValue,
       builder: (context, label) {
-        return AnimatedSwitcher(
-          switchInCurve: Curves.easeOut,
-          switchOutCurve: Curves.easeIn,
-          duration: const Duration(milliseconds: 500),
-          child: showThinking
-              ? const ThinkingAnimation(
-                  alignment: Alignment.topLeft,
-                  width: 150,
-                )
-              : Padding(
-                  padding: const EdgeInsets.only(top: Spacing.md),
-                  child: AppButton(
+        return Padding(
+          padding: const EdgeInsets.only(top: Spacing.md),
+          child: AnimatedSwitcher(
+            switchInCurve: Curves.easeOut,
+            switchOutCurve: Curves.easeIn,
+            duration: const Duration(milliseconds: 500),
+            child: showThinking
+                ? const ThinkingAnimation(
+                    alignment: Alignment.topLeft,
+                    width: 150,
+                  )
+                : AppButton(
                     label: label ?? '',
                     variant: widget.variant,
                     size: widget.size,
-                    onPressed: _tapped ? null : _onPressed,
+                    onPressed: _tapped || state.isLoading ? null : _onPressed,
                   ),
-                ),
+          ),
         );
       },
     );

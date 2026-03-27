@@ -106,7 +106,32 @@ class _NextStepsBarOverlayState extends State<_NextStepsBarOverlay> {
     _overlayEntry = OverlayEntry(
       builder: (_) {
         final colors = Theme.of(context).extension<AppColors>();
-        final showLoading = _tapped || _isLoading;
+        final showThinking = _tapped;
+        final isDisabledByLoading = !_tapped && _isLoading;
+
+        Widget buttons = SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            spacing: Spacing.md,
+            children: widget.suggestions.map((s) {
+              final label = s['label']! as String;
+              return AiButton(
+                text: label,
+                onTap: () => _onTap(label),
+              );
+            }).toList(),
+          ),
+        );
+
+        if (isDisabledByLoading) {
+          buttons = IgnorePointer(
+            child: Opacity(
+              opacity: 0.5,
+              child: buttons,
+            ),
+          );
+        }
 
         return Positioned(
           left: Spacing.md,
@@ -137,22 +162,9 @@ class _NextStepsBarOverlayState extends State<_NextStepsBarOverlay> {
                         ),
                       ],
                     ),
-                    child: showLoading
+                    child: showThinking
                         ? const ThinkingAnimation(width: 150)
-                        : SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              spacing: Spacing.md,
-                              children: widget.suggestions.map((s) {
-                                final label = s['label']! as String;
-                                return AiButton(
-                                  text: label,
-                                  onTap: () => _onTap(label),
-                                );
-                              }).toList(),
-                            ),
-                          ),
+                        : buttons,
                   ),
                 ),
               ),
