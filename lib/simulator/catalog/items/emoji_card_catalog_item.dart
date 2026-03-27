@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:genui/genui.dart';
 import 'package:genui_life_goal_simulator/design_system/design_system.dart';
 import 'package:json_schema_builder/json_schema_builder.dart';
@@ -161,9 +162,11 @@ class _StatefulEmojiCardsState extends State<_StatefulEmojiCards> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          widget.callToAction,
-          style: Theme.of(context).textTheme.bodyMedium,
+        MarkdownBody(
+          data: widget.callToAction,
+          styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
+            p: Theme.of(context).textTheme.bodyMedium,
+          ),
         ),
         const SizedBox(height: Spacing.sm),
         layout,
