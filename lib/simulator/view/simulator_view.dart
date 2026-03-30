@@ -244,40 +244,59 @@ class _ErrorView extends StatelessWidget {
     final onSurfaceVariant =
         colors?.onSurfaceVariant ?? const Color(0xFF5D5F5F);
 
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: Spacing.lg),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Assets.images.advisor.errorSkeleton.svg(),
-            const SizedBox(height: Spacing.xxxl),
-            Text(
-              l10n.errorViewTitle,
-              style: textTheme.headlineMedium?.copyWith(
-                color: onSurfaceVariant,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: Spacing.sm),
-            ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 500),
-              child: Text(
-                l10n.errorViewBody,
-                style: textTheme.bodyLarge?.copyWith(color: onSurfaceVariant),
-                textAlign: TextAlign.center,
+    return Stack(
+      children: [
+        Positioned(
+          top: Spacing.md,
+          left: Spacing.md,
+          child: GestureDetector(
+            onTap: () => Navigator.of(context).pushReplacement(
+              MaterialPageRoute<void>(
+                builder: (_) => const IntroPage(),
               ),
             ),
-            const SizedBox(height: Spacing.lg),
-            AppButton(
-              label: l10n.errorViewTryAgainLabel,
-              variant: AppButtonVariant.gradient,
-              onPressed: () =>
-                  context.read<SimulatorBloc>().add(const SimulatorRetried()),
-            ),
-          ],
+            child: Assets.images.advisor.goBackButton.svg(),
+          ),
         ),
-      ),
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: Spacing.lg),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Assets.images.advisor.errorSkeleton.svg(),
+                const SizedBox(height: Spacing.xxxl),
+                Text(
+                  l10n.errorViewTitle,
+                  style: textTheme.headlineMedium?.copyWith(
+                    color: onSurfaceVariant,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: Spacing.sm),
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 500),
+                  child: Text(
+                    l10n.errorViewBody,
+                    style: textTheme.bodyLarge?.copyWith(
+                      color: onSurfaceVariant,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                const SizedBox(height: Spacing.lg),
+                AppButton(
+                  label: l10n.errorViewTryAgainLabel,
+                  variant: AppButtonVariant.gradient,
+                  onPressed: () => context.read<SimulatorBloc>().add(
+                    const SimulatorRetried(),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
