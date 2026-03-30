@@ -19,7 +19,8 @@ final _schema = S.object(
       description:
           'Short instruction shown above the cards telling the user what '
           'action to take (e.g. "Select all that apply", '
-          '"Choose one option").',
+          '"Choose one option"). '
+          'Plain text only — no markdown formatting.',
     ),
     'selectionMode': S.string(
       description:
@@ -37,7 +38,9 @@ final _schema = S.object(
             description: 'A single emoji character.',
           ),
           'label': A2uiSchemas.stringReference(
-            description: 'Short label shown below the emoji.',
+            description:
+                'Short label shown below the emoji. '
+                'Plain text only — no markdown formatting.',
           ),
           'isSelected': S.boolean(
             description: 'Whether the card starts in the selected state.',
