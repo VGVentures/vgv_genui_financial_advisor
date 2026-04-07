@@ -22,24 +22,38 @@ final _schema = S.object(
           ),
           'subtitle': A2uiSchemas.stringReference(
             description:
-                'Optional context line below the value (e.g. "vs last month").',
+                'Optional context line below the value '
+                '(e.g. "vs last month").',
           ),
-          'delta': A2uiSchemas.stringReference(
-            description: 'Optional delta text (e.g. "+1.2%").',
+          'delta': S.string(
+            description:
+                'Optional short numeric delta including sign and unit. '
+                'Must be a number with a sign and unit ONLY — no words or '
+                r'descriptions (e.g. "+1.2%", "-$80", "+3k"). '
+                r'Wrong: "Commodity hedge needed", "Drawdown: -$61k". '
+                'Use subtitle for any descriptive context instead.',
           ),
           'deltaDirection': S.string(
-            description: 'Colour direction of the delta indicator.',
+            description:
+                'Whether the delta is favorable or unfavorable for the user. '
+                'Controls the colour: "positive" = green, "negative" = red. '
+                'Ignore the sign of the number. Instead ask: '
+                'is the user in a better or worse position because of this? '
+                '"positive" (green): improvement achieved, goal met, '
+                'savings realised, high coverage or utilisation '
+                '(e.g. "-95%" tax-advantaged coverage is green — '
+                'sheltering 95% of surplus is great). '
+                '"negative" (red): problem still exists, gap or deficit '
+                'remaining, target not yet met, overspending '
+                '(e.g. "-18.9%" gap-to-close is red — the shortfall '
+                'still exists; "+7%" fixed-cost ratio above goal is red). '
+                'When in doubt: would a financial advisor highlight this '
+                'in green (good news) or red (needs attention)?',
             enumValues: ['positive', 'negative'],
-          ),
-          'isSelected': S.boolean(
-            description: 'Whether the card is in the selected state.',
           ),
         },
         required: ['label', 'value'],
       ),
-    ),
-    'action': A2uiSchemas.action(
-      description: 'The action to perform when a metric card is tapped.',
     ),
   },
   required: ['cards'],
@@ -55,15 +69,15 @@ MetricDeltaDirection? _parseDeltaDirection(String? value) {
 
 /// CatalogItem that renders a [MetricCardsLayout] of [MetricCard] widgets.
 ///
-/// String fields (`label`, `value`, `subtitle`, `delta`) support data model
+/// String fields (`label`, `value`, `subtitle`) support data model
 /// bindings via `{"path": "..."}` for reactive values.
+/// The `delta` field must be a pre-formatted literal string (e.g. "+1.2%").
 final metricCardsItem = CatalogItem(
   name: 'MetricCard',
   dataSchema: _schema,
   widgetBuilder: (ctx) {
     final json = ctx.data as Map<String, Object?>;
     final rawCards = json['cards']! as List;
-    final action = json['action'] as Map<String, Object?>?;
 
     final cards = rawCards.cast<Map<String, Object?>>().indexed.map((entry) {
       final (index, c) = entry;
@@ -71,24 +85,8 @@ final metricCardsItem = CatalogItem(
         key: ValueKey('metric_card_$index'),
         dataContext: ctx.dataContext,
         cardData: c,
+        delta: c['delta'] as String?,
         deltaDirection: _parseDeltaDirection(c['deltaDirection'] as String?),
-        isSelected: c['isSelected'] as bool? ?? false,
-        onTap: action == null
-            ? null
-            : () {
-                if (action case {'event': final Map<String, Object?> event}) {
-                  ctx.dispatchEvent(
-                    UserActionEvent(
-                      name: event['name']! as String,
-                      sourceComponentId: ctx.id,
-                      context: {
-                        ...event['context'] as Map<String, Object?>? ?? {},
-                        'index': index,
-                      },
-                    ),
-                  );
-                }
-              },
       );
     }).toList();
 
@@ -100,17 +98,15 @@ class _BoundMetricCard extends StatelessWidget {
   const _BoundMetricCard({
     required this.dataContext,
     required this.cardData,
+    required this.delta,
     required this.deltaDirection,
-    required this.isSelected,
-    required this.onTap,
     super.key,
   });
 
   final DataContext dataContext;
   final Map<String, Object?> cardData;
+  final String? delta;
   final MetricDeltaDirection? deltaDirection;
-  final bool isSelected;
-  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -133,8 +129,6 @@ class _BoundMetricCard extends StatelessWidget {
                     value: value ?? '',
                     subtitle: subtitle?.isEmpty ?? true ? null : subtitle,
                     deltaDirection: deltaDirection,
-                    isSelected: isSelected,
-                    onTap: onTap,
                   );
                 }
                 return BoundString(
@@ -147,8 +141,6 @@ class _BoundMetricCard extends StatelessWidget {
                       subtitle: subtitle?.isEmpty ?? true ? null : subtitle,
                       delta: delta,
                       deltaDirection: deltaDirection,
-                      isSelected: isSelected,
-                      onTap: onTap,
                     );
                   },
                 );

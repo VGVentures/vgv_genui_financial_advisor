@@ -106,16 +106,34 @@ class $AssetsImagesGen {
 class $AssetsImagesAdvisorGen {
   const $AssetsImagesAdvisorGen();
 
-  /// File path: assets/images/advisor/advisor_logo.svg
-  SvgGenImage get advisorLogo =>
-      const SvgGenImage('assets/images/advisor/advisor_logo.svg');
+  /// File path: assets/images/advisor/error_skeleton.svg
+  SvgGenImage get errorSkeleton =>
+      const SvgGenImage('assets/images/advisor/error_skeleton.svg');
+
+  /// File path: assets/images/advisor/go_back_button.svg
+  SvgGenImage get goBackButton =>
+      const SvgGenImage('assets/images/advisor/go_back_button.svg');
 
   /// File path: assets/images/advisor/restart_icon.svg
   SvgGenImage get restartIcon =>
       const SvgGenImage('assets/images/advisor/restart_icon.svg');
 
+  /// File path: assets/images/advisor/vgvunicorn_appbar.svg
+  SvgGenImage get vgvunicornAppbar =>
+      const SvgGenImage('assets/images/advisor/vgvunicorn_appbar.svg');
+
+  /// File path: assets/images/advisor/vgvunicorn_appbar_darkmode.svg
+  SvgGenImage get vgvunicornAppbarDarkmode =>
+      const SvgGenImage('assets/images/advisor/vgvunicorn_appbar_darkmode.svg');
+
   /// List of all assets
-  List<SvgGenImage> get values => [advisorLogo, restartIcon];
+  List<SvgGenImage> get values => [
+    errorSkeleton,
+    goBackButton,
+    restartIcon,
+    vgvunicornAppbar,
+    vgvunicornAppbarDarkmode,
+  ];
 }
 
 class $AssetsImagesIntroGen {
@@ -145,6 +163,10 @@ class $AssetsImagesIntroGen {
   /// File path: assets/images/intro/star9.svg
   SvgGenImage get star9 => const SvgGenImage('assets/images/intro/star9.svg');
 
+  /// File path: assets/images/intro/vgvunicorn.svg
+  SvgGenImage get vgvunicorn =>
+      const SvgGenImage('assets/images/intro/vgvunicorn.svg');
+
   /// File path: assets/images/intro/waveline1.svg
   SvgGenImage get waveline1 =>
       const SvgGenImage('assets/images/intro/waveline1.svg');
@@ -166,6 +188,7 @@ class $AssetsImagesIntroGen {
     star7,
     star8,
     star9,
+    vgvunicorn,
     waveline1,
     waveline2,
     waveline3,
