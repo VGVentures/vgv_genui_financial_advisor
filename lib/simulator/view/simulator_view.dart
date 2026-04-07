@@ -53,28 +53,55 @@ class _SimulatorViewState extends State<SimulatorView> {
         buildWhen: (previous, current) =>
             previous.pages != current.pages ||
             previous.host != current.host ||
-            previous.isLoading != current.isLoading,
+            previous.isLoading != current.isLoading ||
+            previous.status != current.status ||
+            previous.hasPendingNavigation != current.hasPendingNavigation ||
+            previous.showLoadingOverlay != current.showLoadingOverlay,
         builder: (context, state) {
-          return Column(
+          if (state.status == SimulatorStatus.error) {
+            return const _ErrorView();
+          }
+
+          // The user has visible content if they've already navigated
+          // to a page (i.e., there are older pages beyond the pending one).
+          final hasVisibleContent =
+              state.hasPendingNavigation && state.pages.length > 1;
+          final showThinking =
+              state.pages.isEmpty ||
+              state.host == null ||
+              (state.hasPendingNavigation && !hasVisibleContent);
+
+          return Stack(
             children: [
-              Expanded(
-                child: state.pages.isEmpty || state.host == null
-                    ? const Center(child: CircularProgressIndicator())
-                    : _FadingPageView(
-                        controller: _pageController,
-                        itemCount: state.pages.length,
-                        itemBuilder: (context, pageIndex) {
-                          final messages = state.pages[pageIndex];
-                          return _SimulatorPage(
-                            messages: messages,
-                            host: state.host!,
-                            isLoading:
-                                state.isLoading &&
-                                pageIndex == state.currentPageIndex,
-                          );
-                        },
-                      ),
+              Column(
+                children: [
+                  Expanded(
+                    child: state.pages.isEmpty || state.host == null
+                        ? const SizedBox.shrink()
+                        : _FadingPageView(
+                            controller: _pageController,
+                            itemCount: state.pages.length,
+                            itemBuilder: (context, pageIndex) {
+                              final messages = state.pages[pageIndex];
+                              return _SimulatorPage(
+                                messages: messages,
+                                host: state.host!,
+                              );
+                            },
+                          ),
+                  ),
+                ],
               ),
+              if (showThinking)
+                const Center(
+                  child: ThinkingAnimation(
+                    key: Key('simulator_thinking'),
+                  ),
+                ),
+              if (state.showLoadingOverlay)
+                const Positioned.fill(
+                  child: LoadingOverlay(),
+                ),
             ],
           );
         },
@@ -105,15 +132,11 @@ class _SimulatorAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
 
     return Container(
-      decoration: responsiveValue<BoxDecoration?>(
-        context,
-        mobile: null,
-        desktop: BoxDecoration(
-          color: const Color(0xFFF9FAFB),
-          border: Border(
-            bottom: BorderSide(
-              color: Colors.black.withValues(alpha: 0.2),
-            ),
+      decoration: BoxDecoration(
+        color: colors?.surface,
+        border: Border(
+          bottom: BorderSide(
+            color: Colors.black.withValues(alpha: 0.2),
           ),
         ),
       ),
@@ -128,7 +151,7 @@ class _SimulatorAppBar extends StatelessWidget implements PreferredSizeWidget {
         child: Row(
           children: [
             // Logo — smaller on mobile
-            LogoIcon(size: isMobile ? 24 : 40),
+            LogoIcon(size: isMobile ? 30 : 40),
             const SizedBox(width: Spacing.xs),
             Text.rich(
               TextSpan(
@@ -230,98 +253,105 @@ class _FadingPageView extends StatelessWidget {
   }
 }
 
-class _SimulatorPage extends StatefulWidget {
+class _ErrorView extends StatelessWidget {
+  const _ErrorView();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final colors = Theme.of(context).extension<AppColors>();
+    final textTheme = AppTextStyles.getResponsiveTextTheme(context);
+    final onSurfaceVariant =
+        colors?.onSurfaceVariant ?? const Color(0xFF5D5F5F);
+
+    return Stack(
+      children: [
+        Positioned(
+          top: Spacing.md,
+          left: Spacing.md,
+          child: GestureDetector(
+            onTap: () => Navigator.of(context).pushReplacement(
+              MaterialPageRoute<void>(
+                builder: (_) => const IntroPage(),
+              ),
+            ),
+            child: Assets.images.advisor.goBackButton.svg(),
+          ),
+        ),
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: Spacing.lg),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Assets.images.advisor.errorSkeleton.svg(),
+                const SizedBox(height: Spacing.xxxl),
+                Text(
+                  l10n.errorViewTitle,
+                  style: textTheme.headlineMedium?.copyWith(
+                    color: onSurfaceVariant,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: Spacing.sm),
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 500),
+                  child: Text(
+                    l10n.errorViewBody,
+                    style: textTheme.bodyLarge?.copyWith(
+                      color: onSurfaceVariant,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                const SizedBox(height: Spacing.lg),
+                AppButton(
+                  label: l10n.errorViewTryAgainLabel,
+                  variant: AppButtonVariant.gradient,
+                  onPressed: () => context.read<SimulatorBloc>().add(
+                    const SimulatorRetried(),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _SimulatorPage extends StatelessWidget {
   const _SimulatorPage({
     required this.messages,
     required this.host,
-    required this.isLoading,
   });
 
   final List<DisplayMessage> messages;
   final SurfaceHost host;
-  final bool isLoading;
-
-  @override
-  State<_SimulatorPage> createState() => _SimulatorPageState();
-}
-
-class _SimulatorPageState extends State<_SimulatorPage>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _fadeController;
-  late final Animation<double> _contentOpacity;
-  bool _hasFinishedLoading = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _fadeController = AnimationController(
-      duration: const Duration(milliseconds: 400),
-      vsync: this,
-    );
-    _contentOpacity = CurvedAnimation(
-      parent: _fadeController,
-      curve: Curves.easeOut,
-    );
-    // If not loading from the start, show content immediately.
-    if (!widget.isLoading) {
-      _hasFinishedLoading = true;
-      _fadeController.value = 1.0;
-    }
-  }
-
-  @override
-  void didUpdateWidget(_SimulatorPage oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    // Detect transition from loading → done.
-    if (oldWidget.isLoading && !widget.isLoading && !_hasFinishedLoading) {
-      _hasFinishedLoading = true;
-      unawaited(_fadeController.forward(from: 0));
-    }
-  }
-
-  @override
-  void dispose() {
-    _fadeController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        // Content — always laid out, visibility controlled by fade.
-        FadeTransition(
-          opacity: _contentOpacity,
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.only(
-              top: 40,
-              bottom: 100,
-              left: Spacing.md,
-              right: Spacing.md,
-            ),
-            child: Center(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  for (final message in widget.messages)
-                    if (message is! UserDisplayMessage)
-                      SimulatorMessageBubble(
-                        message: message,
-                        host: widget.host,
-                      ),
-                ],
-              ),
-            ),
-          ),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.only(
+        top: 40,
+        bottom: 100,
+        left: Spacing.md,
+        right: Spacing.md,
+      ),
+      child: Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            for (final message in messages)
+              if (message is! UserDisplayMessage)
+                SimulatorMessageBubble(
+                  message: message,
+                  host: host,
+                ),
+          ],
         ),
-        // Spinner — fades out as content fades in.
-        if (widget.isLoading || !_hasFinishedLoading)
-          AnimatedOpacity(
-            opacity: _hasFinishedLoading ? 0.0 : 1.0,
-            duration: const Duration(milliseconds: 200),
-            child: const Center(child: CircularProgressIndicator()),
-          ),
-      ],
+      ),
     );
   }
 }

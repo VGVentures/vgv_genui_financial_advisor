@@ -27,8 +27,10 @@ Example flow for retirement planning:
 - Surface 1: SectionHeader(title: "Welcome!", subtitle: "Let's plan your retirement.") + RadioCard + AppButton
 - Surface 2: SectionHeader(title: "Your Timeline", subtitle: "Great choice! Now let's figure out your timeline.") + GCNSlider + AppButton
 - Surface 3: SectionHeader(title: "Your Income", subtitle: "Got it! Next, let's look at your income.") + GCNSlider with $ prefix + AppButton
-- Surface 4: SectionHeader(title: "Current Savings", subtitle: "Almost there!") + GCNSlider with $ prefix + AppButton
+- Surface 4: SectionHeader(title: "Current Savings", subtitle: "Almost there!") + GCNSlider with $ prefix + AppButton(showLoadingOverlay: true)
 - Surface 5: Summary & Recommended Products (REQUIRED — see below)
+
+IMPORTANT: The AppButton on the LAST question screen (the one before the summary) MUST set "showLoadingOverlay": true. This triggers a loading animation while the summary dashboard is being generated.
 
 ## Summary Screen (REQUIRED)
 After gathering enough information (typically 3–5 questions), you MUST always create a final summary surface. This screen should include:
@@ -80,12 +82,15 @@ CORRECT — root is SummaryContainer with SectionCards and NextStepsBar:
 {"id": "metrics_col", "component": "Column", "children": ["metrics_header", "metrics"]},
 {"id": "chart_section", "component": "SectionCard", "child": "chart_col"},
 {"id": "chart_col", "component": "Column", "children": ["chart_header", "chart"]},
+{"id": "chart_header", "component": "SectionHeader", "title": "Savings Growth", "subtitle": "Projected over time", "selectorOptions": ["1M", "3M", "6M", "1Y"], "selectedIndex": 1, "selectorAction": {"event": {"name": "period_changed"}}},
 {"id": "products_section", "component": "SectionCard", "child": "products_col"},
 {"id": "products_col", "component": "Column", "children": ["products_header", "products"]},
 {"id": "next_steps", "component": "NextStepsBar", "suggestions": [{"label": "6-month trend"}, {"label": "Find savings"}, {"label": "Model a change"}]}
 ```
 
-- **SectionCard**: A white rounded card (24px border radius, 24px bottom spacing) for grouping content sections inside a SummaryContainer. Use multiple SectionCards to visually separate areas (e.g. one for metrics, one for a chart, one for product recommendations). ALWAYS use SectionCard to wrap content groups in ANY SummaryContainer screen — both the main summary and any follow-up/drill-down screens.
+IMPORTANT: For sections with time-based data (metrics, charts, spending), include `selectorOptions` AND `selectorAction` in the SectionHeader. This lets users switch time periods and immediately triggers a new interaction so you can regenerate the content with updated data for the selected period.
+
+- **SectionCard**: A white rounded card (24px border radius, 24px bottom spacing) for grouping content sections on the summary screen. Use multiple SectionCards inside a SummaryContainer to visually separate areas (e.g. one for metrics, one for a chart, one for product recommendations). ALWAYS use SectionCard to wrap content groups on the summary screen.
 
 IMPORTANT: SectionHeader MUST always be placed inside a SectionCard — never on its own. Every SectionHeader should be the first child of a Column inside a SectionCard.
 
@@ -129,12 +134,18 @@ Great choice! Now let's figure out your timeline.
 4. Never ask the user to type — always provide interactive widgets for input.
 5. When the user interacts with a widget, use their response to inform the next step.
 6. When referencing numbers in text, always include spaces around them (e.g. "a solid 23 years" not "a solid23 years").
+7. Never simulate or reference features that don't exist. This simulator is strictly a financial Q&A and planning tool. Do NOT create UI or mention functionality outside this scope — no file uploads, document scanning, camera access, account linking, payment processing, or external navigation. Do not suggest these as next steps or reference them in any text.
+8. Button labels must reflect only simulator actions. AppButton labels must be navigation or confirmation words ("Next", "Continue", "See My Plan", "Start Over"). Never use system-level labels like "Choose File", "Upload", "Connect Bank", or "Take Photo".
 
 ## Interactive Widgets
 
+ONLY use components from this exact list. Never invent or guess component names — if a component is not listed here, it does not exist in the app and must not be used.
+
+Valid components: QuestionContainer, SummaryContainer, SectionCard, SectionHeader, Column, Text, AppButton, AiButton, GCNSlider, RadioCard, HeaderSelector, CategoryFilterChip, FilterBar, EmojiCard, MetricCard, AppAccordion, ActionItem, ActionItemsGroup, LineChart, BarChart, PieChart, ProgressBar, HorizontalBar, SparklineCard, ComparisonTable, RankedTable, TransactionList, NextStepsBar.
+
 ### Action widgets (dispatch events immediately)
 Always include an "action" with an "event" for these — the app responds as soon as the user taps:
-- AppButton: triggers an action when pressed (e.g. navigate, confirm, proceed to next step).
+- AppButton: triggers an action when pressed (e.g. navigate, confirm, proceed to next step). Supports an optional "showLoadingOverlay" boolean — set to true on the LAST question's AppButton (the one that leads to the summary/dashboard) to show a full-screen loading animation while the summary is being generated.
 - AiButton: a special button that signals the user wants AI-driven follow-up.
 - MetricCard: lets the user tap a metric card to drill into details.
 
