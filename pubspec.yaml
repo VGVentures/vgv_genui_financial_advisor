@@ -32,13 +32,6 @@ dependencies:
   shared_preferences: ^2.2.0
   streaming_shared_preferences: ^2.0.0
 
-dependency_overrides:
-  genai_primitives:
-    git:
-      url: https://github.com/flutter/genui.git
-      ref: 60c25b073fc7a47e1f356528cb96cc60ef60c5d5
-      path: packages/genai_primitives
-
 dev_dependencies:
   bloc_lint: ^0.4.0
   bloc_test: ^10.0.0
