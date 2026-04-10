@@ -590,13 +590,12 @@ packages:
     source: hosted
     version: "4.0.0"
   genai_primitives:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: "packages/genai_primitives"
-      ref: "60c25b073fc7a47e1f356528cb96cc60ef60c5d5"
-      resolved-ref: "60c25b073fc7a47e1f356528cb96cc60ef60c5d5"
-      url: "https://github.com/flutter/genui.git"
-    source: git
+      name: genai_primitives
+      sha256: "2468ecd2984f32232ab199315e384821c61a198e356828e34b9a5bcf0fda863e"
+      url: "https://pub.dev"
+    source: hosted
     version: "0.2.3"
   genui:
     dependency: "direct main"
@@ -1685,4 +1684,4 @@ packages:
     version: "3.1.3"
 sdks:
   dart: ">=3.11.0 <4.0.0"
-  flutter: ">=3.41.4"
+  flutter: ">=3.41.4 <4.0.0"
