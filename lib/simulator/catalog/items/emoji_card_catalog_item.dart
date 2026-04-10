@@ -195,40 +195,35 @@ class _EmojiCardSurface extends StatelessWidget {
   }
 }
 
-class _BoundEmojiCard extends EmojiCard {
+class _BoundEmojiCard extends StatelessWidget {
   const _BoundEmojiCard({
-    required DataContext dataContext,
-    required Map<String, Object?> cardData,
-    required List<String> selectedLabels,
-    required EmojiCardSelectionMode selectionMode,
-    required String componentId,
+    required this.dataContext,
+    required this.cardData,
+    required this.selectedLabels,
+    required this.selectionMode,
+    required this.componentId,
     super.key,
-  }) : _dataContext = dataContext,
-       _cardData = cardData,
-       _selectedLabels = selectedLabels,
-       _selectionMode = selectionMode,
-       _componentId = componentId,
-       super(emoji: '', label: '');
+  });
 
-  final DataContext _dataContext;
-  final Map<String, Object?> _cardData;
-  final List<String> _selectedLabels;
-  final EmojiCardSelectionMode _selectionMode;
-  final String _componentId;
+  final DataContext dataContext;
+  final Map<String, Object?> cardData;
+  final List<String> selectedLabels;
+  final EmojiCardSelectionMode selectionMode;
+  final String componentId;
 
   @override
   Widget build(BuildContext context) {
     return BoundString(
-      dataContext: _dataContext,
-      value: _cardData['emoji'],
+      dataContext: dataContext,
+      value: cardData['emoji'],
       builder: (context, emoji) {
         return BoundString(
-          dataContext: _dataContext,
-          value: _cardData['label'],
+          dataContext: dataContext,
+          value: cardData['label'],
           builder: (context, labelStr) {
             final label = labelStr ?? '';
             final isSelected =
-                label.isNotEmpty && _selectedLabels.contains(label);
+                label.isNotEmpty && selectedLabels.contains(label);
             return EmojiCard(
               emoji: emoji ?? '',
               label: label,
@@ -237,10 +232,10 @@ class _BoundEmojiCard extends EmojiCard {
                   ? null
                   : () {
                       _toggleEmojiSelection(
-                        dataContext: _dataContext,
-                        componentId: _componentId,
-                        mode: _selectionMode,
-                        currentList: _selectedLabels,
+                        dataContext: dataContext,
+                        componentId: componentId,
+                        mode: selectionMode,
+                        currentList: selectedLabels,
                         toggledLabel: label,
                       );
                     },

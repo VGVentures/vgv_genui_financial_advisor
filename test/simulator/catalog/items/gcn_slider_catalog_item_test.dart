@@ -10,10 +10,9 @@ Map<String, Object?> _data({
   Object value = 450.0,
   double min = 0,
   double max = 1000,
-  String? valueLabel,
+  String? formatter,
   String? minLabel,
   String? maxLabel,
-  String? prefix,
   int? divisions,
   List<String>? splitLabels,
 }) => {
@@ -22,10 +21,9 @@ Map<String, Object?> _data({
   'value': value,
   'min': min,
   'max': max,
-  'valueLabel': valueLabel,
+  'formatter': formatter,
   'minLabel': minLabel,
   'maxLabel': maxLabel,
-  'prefix': prefix,
   'divisions': divisions,
   'splitLabels': splitLabels,
 };
@@ -92,7 +90,7 @@ void main() {
           'value',
           'min',
           'max',
-          'valueLabel',
+          'formatter',
           'minLabel',
           'maxLabel',
           'divisions',
@@ -116,24 +114,49 @@ void main() {
         expect(find.text('Dining • Feb 18'), findsOneWidget);
       });
 
-      testWidgets('with value label', (tester) async {
+      testWidgets('formats value as usd', (tester) async {
         await _pump(
           tester,
-          _data(valueLabel: r'$450', prefix: r'$'),
+          _data(formatter: 'usd', value: 72000.0, max: 100000),
         );
 
-        expect(find.text(r'$450'), findsOneWidget);
+        expect(find.text(r'$72,000'), findsOneWidget);
       });
 
-      testWidgets('shows formatted top-right amount with prefix only', (
-        tester,
-      ) async {
+      testWidgets('formats value as percentage', (tester) async {
         await _pump(
           tester,
-          _data(prefix: r'$', value: 72.0),
+          _data(formatter: 'percentage', value: 10.1, max: 100),
         );
 
-        expect(find.text(r'$72'), findsOneWidget);
+        expect(find.text('10.1%'), findsOneWidget);
+      });
+
+      testWidgets('formats whole percentage without decimal', (tester) async {
+        await _pump(
+          tester,
+          _data(formatter: 'percentage', value: 50.0, max: 100),
+        );
+
+        expect(find.text('50%'), findsOneWidget);
+      });
+
+      testWidgets('formats value as integer', (tester) async {
+        await _pump(
+          tester,
+          _data(formatter: 'integer', value: 42.0),
+        );
+
+        expect(find.text('42'), findsOneWidget);
+      });
+
+      testWidgets('hides value label when formatter is omitted', (
+        tester,
+      ) async {
+        await _pump(tester, _data());
+
+        final slider = tester.widget<GCNSlider>(find.byType(GCNSlider));
+        expect(slider.valueLabel, isNull);
       });
 
       testWidgets('with min and max labels', (tester) async {

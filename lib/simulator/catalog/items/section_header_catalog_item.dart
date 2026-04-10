@@ -170,6 +170,35 @@ class _ActionLockSectionHeaderState extends State<_ActionLockSectionHeader> {
     }
   }
 
+  Widget _buildSectionHeader({
+    required String? title,
+    required String? subtitle,
+    required bool isDisabled,
+    String? selectedOption,
+  }) {
+    final options = widget.selectorOptions;
+    if (options == null || options.isEmpty) {
+      return SectionHeader(
+        title: title ?? '',
+        subtitle: subtitle ?? '',
+      );
+    }
+
+    final idx = _sectionSelectorIndex(
+      options,
+      selectedOption,
+      widget.initialSelectedIndex,
+    );
+
+    return SectionHeader(
+      title: title ?? '',
+      subtitle: subtitle ?? '',
+      selectorOptions: options,
+      selectedIndex: idx,
+      onSelectorChanged: isDisabled ? (_) {} : _onSelectorChanged,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SimulatorBloc, SimulatorState>(
@@ -178,74 +207,44 @@ class _ActionLockSectionHeaderState extends State<_ActionLockSectionHeader> {
       listener: (context, state) => setState(() => _tapped = false),
       builder: (context, state) {
         final isDisabled = _tapped || state.isLoading;
-        final showThinking = _tapped;
-
-        Widget buildSectionHeader(
-          BuildContext context,
-          String? title,
-          String? subtitle, [
-          String? selectedOption,
-        ]) {
-          final options = widget.selectorOptions;
-          if (options == null || options.isEmpty) {
-            return SectionHeader(
-              title: title ?? '',
-              subtitle: subtitle ?? '',
-            );
-          }
-
-          final idx = _sectionSelectorIndex(
-            options,
-            selectedOption,
-            widget.initialSelectedIndex,
-          );
-
-          return SectionHeader(
-            title: title ?? '',
-            subtitle: subtitle ?? '',
-            selectorOptions: options,
-            selectedIndex: idx,
-            onSelectorChanged: isDisabled ? (_) {} : _onSelectorChanged,
-          );
-        }
-
-        Widget sectionHeaderWithTitle(BuildContext context, String? val) {
-          final title = val;
-          return BoundString(
-            dataContext: widget.dataContext,
-            value: widget.subtitleValue,
-            builder: (context, subtitle) {
-              final options = widget.selectorOptions;
-              if (options == null || options.isEmpty) {
-                return buildSectionHeader(
-                  context,
-                  title,
-                  subtitle,
-                );
-              }
-              return BoundString(
-                dataContext: widget.dataContext,
-                value: {'path': '/${widget.componentId}/selectedOption'},
-                builder: (context, selectedOption) {
-                  return buildSectionHeader(
-                    context,
-                    title,
-                    subtitle,
-                    selectedOption,
-                  );
-                },
-              );
-            },
-          );
-        }
+        final options = widget.selectorOptions;
+        final hasSelector = options != null && options.isNotEmpty;
 
         final sectionHeader = BoundString(
           dataContext: widget.dataContext,
           value: widget.titleValue,
-          builder: sectionHeaderWithTitle,
+          builder: (context, title) {
+            return BoundString(
+              dataContext: widget.dataContext,
+              value: widget.subtitleValue,
+              builder: (context, subtitle) {
+                if (!hasSelector) {
+                  return _buildSectionHeader(
+                    title: title,
+                    subtitle: subtitle,
+                    isDisabled: isDisabled,
+                  );
+                }
+                return BoundString(
+                  dataContext: widget.dataContext,
+                  value: {
+                    'path': '/${widget.componentId}/selectedOption',
+                  },
+                  builder: (context, selectedOption) {
+                    return _buildSectionHeader(
+                      title: title,
+                      subtitle: subtitle,
+                      isDisabled: isDisabled,
+                      selectedOption: selectedOption,
+                    );
+                  },
+                );
+              },
+            );
+          },
         );
 
-        if (!showThinking) return sectionHeader;
+        if (!_tapped) return sectionHeader;
 
         return Stack(
           children: [
