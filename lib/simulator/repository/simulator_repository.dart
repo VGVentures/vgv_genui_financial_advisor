@@ -1,10 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:dartantic_firebase_ai/dartantic_firebase_ai.dart';
+import 'package:dartantic_ai/dartantic_ai.dart';
 import 'package:genui/genui.dart';
 import 'package:genui_life_goal_simulator/error_reporting/error_reporting.dart';
-import 'package:genui_life_goal_simulator/simulator/catalog/catalog.dart';
 import 'package:genui_life_goal_simulator/simulator/prompt/prompt.dart'
     as app_prompt;
 import 'package:genui_life_goal_simulator/simulator/repository/simulator_conversation_event.dart';
@@ -12,55 +11,62 @@ import 'package:genui_life_goal_simulator/simulator/repository/simulator_convers
 /// {@template simulator_repository}
 /// Repository that manages the AI life goal simulator conversation.
 ///
-/// Hides the GenUI plumbing (catalog, controller, transport adapter) and
-/// the Firebase AI chat model behind a simple API: [startConversation] and
-/// [sendMessage].
+/// Wraps the Firebase AI chat model and GenUI transport behind a simple API:
+/// [startConversation] and [sendMessage].
+///
+/// The [Catalog] and [SurfaceController] are created by the presentation layer
+/// and passed in — the repository uses them for prompt building and
+/// conversation wiring, but does not own them.
 /// {@endtemplate}
 class SimulatorRepository {
   /// {@macro simulator_repository}
   SimulatorRepository({
-    required FirebaseAIChatModel chatModel,
+    required ChatModel chatModel,
     required ErrorReportingRepository errorReporting,
+    required Catalog catalog,
+    required SurfaceController surfaceController,
   }) : _chatModel = chatModel,
-       _errorReporting = errorReporting;
+       _errorReporting = errorReporting,
+       _catalog = catalog,
+       _surfaceController = surfaceController;
 
-  final FirebaseAIChatModel _chatModel;
+  final ChatModel _chatModel;
   final ErrorReportingRepository _errorReporting;
+  final Catalog _catalog;
+  final SurfaceController _surfaceController;
   Conversation? _conversation;
   StreamSubscription<ConversationEvent>? _eventSubscription;
   final List<ChatMessage> _history = [];
   late String _systemPrompt;
+
+  /// The current step index for history tracking.
+  ///
+  /// Set this when navigating between steps so that [_handleSend] can
+  /// truncate stale future history entries when continuing from a revisited
+  /// step.
+  int currentStep = 0;
 
   final _controller = StreamController<SimulatorConversationEvent>.broadcast();
 
   /// Stream of conversation events (text, surfaces, errors, waiting state).
   Stream<SimulatorConversationEvent> get events => _controller.stream;
 
-  /// The [SurfaceHost] for rendering GenUI surfaces in the presentation layer.
-  ///
-  /// Only available after [startConversation] has been called.
-  SurfaceHost? get surfaceHost => _conversation?.controller;
-
   /// Starts a new conversation with the AI life goal simulator.
   ///
   /// Call [sendMessage] afterwards to send the initial user message.
   Future<void> startConversation() async {
-    final catalog = buildFinanceCatalog();
-
     final genUiPromptBuilder = PromptBuilder.chat(
-      catalog: catalog,
+      catalog: _catalog,
       systemPromptFragments: [
         app_prompt.PromptBuilder.buildSystemPrompt(),
       ],
     );
     _systemPrompt = genUiPromptBuilder.systemPromptJoined();
 
-    final controller = SurfaceController(catalogs: [catalog]);
-
     final adapter = A2uiTransportAdapter(onSend: _handleSend);
 
     _conversation = Conversation(
-      controller: controller,
+      controller: _surfaceController,
       transport: adapter,
     );
 
@@ -109,6 +115,13 @@ class SimulatorRepository {
   }
 
   Future<void> _handleSend(ChatMessage message) async {
+    // If continuing from a revisited step, truncate future history so the
+    // LLM only sees the conversation up to the current step.
+    final expectedLength = (currentStep + 1) * 2;
+    if (_history.length > expectedLength) {
+      _history.removeRange(expectedLength, _history.length);
+    }
+
     _history.add(_convertDataPartsToText(message));
 
     final messages = [

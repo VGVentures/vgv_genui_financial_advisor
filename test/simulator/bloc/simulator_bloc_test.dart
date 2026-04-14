@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:genui/genui.dart';
 import 'package:genui_life_goal_simulator/onboarding/pick_profile/models/profile_type.dart';
 import 'package:genui_life_goal_simulator/onboarding/want_to_focus/models/focus_option.dart';
 import 'package:genui_life_goal_simulator/simulator/bloc/bloc.dart';
@@ -11,8 +10,6 @@ import 'package:genui_life_goal_simulator/simulator/repository/simulator_reposit
 import 'package:mocktail/mocktail.dart';
 
 class _MockSimulatorRepository extends Mock implements SimulatorRepository {}
-
-class _MockSurfaceHost extends Mock implements SurfaceHost {}
 
 const _simulatorStarted = SimulatorStarted(
   profileType: ProfileType.beginner,
@@ -35,7 +32,6 @@ void main() {
     when(() => repository.events).thenAnswer((_) => eventsController.stream);
     when(() => repository.startConversation()).thenAnswer((_) async {});
     when(() => repository.sendMessage(any())).thenAnswer((_) async {});
-    when(() => repository.surfaceHost).thenReturn(_MockSurfaceHost());
     when(() => repository.dispose()).thenAnswer((_) async {});
   });
 
@@ -50,9 +46,16 @@ void main() {
       expect(state.pages, isEmpty);
       expect(state.currentPageIndex, 0);
       expect(state.isLoading, isFalse);
+      expect(state.isNavigatingBack, isFalse);
+      expect(state.pendingPageIndex, isNull);
+      expect(state.hasPendingNavigation, isFalse);
       expect(state.showLoadingOverlay, isFalse);
-      expect(state.host, isNull);
       expect(state.error, isNull);
+    });
+
+    test('hasPendingNavigation is true when pendingPageIndex is set', () {
+      const state = SimulatorState(pendingPageIndex: 2);
+      expect(state.hasPendingNavigation, isTrue);
     });
 
     test('copyWith returns new instance with overridden values', () {
@@ -70,6 +73,12 @@ void main() {
       expect(updated.currentPageIndex, 0);
       expect(updated.isLoading, isTrue);
       expect(updated.error, 'oops');
+    });
+
+    test('copyWith overrides isNavigatingBack', () {
+      const state = SimulatorState();
+      final updated = state.copyWith(isNavigatingBack: true);
+      expect(updated.isNavigatingBack, isTrue);
     });
 
     test('copyWith preserves values when not overridden', () {
@@ -140,6 +149,16 @@ void main() {
       const event = SimulatorErrorOccurred('fail');
       expect(event.message, 'fail');
     });
+
+    test('$SimulatorBackPressed can be constructed', () {
+      const event = SimulatorBackPressed();
+      expect(event, isA<SimulatorEvent>());
+    });
+
+    test('$SimulatorForwardPagesTruncated can be constructed', () {
+      const event = SimulatorForwardPagesTruncated();
+      expect(event, isA<SimulatorEvent>());
+    });
   });
 
   group(SimulatorBloc, () {
@@ -152,12 +171,11 @@ void main() {
     });
 
     blocTest<SimulatorBloc, SimulatorState>(
-      '$SimulatorStarted emits loading, then active with host',
+      '$SimulatorStarted emits loading, then active',
       build: () => SimulatorBloc(simulatorRepository: repository),
       act: (bloc) => bloc.add(_simulatorStarted),
       verify: (bloc) {
         expect(bloc.state.status, SimulatorStatus.active);
-        expect(bloc.state.host, isNotNull);
         verify(() => repository.startConversation()).called(1);
         verify(
           () => repository.sendMessage(any()),
@@ -259,6 +277,9 @@ void main() {
             .having((s) => s.pages, 'pages', hasLength(2))
             .having((s) => s.currentPageIndex, 'currentPageIndex', 0),
       ],
+      verify: (_) {
+        verify(() => repository.currentStep = 0).called(1);
+      },
     );
 
     blocTest<SimulatorBloc, SimulatorState>(
@@ -405,6 +426,270 @@ void main() {
       verify: (_) {
         verify(() => repository.sendMessage('hello')).called(1);
       },
+    );
+
+    group('$SimulatorBackPressed', () {
+      blocTest<SimulatorBloc, SimulatorState>(
+        'decrements currentPageIndex when not on first page',
+        build: () => SimulatorBloc(simulatorRepository: repository),
+        seed: () => const SimulatorState(
+          pages: [
+            [AiSurfaceDisplayMessage('s1')],
+            [AiSurfaceDisplayMessage('s2')],
+            [AiSurfaceDisplayMessage('s3')],
+          ],
+          currentPageIndex: 2,
+        ),
+        act: (bloc) => bloc.add(const SimulatorBackPressed()),
+        expect: () => [
+          isA<SimulatorState>()
+              .having((s) => s.currentPageIndex, 'currentPageIndex', 1)
+              .having((s) => s.pages, 'pages', hasLength(3))
+              .having((s) => s.isNavigatingBack, 'isNavigatingBack', isTrue),
+        ],
+      );
+
+      blocTest<SimulatorBloc, SimulatorState>(
+        'does nothing when already on first page',
+        build: () => SimulatorBloc(simulatorRepository: repository),
+        seed: () => const SimulatorState(
+          pages: [
+            [AiSurfaceDisplayMessage('s1')],
+          ],
+        ),
+        act: (bloc) => bloc.add(const SimulatorBackPressed()),
+        expect: () => <SimulatorState>[],
+      );
+
+      blocTest<SimulatorBloc, SimulatorState>(
+        'sets repository.currentStep to the new index',
+        build: () => SimulatorBloc(simulatorRepository: repository),
+        seed: () => const SimulatorState(
+          pages: [
+            [AiSurfaceDisplayMessage('s1')],
+            [AiSurfaceDisplayMessage('s2')],
+          ],
+          currentPageIndex: 1,
+        ),
+        act: (bloc) => bloc.add(const SimulatorBackPressed()),
+        verify: (_) {
+          verify(() => repository.currentStep = 0).called(1);
+        },
+      );
+    });
+
+    group('$SimulatorForwardPagesTruncated', () {
+      blocTest<SimulatorBloc, SimulatorState>(
+        'removes forward pages and clears isNavigatingBack',
+        build: () => SimulatorBloc(simulatorRepository: repository),
+        seed: () => const SimulatorState(
+          pages: [
+            [AiSurfaceDisplayMessage('s1')],
+            [AiSurfaceDisplayMessage('s2')],
+            [AiSurfaceDisplayMessage('s3')],
+          ],
+          currentPageIndex: 1,
+          isNavigatingBack: true,
+        ),
+        act: (bloc) => bloc.add(const SimulatorForwardPagesTruncated()),
+        expect: () => [
+          isA<SimulatorState>()
+              .having((s) => s.pages, 'pages', hasLength(2))
+              .having((s) => s.currentPageIndex, 'currentPageIndex', 1)
+              .having((s) => s.isNavigatingBack, 'isNavigatingBack', isFalse),
+        ],
+      );
+    });
+
+    blocTest<SimulatorBloc, SimulatorState>(
+      '$SimulatorSurfaceReceived after back navigation appends new page',
+      build: () => SimulatorBloc(simulatorRepository: repository),
+      seed: () => const SimulatorState(
+        pages: [
+          [AiSurfaceDisplayMessage('s1')],
+          [AiSurfaceDisplayMessage('s2')],
+        ],
+        currentPageIndex: 1,
+      ),
+      act: (bloc) => bloc.add(const SimulatorSurfaceReceived('s3')),
+      expect: () => [
+        isA<SimulatorState>()
+            .having((s) => s.pages, 'pages', hasLength(3))
+            .having((s) => s.currentPageIndex, 'currentPageIndex', 2),
+      ],
+    );
+
+    blocTest<SimulatorBloc, SimulatorState>(
+      '$SimulatorSurfaceReceived trims stale forward pages before appending',
+      build: () => SimulatorBloc(simulatorRepository: repository),
+      seed: () => const SimulatorState(
+        pages: [
+          [AiSurfaceDisplayMessage('s1')],
+          [AiSurfaceDisplayMessage('s2')],
+          [AiSurfaceDisplayMessage('s3')],
+        ],
+        // Simulates being on page 0 after back with forward pages still
+        // present (truncation hasn't fired yet).
+        isNavigatingBack: true,
+      ),
+      act: (bloc) => bloc.add(const SimulatorSurfaceReceived('s4')),
+      expect: () => [
+        isA<SimulatorState>()
+            .having((s) => s.pages, 'pages', hasLength(2))
+            .having((s) => s.currentPageIndex, 'currentPageIndex', 1)
+            .having((s) => s.isNavigatingBack, 'isNavigatingBack', isFalse),
+      ],
+    );
+
+    blocTest<SimulatorBloc, SimulatorState>(
+      '$SimulatorSurfaceReceived navigates immediately for known surface '
+      'even while loading',
+      build: () => SimulatorBloc(simulatorRepository: repository),
+      seed: () => const SimulatorState(
+        pages: [
+          [AiSurfaceDisplayMessage('surface_1')],
+          [AiSurfaceDisplayMessage('surface_2')],
+        ],
+        currentPageIndex: 1,
+        isLoading: true,
+      ),
+      act: (bloc) => bloc.add(const SimulatorSurfaceReceived('surface_1')),
+      expect: () => [
+        isA<SimulatorState>()
+            .having((s) => s.currentPageIndex, 'currentPageIndex', 0)
+            .having(
+              (s) => s.pendingPageIndex,
+              'pendingPageIndex',
+              isNull,
+            )
+            .having(
+              (s) => s.showLoadingOverlay,
+              'showLoadingOverlay',
+              isFalse,
+            ),
+      ],
+      verify: (_) {
+        verify(() => repository.currentStep = 0).called(1);
+      },
+    );
+
+    blocTest<SimulatorBloc, SimulatorState>(
+      '$SimulatorSurfaceReceived clears isNavigatingBack',
+      build: () => SimulatorBloc(simulatorRepository: repository),
+      seed: () => const SimulatorState(
+        pages: [
+          [AiSurfaceDisplayMessage('s1')],
+        ],
+        isNavigatingBack: true,
+      ),
+      act: (bloc) => bloc.add(const SimulatorSurfaceReceived('s2')),
+      expect: () => [
+        isA<SimulatorState>().having(
+          (s) => s.isNavigatingBack,
+          'isNavigatingBack',
+          isFalse,
+        ),
+      ],
+    );
+
+    blocTest<SimulatorBloc, SimulatorState>(
+      '$SimulatorSurfaceReceived sets repository.currentStep',
+      build: () => SimulatorBloc(simulatorRepository: repository),
+      seed: () => const SimulatorState(
+        pages: [
+          [AiSurfaceDisplayMessage('s1')],
+        ],
+      ),
+      act: (bloc) => bloc.add(const SimulatorSurfaceReceived('s2')),
+      verify: (_) {
+        verify(() => repository.currentStep = 1).called(1);
+      },
+    );
+
+    blocTest<SimulatorBloc, SimulatorState>(
+      '$SimulatorRetried resets to last page with content and clears error',
+      build: () => SimulatorBloc(simulatorRepository: repository),
+      seed: () => const SimulatorState(
+        status: SimulatorStatus.error,
+        error: 'something failed',
+        pages: [
+          [AiTextDisplayMessage('Welcome')],
+          [AiSurfaceDisplayMessage('surface_1')],
+        ],
+        currentPageIndex: 1,
+      ),
+      act: (bloc) => bloc.add(const SimulatorRetried()),
+      expect: () => [
+        isA<SimulatorState>()
+            .having((s) => s.status, 'status', SimulatorStatus.active)
+            .having((s) => s.isLoading, 'isLoading', isTrue)
+            .having((s) => s.currentPageIndex, 'currentPageIndex', 0)
+            .having((s) => s.error, 'error', isNull),
+      ],
+      verify: (_) {
+        verify(
+          () => repository.sendMessage('Please continue where you left off.'),
+        ).called(1);
+      },
+    );
+
+    blocTest<SimulatorBloc, SimulatorState>(
+      '$SimulatorContentReceived merges consecutive text messages with space',
+      build: () => SimulatorBloc(simulatorRepository: repository),
+      seed: () => const SimulatorState(
+        pages: [
+          [AiTextDisplayMessage('Hello')],
+        ],
+      ),
+      act: (bloc) => bloc.add(
+        const SimulatorContentReceived(AiTextDisplayMessage('world')),
+      ),
+      expect: () => [
+        isA<SimulatorState>().having(
+          (s) => (s.pages.first.first as AiTextDisplayMessage).text,
+          'merged text',
+          'Hello world',
+        ),
+      ],
+    );
+
+    blocTest<SimulatorBloc, SimulatorState>(
+      '$SimulatorContentReceived skips space when text ends with newline',
+      build: () => SimulatorBloc(simulatorRepository: repository),
+      seed: () => const SimulatorState(
+        pages: [
+          [AiTextDisplayMessage('Hello\n')],
+        ],
+      ),
+      act: (bloc) => bloc.add(
+        const SimulatorContentReceived(AiTextDisplayMessage('world')),
+      ),
+      expect: () => [
+        isA<SimulatorState>().having(
+          (s) => (s.pages.first.first as AiTextDisplayMessage).text,
+          'merged text',
+          'Hello\nworld',
+        ),
+      ],
+    );
+
+    blocTest<SimulatorBloc, SimulatorState>(
+      '$SimulatorContentReceived does not merge surface with text',
+      build: () => SimulatorBloc(simulatorRepository: repository),
+      seed: () => const SimulatorState(
+        pages: [
+          [AiSurfaceDisplayMessage('s1')],
+        ],
+      ),
+      act: (bloc) =>
+          bloc.add(const SimulatorContentReceived(AiTextDisplayMessage('hi'))),
+      expect: () => [
+        isA<SimulatorState>().having(
+          (s) => s.pages.first,
+          'first page',
+          hasLength(2),
+        ),
+      ],
     );
 
     test('close disposes repository', () async {

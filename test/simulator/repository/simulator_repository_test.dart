@@ -1,7 +1,9 @@
 import 'package:dartantic_ai/dartantic_ai.dart';
 import 'package:dartantic_firebase_ai/dartantic_firebase_ai.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:genui/genui.dart';
 import 'package:genui_life_goal_simulator/error_reporting/error_reporting.dart';
+import 'package:genui_life_goal_simulator/simulator/catalog/catalog.dart';
 import 'package:genui_life_goal_simulator/simulator/repository/simulator_conversation_event.dart';
 import 'package:genui_life_goal_simulator/simulator/repository/simulator_repository.dart';
 import 'package:mocktail/mocktail.dart';
@@ -14,11 +16,15 @@ class _MockErrorReportingRepository extends Mock
 void main() {
   late _MockFirebaseAIChatModel chatModel;
   late _MockErrorReportingRepository errorReporting;
+  late Catalog catalog;
+  late SurfaceController surfaceController;
   late SimulatorRepository repository;
 
   setUp(() {
     chatModel = _MockFirebaseAIChatModel();
     errorReporting = _MockErrorReportingRepository();
+    catalog = buildFinanceCatalog();
+    surfaceController = SurfaceController(catalogs: [catalog]);
 
     when(() => chatModel.sendStream(any())).thenAnswer(
       (_) => Stream.fromIterable([
@@ -38,6 +44,8 @@ void main() {
     repository = SimulatorRepository(
       chatModel: chatModel,
       errorReporting: errorReporting,
+      catalog: catalog,
+      surfaceController: surfaceController,
     );
   });
 
@@ -47,19 +55,8 @@ void main() {
 
   group('$SimulatorRepository', () {
     group('initial state', () {
-      test('surfaceHost is null before startConversation', () {
-        expect(repository.surfaceHost, isNull);
-      });
-
       test('events stream is accessible before startConversation', () {
         expect(repository.events, isA<Stream<SimulatorConversationEvent>>());
-      });
-    });
-
-    group('startConversation', () {
-      test('sets surfaceHost', () async {
-        await repository.startConversation();
-        expect(repository.surfaceHost, isNotNull);
       });
     });
 
@@ -120,6 +117,84 @@ void main() {
           expect(msg.parts.whereType<DataPart>(), isEmpty);
         }
       });
+    });
+
+    group('currentStep and history truncation', () {
+      test('currentStep defaults to 0', () {
+        expect(repository.currentStep, 0);
+      });
+
+      test('currentStep can be read and written', () {
+        repository.currentStep = 3;
+        expect(repository.currentStep, 3);
+      });
+
+      test(
+        'truncates history beyond currentStep when sending after going back',
+        () async {
+          await repository.startConversation();
+
+          // Build up history, advancing currentStep after each send just
+          // like the bloc does when a new surface arrives.
+          await repository.sendMessage('step 0');
+          repository.currentStep = 1;
+          await repository.sendMessage('step 1');
+          repository.currentStep = 2;
+          await repository.sendMessage('step 2');
+
+          // Record how many messages the LLM saw on the 3rd send.
+          final beforeBacktrack = verify(
+            () => chatModel.sendStream(captureAny()),
+          ).captured;
+          final messagesAtStep2 =
+              (beforeBacktrack.last as List<ChatMessage>).length;
+
+          // Simulate going back to step 0 and continuing.
+          repository.currentStep = 0;
+          await repository.sendMessage('step 0 redo');
+
+          final afterBacktrack = verify(
+            () => chatModel.sendStream(captureAny()),
+          ).captured;
+          final messagesAfterTruncation =
+              (afterBacktrack.last as List<ChatMessage>).length;
+
+          // After truncation the LLM should see fewer messages than before
+          // (system + step0 user + step0 model + new user vs. the full
+          // chain that included step1 and step2).
+          expect(messagesAfterTruncation, lessThan(messagesAtStep2));
+        },
+      );
+
+      test(
+        'does not truncate when currentStep matches history',
+        () async {
+          await repository.startConversation();
+
+          // Advance currentStep in lockstep with sends.
+          await repository.sendMessage('step 0');
+          repository.currentStep = 1;
+          await repository.sendMessage('step 1');
+          repository.currentStep = 2;
+          await repository.sendMessage('step 2');
+
+          final captured = verify(
+            () => chatModel.sendStream(captureAny()),
+          ).captured;
+
+          // Each successive call should see more messages than the previous.
+          final lengths = [
+            for (final c in captured) (c as List<ChatMessage>).length,
+          ];
+          for (var i = 1; i < lengths.length; i++) {
+            expect(
+              lengths[i],
+              greaterThan(lengths[i - 1]),
+              reason: 'send $i should see more messages than send ${i - 1}',
+            );
+          }
+        },
+      );
     });
 
     group('AI response streaming', () {
@@ -225,6 +300,8 @@ void main() {
         final localRepo = SimulatorRepository(
           chatModel: chatModel,
           errorReporting: errorReporting,
+          catalog: catalog,
+          surfaceController: surfaceController,
         );
         await localRepo.startConversation();
         await localRepo.dispose();
@@ -236,6 +313,8 @@ void main() {
         final localRepo = SimulatorRepository(
           chatModel: chatModel,
           errorReporting: errorReporting,
+          catalog: catalog,
+          surfaceController: surfaceController,
         );
         await localRepo.dispose();
 

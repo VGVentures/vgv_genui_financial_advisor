@@ -12,9 +12,14 @@ import 'package:genui_life_goal_simulator/onboarding/pick_profile/models/profile
 import 'package:genui_life_goal_simulator/simulator/simulator.dart';
 
 class SimulatorView extends StatefulWidget {
-  const SimulatorView({required this.profileType, super.key});
+  const SimulatorView({
+    required this.profileType,
+    required this.surfaceHost,
+    super.key,
+  });
 
   final ProfileType profileType;
+  final SurfaceHost surfaceHost;
 
   @override
   State<SimulatorView> createState() => _SimulatorViewState();
@@ -38,23 +43,29 @@ class _SimulatorViewState extends State<SimulatorView> {
         listenWhen: (previous, current) =>
             previous.currentPageIndex != current.currentPageIndex,
         listener: (context, state) {
-          if (_pageController.hasClients && state.pages.isNotEmpty) {
-            if (mounted && _pageController.hasClients) {
-              unawaited(
-                _pageController.animateToPage(
-                  state.currentPageIndex,
-                  duration: const Duration(milliseconds: 1200),
-                  curve: Curves.easeInOutCubic,
-                ),
-              );
-            }
+          if (mounted && _pageController.hasClients && state.pages.isNotEmpty) {
+            final bloc = context.read<SimulatorBloc>();
+            unawaited(
+              _pageController
+                  .animateToPage(
+                    state.currentPageIndex,
+                    duration: const Duration(milliseconds: 1200),
+                    curve: Curves.easeInOutCubic,
+                  )
+                  .then((_) {
+                    if (state.isNavigatingBack && mounted) {
+                      bloc.add(const SimulatorForwardPagesTruncated());
+                    }
+                  }),
+            );
           }
         },
         buildWhen: (previous, current) =>
             previous.pages != current.pages ||
-            previous.host != current.host ||
             previous.isLoading != current.isLoading ||
             previous.status != current.status ||
+            previous.currentPageIndex != current.currentPageIndex ||
+            previous.isNavigatingBack != current.isNavigatingBack ||
             previous.hasPendingNavigation != current.hasPendingNavigation ||
             previous.showLoadingOverlay != current.showLoadingOverlay,
         builder: (context, state) {
@@ -68,7 +79,6 @@ class _SimulatorViewState extends State<SimulatorView> {
               state.hasPendingNavigation && state.pages.length > 1;
           final showThinking =
               state.pages.isEmpty ||
-              state.host == null ||
               (state.hasPendingNavigation && !hasVisibleContent);
 
           return Stack(
@@ -76,7 +86,7 @@ class _SimulatorViewState extends State<SimulatorView> {
               Column(
                 children: [
                   Expanded(
-                    child: state.pages.isEmpty || state.host == null
+                    child: state.pages.isEmpty
                         ? const SizedBox.shrink()
                         : _FadingPageView(
                             controller: _pageController,
@@ -85,7 +95,7 @@ class _SimulatorViewState extends State<SimulatorView> {
                               final messages = state.pages[pageIndex];
                               return _SimulatorPage(
                                 messages: messages,
-                                host: state.host!,
+                                host: widget.surfaceHost,
                               );
                             },
                           ),
@@ -219,6 +229,7 @@ class _FadingPageView extends StatelessWidget {
       animation: controller,
       builder: (context, child) {
         return PageView.builder(
+          physics: const NeverScrollableScrollPhysics(),
           controller: controller,
           itemCount: itemCount,
           itemBuilder: (context, pageIndex) {
