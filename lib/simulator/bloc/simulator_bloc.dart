@@ -18,7 +18,7 @@ class SimulatorBloc extends Bloc<SimulatorEvent, SimulatorState> {
     on<SimulatorForwardPagesTruncated>(_onForwardPagesTruncated);
     on<SimulatorSurfaceReceived>(_onSurfaceReceived);
     on<SimulatorContentReceived>(_onContentReceived);
-    on<SimulatorLoading>(_onLoading);
+    on<SimulatorLoadingChanged>(_onLoadingChanged);
     on<SimulatorLoadingOverlayRequested>(_onLoadingOverlayRequested);
     on<SimulatorErrorOccurred>(_onErrorOccurred);
     on<SimulatorRetried>(_onRetried);
@@ -37,7 +37,7 @@ class SimulatorBloc extends Bloc<SimulatorEvent, SimulatorState> {
       if (isClosed) return;
       switch (event) {
         case SimulatorConversationWaiting(:final isWaiting):
-          add(SimulatorLoading(isLoading: isWaiting));
+          add(SimulatorLoadingChanged(isLoading: isWaiting));
         case SimulatorConversationTextReceived(:final text):
           add(SimulatorContentReceived(AiTextDisplayMessage(text)));
         case SimulatorConversationSurfaceAdded(:final surfaceId):
@@ -189,8 +189,8 @@ class SimulatorBloc extends Bloc<SimulatorEvent, SimulatorState> {
     emit(state.copyWith(pages: pages, currentPageIndex: currentPageIndex));
   }
 
-  void _onLoading(
-    SimulatorLoading event,
+  void _onLoadingChanged(
+    SimulatorLoadingChanged event,
     Emitter<SimulatorState> emit,
   ) {
     final withLoading = state.copyWith(isLoading: event.isLoading);

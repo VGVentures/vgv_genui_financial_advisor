@@ -293,6 +293,51 @@ void main() {
         final errors = events.whereType<SimulatorConversationError>();
         expect(errors, isNotEmpty);
       });
+
+      test(
+        'pops the dangling user message when the stream fails with zero '
+        'chunks so the next send does not produce two consecutive user turns',
+        () async {
+          // First call: fail immediately with no chunks.
+          // Second call: succeed.
+          var callCount = 0;
+          when(() => chatModel.sendStream(any())).thenAnswer((_) {
+            callCount++;
+            if (callCount == 1) {
+              return Stream<ChatResult<ChatMessage>>.error(
+                Exception('network blip'),
+              );
+            }
+            return Stream.fromIterable([
+              ChatResult(output: ChatMessage.model('ok')),
+            ]);
+          });
+
+          await repository.startConversation();
+          await repository.sendMessage('first attempt');
+          await Future<void>.delayed(Duration.zero);
+          await repository.sendMessage('second attempt');
+
+          final captured = verify(
+            () => chatModel.sendStream(captureAny()),
+          ).captured;
+
+          // Walk the history the LLM saw on the second call and confirm no
+          // two adjacent user turns (the dangling first-attempt user
+          // message should have been popped).
+          final secondCallMessages = captured.last as List<ChatMessage>;
+          for (var i = 1; i < secondCallMessages.length; i++) {
+            expect(
+              secondCallMessages[i].role == ChatMessageRole.user &&
+                  secondCallMessages[i - 1].role == ChatMessageRole.user,
+              isFalse,
+              reason:
+                  'history must never contain two consecutive user turns: '
+                  '${secondCallMessages.map((m) => m.role).toList()}',
+            );
+          }
+        },
+      );
     });
 
     group('dispose', () {

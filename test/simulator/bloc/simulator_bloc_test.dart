@@ -140,8 +140,8 @@ void main() {
       expect(event.message, isA<AiTextDisplayMessage>());
     });
 
-    test('$SimulatorLoading holds isLoading', () {
-      const event = SimulatorLoading(isLoading: true);
+    test('$SimulatorLoadingChanged holds isLoading', () {
+      const event = SimulatorLoadingChanged(isLoading: true);
       expect(event.isLoading, isTrue);
     });
 
@@ -312,9 +312,9 @@ void main() {
     );
 
     blocTest<SimulatorBloc, SimulatorState>(
-      '$SimulatorLoading emits state with isLoading',
+      '$SimulatorLoadingChanged emits state with isLoading',
       build: () => SimulatorBloc(simulatorRepository: repository),
-      act: (bloc) => bloc.add(const SimulatorLoading(isLoading: true)),
+      act: (bloc) => bloc.add(const SimulatorLoadingChanged(isLoading: true)),
       expect: () => [
         isA<SimulatorState>().having((s) => s.isLoading, 'isLoading', isTrue),
       ],
@@ -386,7 +386,7 @@ void main() {
         // Then loading finishes → pending navigation flushes.
         bloc
           ..add(const SimulatorSurfaceReceived('surface_2'))
-          ..add(const SimulatorLoading(isLoading: false));
+          ..add(const SimulatorLoadingChanged(isLoading: false));
       },
       skip: 1,
       expect: () => [
