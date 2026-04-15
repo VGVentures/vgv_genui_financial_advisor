@@ -41,9 +41,9 @@ final class SimulatorContentReceived extends SimulatorEvent {
   final DisplayMessage message;
 }
 
-/// Loading state when LLM is processing a request
-final class SimulatorLoading extends SimulatorEvent {
-  const SimulatorLoading({required this.isLoading});
+/// The LLM's waiting state toggled (started or stopped processing a request).
+final class SimulatorLoadingChanged extends SimulatorEvent {
+  const SimulatorLoadingChanged({required this.isLoading});
 
   final bool isLoading;
 }

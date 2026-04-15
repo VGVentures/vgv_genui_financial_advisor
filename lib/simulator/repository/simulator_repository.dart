@@ -142,9 +142,14 @@ class SimulatorRepository {
       }
       _history.add(ChatMessage.model(buffer.toString()));
     } on Object catch (e, st) {
-      // Save whatever was streamed so retry has full context.
       if (buffer.isNotEmpty) {
+        // Save whatever was streamed so retry has full context.
         _history.add(ChatMessage.model(buffer.toString()));
+      } else {
+        // Zero chunks arrived — pop the dangling user message so history
+        // doesn't end with two consecutive user turns on the next send,
+        // which Firebase AI rejects as INVALID_ARGUMENT.
+        _history.removeLast();
       }
       await _errorReporting.recordError(e, st, reason: 'AI sendStream error');
       _controller.add(SimulatorConversationError('AI error: $e'));
