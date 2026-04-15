@@ -1494,10 +1494,10 @@ packages:
     dependency: "direct dev"
     description:
       name: very_good_cli
-      sha256: "7dac489eb422240e2bcd2c087a8d11bb93d9547b2b2fe107983385f4e0e2abb0"
+      sha256: "5dc7d54ba188402f973545a8345b448473bc99af8059e499fef12703b888c9bc"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.0"
+    version: "1.1.1"
   very_good_test_runner:
     dependency: transitive
     description:
@@ -1636,4 +1636,4 @@ packages:
     version: "3.1.3"
 sdks:
   dart: ">=3.11.0 <4.0.0"
-  flutter: ">=3.41.4 <4.0.0"
+  flutter: ">=3.41.4"
