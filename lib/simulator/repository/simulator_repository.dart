@@ -7,6 +7,7 @@ import 'package:genui_life_goal_simulator/error_reporting/error_reporting.dart';
 import 'package:genui_life_goal_simulator/simulator/prompt/prompt.dart'
     as app_prompt;
 import 'package:genui_life_goal_simulator/simulator/repository/simulator_conversation_event.dart';
+import 'package:genui_openui_lang/genui_openui_lang.dart';
 
 /// {@template simulator_repository}
 /// Repository that manages the AI life goal simulator conversation.
@@ -38,6 +39,7 @@ class SimulatorRepository {
   StreamSubscription<ConversationEvent>? _eventSubscription;
   final List<ChatMessage> _history = [];
   late String _systemPrompt;
+  bool _isSending = false;
 
   /// The current step index for history tracking.
   ///
@@ -55,15 +57,18 @@ class SimulatorRepository {
   ///
   /// Call [sendMessage] afterwards to send the initial user message.
   Future<void> startConversation() async {
-    final genUiPromptBuilder = PromptBuilder.chat(
+    final openUiLangPromptBuilder = OpenUiLangPromptBuilder(
       catalog: _catalog,
-      systemPromptFragments: [
+      additionalFragments: [
         app_prompt.PromptBuilder.buildSystemPrompt(),
       ],
     );
-    _systemPrompt = genUiPromptBuilder.systemPromptJoined();
+    _systemPrompt = openUiLangPromptBuilder.build();
 
-    final adapter = A2uiTransportAdapter(onSend: _handleSend);
+    final adapter = OpenUiLangTransportAdapter(
+      converter: OpenUiLangConverter(catalog: _catalog),
+      onSend: _handleSend,
+    );
 
     _conversation = Conversation(
       controller: _surfaceController,
@@ -115,6 +120,22 @@ class SimulatorRepository {
   }
 
   Future<void> _handleSend(ChatMessage message) async {
+    // Guard: prevent re-entrant sends (e.g. error → reportError → send loop).
+    if (_isSending) {
+      final errorDetail = message.parts.map((p) {
+        if (p is TextPart) return p.text;
+        if (p is DataPart) return utf8.decode(p.bytes);
+        return p.toString();
+      }).join();
+      _controller.add(
+        SimulatorConversationError(
+          'Blocked re-entrant send. Error: $errorDetail',
+        ),
+      );
+      return;
+    }
+    _isSending = true;
+
     // If continuing from a revisited step, truncate future history so the
     // LLM only sees the conversation up to the current step.
     final expectedLength = (currentStep + 1) * 2;
@@ -129,7 +150,7 @@ class SimulatorRepository {
       ..._history,
     ];
 
-    final adapter = _conversation!.transport as A2uiTransportAdapter;
+    final adapter = _conversation!.transport as OpenUiLangTransportAdapter;
     final buffer = StringBuffer();
 
     try {
@@ -153,6 +174,8 @@ class SimulatorRepository {
       }
       await _errorReporting.recordError(e, st, reason: 'AI sendStream error');
       _controller.add(SimulatorConversationError('AI error: $e'));
+    } finally {
+      _isSending = false;
     }
   }
 
