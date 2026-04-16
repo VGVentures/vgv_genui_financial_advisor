@@ -26,7 +26,7 @@ dependencies:
   genui: 0.8.0
   genui_openui_lang:
     git:
-      url: git@github.com:brianegan/genui.git
+      url: https://github.com/brianegan/genui.git
       ref: open-ui-transport-adapter
       path: packages/genui_openui_lang
   intl: ^0.20.2

@@ -611,7 +611,7 @@ packages:
       path: "packages/genui_openui_lang"
       ref: open-ui-transport-adapter
       resolved-ref: "4e1ad51980ed5c38a36064f1a31304541b3ea9e9"
-      url: "git@github.com:brianegan/genui.git"
+      url: "https://github.com/brianegan/genui.git"
     source: git
     version: "0.1.0"
   glob:
