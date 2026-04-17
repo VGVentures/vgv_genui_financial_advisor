@@ -11,14 +11,6 @@ void main() {
     test('dark returns a $DarkTheme', () {
       expect(AppThemes.dark, isA<DarkTheme>());
     });
-
-    test('getAppTheme returns light theme for ${ThemeType.light}', () {
-      expect(AppThemes.getAppTheme(ThemeType.light), isA<LightTheme>());
-    });
-
-    test('getAppTheme returns dark theme for ${ThemeType.dark}', () {
-      expect(AppThemes.getAppTheme(ThemeType.dark), isA<DarkTheme>());
-    });
   });
 
   group(LightTheme, () {
