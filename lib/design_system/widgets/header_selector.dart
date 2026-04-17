@@ -17,6 +17,7 @@ class HeaderSelector extends StatelessWidget {
     required this.options,
     required this.selectedIndex,
     required this.onChanged,
+    this.borderRadius = 32,
     super.key,
   });
 
@@ -28,6 +29,9 @@ class HeaderSelector extends StatelessWidget {
 
   /// Called with the index of the chip that was tapped.
   final ValueChanged<int> onChanged;
+
+  /// Corner radius of each pill-shaped chip.
+  final double borderRadius;
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +46,7 @@ class HeaderSelector extends StatelessWidget {
               label: label,
               isSelected: i == selectedIndex,
               onTap: () => onChanged(i),
+              borderRadius: borderRadius,
             ),
         ],
       ),
@@ -54,11 +59,13 @@ class _HeaderSelectorChip extends StatefulWidget {
     required this.label,
     required this.isSelected,
     required this.onTap,
+    required this.borderRadius,
   });
 
   final String label;
   final bool isSelected;
   final VoidCallback onTap;
+  final double borderRadius;
 
   @override
   State<_HeaderSelectorChip> createState() => _HeaderSelectorChipState();
@@ -95,15 +102,15 @@ class _HeaderSelectorChipState extends State<_HeaderSelectorChip> {
       onExit: (_) => setState(() => _isHovered = false),
       child: Material(
         color: Colors.transparent,
-        borderRadius: BorderRadius.circular(_Dimensions.borderRadius),
+        borderRadius: BorderRadius.circular(widget.borderRadius),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: widget.onTap,
-          borderRadius: BorderRadius.circular(_Dimensions.borderRadius),
+          borderRadius: BorderRadius.circular(widget.borderRadius),
           child: Ink(
             decoration: BoxDecoration(
               color: backgroundColor,
-              borderRadius: BorderRadius.circular(_Dimensions.borderRadius),
+              borderRadius: BorderRadius.circular(widget.borderRadius),
               border: Border.all(color: borderColor),
             ),
             child: Padding(
@@ -115,7 +122,7 @@ class _HeaderSelectorChipState extends State<_HeaderSelectorChip> {
                 widget.label,
                 style: textTheme.labelLarge?.copyWith(
                   color: textColor,
-                  letterSpacing: _Dimensions.letterSpacing,
+                  letterSpacing: -0.15,
                 ),
               ),
             ),
@@ -124,9 +131,4 @@ class _HeaderSelectorChipState extends State<_HeaderSelectorChip> {
       ),
     );
   }
-}
-
-abstract final class _Dimensions {
-  static const double borderRadius = 32;
-  static const double letterSpacing = -0.15;
 }

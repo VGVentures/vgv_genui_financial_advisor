@@ -19,6 +19,9 @@ class EmojiCard extends StatelessWidget {
     required this.label,
     this.isSelected = false,
     this.onTap,
+    this.borderRadius = 8,
+    this.borderWidth = 2,
+    this.emojiSize = 32,
     super.key,
   });
 
@@ -34,23 +37,35 @@ class EmojiCard extends StatelessWidget {
   /// Optional tap callback.
   final VoidCallback? onTap;
 
+  /// Corner radius of the card.
+  final double borderRadius;
+
+  /// Thickness of the card's border.
+  final double borderWidth;
+
+  /// Font size applied to the emoji glyph.
+  final double emojiSize;
+
   @override
   Widget build(BuildContext context) {
     final content = _EmojiCardContent(
       emoji: emoji,
       label: label,
       isSelected: isSelected,
+      borderRadius: borderRadius,
+      borderWidth: borderWidth,
+      emojiSize: emojiSize,
     );
 
     if (onTap == null) return content;
 
     return Material(
       color: Colors.transparent,
-      borderRadius: BorderRadius.circular(_Dimensions.borderRadius),
+      borderRadius: BorderRadius.circular(borderRadius),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(_Dimensions.borderRadius),
+        borderRadius: BorderRadius.circular(borderRadius),
         child: content,
       ),
     );
@@ -62,11 +77,17 @@ class _EmojiCardContent extends StatefulWidget {
     required this.emoji,
     required this.label,
     required this.isSelected,
+    required this.borderRadius,
+    required this.borderWidth,
+    required this.emojiSize,
   });
 
   final String emoji;
   final String label;
   final bool isSelected;
+  final double borderRadius;
+  final double borderWidth;
+  final double emojiSize;
 
   @override
   State<_EmojiCardContent> createState() => _EmojiCardContentState();
@@ -102,10 +123,10 @@ class _EmojiCardContentState extends State<_EmojiCardContent> {
         padding: const EdgeInsets.all(Spacing.md),
         decoration: BoxDecoration(
           color: backgroundColor,
-          borderRadius: BorderRadius.circular(_Dimensions.borderRadius),
+          borderRadius: BorderRadius.circular(widget.borderRadius),
           border: Border.all(
             color: borderColor,
-            width: _Dimensions.borderWidth,
+            width: widget.borderWidth,
           ),
         ),
         child: Column(
@@ -114,7 +135,7 @@ class _EmojiCardContentState extends State<_EmojiCardContent> {
           children: [
             Text(
               widget.emoji,
-              style: const TextStyle(fontSize: _Dimensions.emojiSize),
+              style: TextStyle(fontSize: widget.emojiSize),
             ),
             const SizedBox(height: Spacing.xs),
             Text(
@@ -208,10 +229,4 @@ class _MobileEmojiCardLayout extends StatelessWidget {
             ..removeLast(),
     );
   }
-}
-
-abstract final class _Dimensions {
-  static const double borderRadius = 8;
-  static const double borderWidth = 2;
-  static const double emojiSize = 32;
 }

@@ -30,11 +30,19 @@ class RankedTable extends StatelessWidget {
   /// {@macro ranked_table}
   const RankedTable({
     required this.items,
+    this.rankBadgeVerticalPadding = 6,
+    this.textRowVerticalPadding = 10,
     super.key,
   });
 
   /// The items to display, ranked in order.
   final List<RankedTableItem> items;
+
+  /// Vertical padding around the rank badge on each row.
+  final double rankBadgeVerticalPadding;
+
+  /// Vertical padding around the text cells (title, amount) on each row.
+  final double textRowVerticalPadding;
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +59,8 @@ class RankedTable extends StatelessWidget {
             item: items[i],
             colors: colors,
             textTheme: textTheme,
+            rankBadgeVerticalPadding: rankBadgeVerticalPadding,
+            textRowVerticalPadding: textRowVerticalPadding,
           ),
           Divider(
             height: 1,
@@ -68,12 +78,16 @@ class _RankedTableRow extends StatelessWidget {
     required this.item,
     required this.colors,
     required this.textTheme,
+    required this.rankBadgeVerticalPadding,
+    required this.textRowVerticalPadding,
   });
 
   final int rank;
   final RankedTableItem item;
   final AppColors colors;
   final TextTheme textTheme;
+  final double rankBadgeVerticalPadding;
+  final double textRowVerticalPadding;
 
   @override
   Widget build(BuildContext context) {
@@ -84,9 +98,7 @@ class _RankedTableRow extends StatelessWidget {
       spacing: Spacing.md,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: _Dimensions.verticalRankItemRowPadding,
-          ),
+          padding: EdgeInsets.symmetric(vertical: rankBadgeVerticalPadding),
           child: DecoratedBox(
             decoration: BoxDecoration(
               color: colors.surfaceContainer,
@@ -109,9 +121,7 @@ class _RankedTableRow extends StatelessWidget {
         ),
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: _Dimensions.verticalTextItemRowPadding,
-            ),
+            padding: EdgeInsets.symmetric(vertical: textRowVerticalPadding),
             child: Text(
               item.title,
               style: textTheme.titleSmall?.copyWith(
@@ -121,9 +131,7 @@ class _RankedTableRow extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: _Dimensions.verticalTextItemRowPadding,
-          ),
+          padding: EdgeInsets.symmetric(vertical: textRowVerticalPadding),
           child: Text(
             item.amount,
             textAlign: TextAlign.end,
@@ -140,9 +148,4 @@ class _RankedTableRow extends StatelessWidget {
       ],
     );
   }
-}
-
-abstract final class _Dimensions {
-  static const double verticalRankItemRowPadding = 6;
-  static const double verticalTextItemRowPadding = 10;
 }

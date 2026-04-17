@@ -18,16 +18,22 @@ enum AppButtonVariant {
 /// Size variant for [AppButton].
 enum AppButtonSize {
   /// Large: 48px height, 16px horizontal padding.
-  large(height: 48),
+  large(height: 48, horizontalPadding: Spacing.md),
 
   /// Small: 40px height, 12px horizontal padding.
-  small(height: 40)
+  small(height: 40, horizontalPadding: Spacing.sm)
   ;
 
-  const AppButtonSize({required this.height});
+  const AppButtonSize({
+    required this.height,
+    required this.horizontalPadding,
+  });
 
   /// The fixed height for this button size.
   final double height;
+
+  /// The horizontal padding applied to the button at this size.
+  final double horizontalPadding;
 }
 
 /// {@template app_button}
@@ -47,6 +53,12 @@ class AppButton extends StatelessWidget {
     this.isLoading = false,
     this.leadingIcon,
     this.trailingIcon,
+    this.pillRadius = 100,
+    this.minWidth = 72,
+    this.outlineBorderWidth = 1.5,
+    this.focusRingWidth = 3,
+    this.loadingIndicatorSize = Spacing.md,
+    this.loadingStrokeWidth = 2,
     super.key,
   });
 
@@ -71,6 +83,24 @@ class AppButton extends StatelessWidget {
 
   /// Optional icon displayed after the label.
   final Widget? trailingIcon;
+
+  /// Corner radius used for the pill-shaped border.
+  final double pillRadius;
+
+  /// Minimum width of the button.
+  final double minWidth;
+
+  /// Border width for the outlined variant.
+  final double outlineBorderWidth;
+
+  /// Border width drawn when the button is focused.
+  final double focusRingWidth;
+
+  /// Size of the loading indicator shown when [isLoading] is `true`.
+  final double loadingIndicatorSize;
+
+  /// Stroke width of the loading indicator.
+  final double loadingStrokeWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -111,9 +141,9 @@ class AppButton extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox.square(
-            dimension: _Dimensions.loadingIndicatorSize,
+            dimension: loadingIndicatorSize,
             child: CircularProgressIndicator(
-              strokeWidth: _Dimensions.loadingStrokeWidth,
+              strokeWidth: loadingStrokeWidth,
               color: colors.onSurfaceMuted,
             ),
           ),
@@ -140,11 +170,6 @@ class AppButton extends StatelessWidget {
   }
 
   ButtonStyle _buttonStyle({required AppColors colors}) {
-    final height = size.height;
-    final horizontalPadding = size == AppButtonSize.large
-        ? _Dimensions.largePadding
-        : _Dimensions.smallPadding;
-
     return ButtonStyle(
       backgroundColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.disabled)) {
@@ -174,36 +199,36 @@ class AppButton extends StatelessWidget {
         if (states.contains(WidgetState.focused)) {
           return BorderSide(
             color: colors.onSurfaceVariant,
-            width: _Dimensions.focusRingWidth,
+            width: focusRingWidth,
           );
         }
         if (variant == AppButtonVariant.outlined) {
           if (states.contains(WidgetState.disabled)) {
             return BorderSide(
               color: colors.onSurfaceDisabled,
-              width: _Dimensions.outlineBorderWidth,
+              width: outlineBorderWidth,
             );
           }
           return BorderSide(
             color: colors.primary,
-            width: _Dimensions.outlineBorderWidth,
+            width: outlineBorderWidth,
           );
         }
         return BorderSide.none;
       }),
       shape: WidgetStateProperty.all(
         RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(_Dimensions.pillRadius),
+          borderRadius: BorderRadius.circular(pillRadius),
         ),
       ),
       padding: WidgetStateProperty.all(
-        EdgeInsets.symmetric(horizontal: horizontalPadding),
+        EdgeInsets.symmetric(horizontal: size.horizontalPadding),
       ),
       minimumSize: WidgetStateProperty.all(
-        Size(_Dimensions.minWidth, height),
+        Size(minWidth, size.height),
       ),
       tapTargetSize: MaterialTapTargetSize.padded,
-      textStyle: WidgetStateProperty.all(_Dimensions.labelTextStyle),
+      textStyle: WidgetStateProperty.all(_labelTextStyle),
       elevation: WidgetStateProperty.all(0),
       backgroundBuilder: variant == AppButtonVariant.gradient
           ? (context, states, child) {
@@ -216,7 +241,7 @@ class AppButton extends StatelessWidget {
               return DecoratedBox(
                 decoration: BoxDecoration(
                   gradient: isDisabled ? null : colors.geniusGradient,
-                  borderRadius: BorderRadius.circular(_Dimensions.pillRadius),
+                  borderRadius: BorderRadius.circular(pillRadius),
                 ),
                 child: DecoratedBox(
                   decoration: BoxDecoration(
@@ -225,7 +250,7 @@ class AppButton extends StatelessWidget {
                         : isHovered
                         ? overlay.withValues(alpha: 0.1)
                         : Colors.transparent,
-                    borderRadius: BorderRadius.circular(_Dimensions.pillRadius),
+                    borderRadius: BorderRadius.circular(pillRadius),
                   ),
                   child: child,
                 ),
@@ -270,21 +295,10 @@ class AppButton extends StatelessWidget {
   }
 }
 
-abstract final class _Dimensions {
-  static const double largePadding = 16;
-  static const double smallPadding = 12;
-  static const double pillRadius = 100;
-  static const double minWidth = 72;
-  static const double outlineBorderWidth = 1.5;
-  static const double focusRingWidth = 3;
-  static const double loadingIndicatorSize = 16;
-  static const double loadingStrokeWidth = 2;
-
-  static const TextStyle labelTextStyle = TextStyle(
-    fontFamily: FontFamily.poppins,
-    fontSize: 14,
-    fontWeight: FontWeight.w500,
-    height: 20 / 14,
-    letterSpacing: -0.15,
-  );
-}
+const _labelTextStyle = TextStyle(
+  fontFamily: FontFamily.poppins,
+  fontSize: 14,
+  fontWeight: FontWeight.w500,
+  height: 20 / 14,
+  letterSpacing: -0.15,
+);

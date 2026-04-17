@@ -36,6 +36,10 @@ class InsightCard extends StatelessWidget {
     required this.description,
     this.emoji,
     this.variant = InsightCardVariant.neutral,
+    this.cardBorderRadius = 12,
+    this.badgeBorderRadius = 8,
+    this.borderWidth = 1.5,
+    this.emojiSize = 20,
     super.key,
   });
 
@@ -51,6 +55,18 @@ class InsightCard extends StatelessWidget {
 
   /// Visual variant controlling colours and border.
   final InsightCardVariant variant;
+
+  /// Corner radius of the card container.
+  final double cardBorderRadius;
+
+  /// Corner radius of the emoji badge.
+  final double badgeBorderRadius;
+
+  /// Thickness of the card's border.
+  final double borderWidth;
+
+  /// Font size applied to the emoji glyph.
+  final double emojiSize;
 
   @override
   Widget build(BuildContext context) {
@@ -89,10 +105,10 @@ class InsightCard extends StatelessWidget {
       padding: const EdgeInsets.all(Spacing.md),
       decoration: BoxDecoration(
         color: backgroundColor,
-        borderRadius: BorderRadius.circular(_Dimensions.cardBorderRadius),
+        borderRadius: BorderRadius.circular(cardBorderRadius),
         border: Border.all(
           color: borderColor,
-          width: _Dimensions.borderWidth,
+          width: borderWidth,
         ),
       ),
       child: Column(
@@ -103,15 +119,13 @@ class InsightCard extends StatelessWidget {
             padding: const EdgeInsets.all(Spacing.xs),
             decoration: BoxDecoration(
               color: badgeColor,
-              borderRadius: BorderRadius.circular(
-                _Dimensions.badgeBorderRadius,
-              ),
+              borderRadius: BorderRadius.circular(badgeBorderRadius),
               border: Border.all(color: badgeBorderColor),
             ),
             child: Text(
               resolvedEmoji,
-              style: const TextStyle(
-                fontSize: _Dimensions.emojiSize,
+              style: TextStyle(
+                fontSize: emojiSize,
                 height: 1,
               ),
             ),
@@ -134,11 +148,4 @@ class InsightCard extends StatelessWidget {
       ),
     );
   }
-}
-
-abstract final class _Dimensions {
-  static const double cardBorderRadius = 12;
-  static const double badgeBorderRadius = 8;
-  static const double borderWidth = 1.5;
-  static const double emojiSize = 20;
 }

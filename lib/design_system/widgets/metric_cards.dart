@@ -31,6 +31,8 @@ class MetricCard extends StatelessWidget {
     this.subtitle,
     this.delta,
     this.deltaDirection,
+    this.borderRadius = 8,
+    this.subtitleTopSpacing = 2,
     super.key,
   });
 
@@ -53,6 +55,12 @@ class MetricCard extends StatelessWidget {
   /// Has no visual effect when [delta] is null.
   final MetricDeltaDirection? deltaDirection;
 
+  /// Corner radius of the card container.
+  final double borderRadius;
+
+  /// Vertical gap between the value row and the subtitle.
+  final double subtitleTopSpacing;
+
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
@@ -66,6 +74,8 @@ class MetricCard extends StatelessWidget {
       deltaColor: _deltaColor(colors),
       textTheme: textTheme,
       colors: colors,
+      borderRadius: borderRadius,
+      subtitleTopSpacing: subtitleTopSpacing,
     );
   }
 
@@ -87,6 +97,8 @@ class _MetricCardContent extends StatelessWidget {
     required this.deltaColor,
     required this.textTheme,
     required this.colors,
+    required this.borderRadius,
+    required this.subtitleTopSpacing,
   });
 
   final String label;
@@ -96,6 +108,8 @@ class _MetricCardContent extends StatelessWidget {
   final Color deltaColor;
   final TextTheme textTheme;
   final AppColors colors;
+  final double borderRadius;
+  final double subtitleTopSpacing;
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +117,7 @@ class _MetricCardContent extends StatelessWidget {
       padding: const EdgeInsets.all(Spacing.md),
       decoration: BoxDecoration(
         color: colors.surfaceVariant,
-        borderRadius: BorderRadius.circular(_Dimensions.borderRadius),
+        borderRadius: BorderRadius.circular(borderRadius),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -119,7 +133,7 @@ class _MetricCardContent extends StatelessWidget {
             colors: colors,
           ),
           if (subtitle != null) ...[
-            const SizedBox(height: _Dimensions.subtitleTopSpacing),
+            SizedBox(height: subtitleTopSpacing),
             _MetricSubtitle(
               subtitle: subtitle!,
               textTheme: textTheme,
@@ -190,7 +204,7 @@ class _MetricValueRow extends StatelessWidget {
           ),
         ),
         if (delta != null) ...[
-          const SizedBox(width: _Dimensions.deltaSpacing),
+          const SizedBox(width: Spacing.xxs),
           Text(
             delta!,
             style: textTheme.labelLarge?.copyWith(
@@ -281,10 +295,4 @@ class _MobileMetricCardsLayout extends StatelessWidget {
             ..removeLast(),
     );
   }
-}
-
-abstract final class _Dimensions {
-  static const double borderRadius = 8;
-  static const double deltaSpacing = 4;
-  static const double subtitleTopSpacing = 2;
 }
