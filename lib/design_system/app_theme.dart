@@ -51,13 +51,17 @@ class AppTheme {
   ThemeData getThemeData(BuildContext context) =>
       _buildThemeData(AppTextStyles.getResponsiveTextTheme(context));
 
+  GCNSliderTheme get _gcnSliderTheme => colors.brightness == Brightness.dark
+      ? darkGCNSliderTheme
+      : lightGCNSliderTheme;
+
   ThemeData _buildThemeData(TextTheme textTheme) =>
       ThemeData.from(
         colorScheme: colorScheme,
         useMaterial3: true,
         textTheme: textTheme,
       ).copyWith(
-        extensions: [colors],
+        extensions: [colors, _gcnSliderTheme],
         appBarTheme: AppBarTheme(
           backgroundColor: colorScheme.primary,
           centerTitle: true,

@@ -66,6 +66,7 @@ class GCNSlider extends StatelessWidget {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
     final colors = context.appColors;
+    final sliderTheme = context.gcnSliderTheme;
 
     final gradient = colors.geniusGradient;
     final trackColor = colors.surfaceContainer;
@@ -111,8 +112,8 @@ class GCNSlider extends StatelessWidget {
             ),
             thumbShape: _RingThumbShape(
               gradient: gradient,
-              ringColor: colors.surfaceVariant,
-              shadowColor: colors.onSurface,
+              ringColor: sliderTheme.thumbRingColor,
+              shadowColor: sliderTheme.thumbShadowColor,
             ),
             tickMarkShape: divisions != null
                 ? _VerticalTickMarkShape(
