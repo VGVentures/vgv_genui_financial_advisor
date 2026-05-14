@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:genui_life_goal_simulator/design_system/design_system.dart';
 import 'package:genui_life_goal_simulator/feature_flags/view/view.dart';
+import 'package:genui_life_goal_simulator/gen/assets.gen.dart';
 import 'package:genui_life_goal_simulator/onboarding/intro/view/intro_desktop_view.dart';
 import 'package:genui_life_goal_simulator/onboarding/intro/view/intro_mobile_view.dart';
 import 'package:genui_life_goal_simulator/onboarding/pick_profile/view/pick_profile_page.dart';
@@ -24,6 +28,23 @@ class IntroPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Preload next screen SVG assets to prevent transition jank
+    unawaited(
+      SvgAssetLoader(
+        Assets.images.onboarding.starBeginner.path,
+      ).loadBytes(context),
+    );
+    unawaited(
+      SvgAssetLoader(
+        Assets.images.onboarding.starOptimizer.path,
+      ).loadBytes(context),
+    );
+    unawaited(
+      SvgAssetLoader(
+        Assets.images.onboarding.rightArrow.path,
+      ).loadBytes(context),
+    );
+
     Future<void> backupOnGetStarted() {
       return Navigator.of(context).pushReplacement(
         MaterialPageRoute<void>(
